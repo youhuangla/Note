@@ -15,4 +15,5 @@
     * git add all file 
         *       git add .
     *       git commit -a
+        * write comment and :wq
     *       git push
