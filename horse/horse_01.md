@@ -1,8 +1,11 @@
+#! https://zhuanlan.zhihu.com/p/458672910
 # 老码识途
 ## 第1章 欲向码途问大道，锵锵bit是吾刀
 * 资料下载：https://cbjj.phei.com.cn/module/zygl/manager/uploadfiles/17382.rar
 ### 1.1 全局变量引发的故事
 ### 1.1.1 剖析赋值语句的机器码
+实验视频：https://www.bilibili.com/video/BV1VL4y147Kv?spm_id_from=333.999.0.0
+https://www.bilibili.com/video/BV1fP4y1j7uG?spm_id_from=333.999.0.0
 * 掌握VS2008中的调试操作
 * 提出问题：
     * Q1:gi的地址在内存的哪？
@@ -24,6 +27,7 @@
     * 以小端机顺序将想要gi修改的值直接写入内存中
 * Q2解决
 ### 1.1.3 直接构建新的赋值语句
+实验视频：https://www.bilibili.com/video/BV1Rr4y1v7Qk?spm_id_from=333.999.0.0
 * 以上几步可以概括为：猜测->实证，接着我们要尝试->构建
 * IP寄存器(EIP寄存器)的值与指令地址相同
 * 用jmp指令以机器码的形式在正常的C代码中嵌入汇编
