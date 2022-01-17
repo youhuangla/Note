@@ -4,7 +4,7 @@
 * 资料下载：https://cbjj.phei.com.cn/module/zygl/manager/uploadfiles/17382.rar
 ### 1.1 全局变量引发的故事
 ### 1.1.1 剖析赋值语句的机器码
-实验视频：https://www.bilibili.com/video/BV1VL4y147Kv?spm_id_from=333.999.0.0
+实验视频：
 https://www.bilibili.com/video/BV1fP4y1j7uG?spm_id_from=333.999.0.0
 * 掌握VS2008中的调试操作
 * 提出问题：
