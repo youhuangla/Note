@@ -1,0 +1,2 @@
+# Vim
+* search mode: /
