@@ -1,5 +1,5 @@
-#! https://zhuanlan.zhihu.com/p/458672910
 # 老码识途
+https://zhuanlan.zhihu.com/p/458672910
 ## 第1章 欲向码途问大道，锵锵bit是吾刀
 * 资料下载：https://cbjj.phei.com.cn/module/zygl/manager/uploadfiles/17382.rar
 ### 1.1 全局变量引发的故事
