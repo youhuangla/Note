@@ -1,11 +1,16 @@
 # Valgrind
+
 ## First valgrind
+
 * When I learn about a dictionary program,I meet an error.It occur to me that valgrind can be use to check memory in OSTEP,so I learn about valgrind.
+
 ```shell
 free(): double free detected in tcache 2
 ```
-* From:https://valgrind.org/docs/manual/quick-start.html#quick-start.intro
+
+* From:<https://valgrind.org/docs/manual/quick-start.html#quick-start.intro>
 * vim test.c
+
 ```c
 /*************************************************************************
 > File Name: test.c
@@ -28,7 +33,9 @@ int main(void)
     return 0;
 }
 ```
+
 * Compile and use valgrind
+
 ```shell
 youhuangla@Ubuntu valgrind_lab % gcc test.c -o myprog                                          [0]
 youhuangla@Ubuntu valgrind_lab % ls                                                            [0]

@@ -1,9 +1,12 @@
 # Common
+
 * Search for software to be installed
+
 ```zsh
 sudo apt-cache search
 ```
-* https://www.cnblogs.com/SunshineKimi/p/12291982.html
+
+* <https://www.cnblogs.com/SunshineKimi/p/12291982.html>
 
 apt-get remove: 卸载软件
 

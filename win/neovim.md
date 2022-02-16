@@ -23,8 +23,8 @@ PS C:\WINDOWS\system32> (New-Object Net.WebClient).DownloadFile(
 >> )
 ```
 
-- After many efforts, successfully add nvim into PATH.I don't know which one succeed,but I add 
+- After many efforts, successfully add nvim into PATH.
 
-![add nvim to path](https://raw.githubusercontent.com/youhuangla/images/main/202202152253614.png)
+[add nvim to path](https://raw.githubusercontent.com/youhuangla/images/main/202202152253614.png)
 
 - type nvim to enter
