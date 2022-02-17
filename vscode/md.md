@@ -10,4 +10,34 @@ press ctrl+shift+p to Open the Command Palette
 
 <https://blog.csdn.net/weixin_43031092/article/details/105322677>
 
-- [jump_to_a_chapter](../os_prog/s14_线程.md#线程控制)
+- [jump_to_a_mf](../os_prog/s14_线程.md#线程控制)
+
+## 图片大小
+
+<https://stackoverflow.com/questions/14675913/changing-image-size-in-markdown>
+
+```md
+<img src="drawing.jpg" alt="drawing" width="200"/>
+```
+
+- 最好还是用typora......
+
+## 代码
+
+### 正文中的代码
+
+<https://zhuanlan.zhihu.com/p/56943330>
+
+- 正文中的代码，则通过输入`` 框出，代码写在两个backquote反引号中间
+
+### 代码补全摸索
+
+<https://juejin.cn/post/6844904089680085006>
+
+#### vscode
+
+- 在vscode中，代码补全键可用 `Ctrl + Space` 开关，注意中文输入法貌似关不了这个，尽量用英文
+
+VsCode 自定义代码补全 默认开启markdown代码补全<https://blog.csdn.net/KSroido/article/details/110342303>
+
+- #累麻了，不写了，学一晚上的笔记
