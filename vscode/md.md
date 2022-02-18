@@ -41,3 +41,13 @@ press ctrl+shift+p to Open the Command Palette
 VsCode 自定义代码补全 默认开启markdown代码补全<https://blog.csdn.net/KSroido/article/details/110342303>
 
 - #累麻了，不写了，学一晚上的笔记
+
+#### markdown math
+
+<https://www.zybuluo.com/mdeditor?url=https://www.zybuluo.com/static/editor/md-help.markdown#5-latex-%E5%85%AC%E5%BC%8F>
+
+<https://support.typora.io/Markdown-Reference/#math-blocks>
+
+## 目录跳转
+
+`[content](章节写这里)`
