@@ -28,3 +28,5 @@ PS C:\WINDOWS\system32> (New-Object Net.WebClient).DownloadFile(
 [add nvim to path](https://raw.githubusercontent.com/youhuangla/images/main/202202152253614.png)
 
 - type nvim to enter
+
+TODO:<https://blog.csdn.net/lxyoucan/article/details/116486176>

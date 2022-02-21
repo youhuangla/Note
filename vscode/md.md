@@ -1,5 +1,19 @@
 # md config
 
+- [md config](#md-config)
+  - [md all in one](#md-all-in-one)
+    - [create directory](#create-directory)
+  - [Markdown如何实现多文档之间的跳转](#markdown如何实现多文档之间的跳转)
+  - [图片大小](#图片大小)
+  - [代码](#代码)
+    - [正文中的代码](#正文中的代码)
+    - [代码补全摸索](#代码补全摸索)
+      - [vscode](#vscode)
+      - [markdown math](#markdown-math)
+  - [目录跳转](#目录跳转)
+  - [Named anchor非目录跳转(锚点)](#named-anchor非目录跳转锚点)
+  - [Center图片标题](#center图片标题)
+
 ## md all in one
 
 ### create directory
@@ -51,3 +65,15 @@ VsCode 自定义代码补全 默认开启markdown代码补全<https://blog.csdn.
 ## 目录跳转
 
 `[content](章节写这里)`
+
+## Named anchor非目录跳转(锚点)
+
+<https://stackoverflow.com/questions/5319754/cross-reference-named-anchor-in-markdown>
+
+- Typora中跳转记得按住Ctrl
+
+## Center图片标题
+
+```markdown
+<center>在typora，可以顺序打到"</",typora自动补全</center>
+```
