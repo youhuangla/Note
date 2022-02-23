@@ -24,3 +24,25 @@
 ![](https://raw.githubusercontent.com/youhuangla/images/main/202202172258369.png)
 
 - 现在vscode中'ctrl + space'就可以显示代码补全选项了
+
+## USB
+
+### USB占用后如何弹出
+
+- 提示程序占用USB设备
+- 使用[在Windows中，U盘或者移动硬盘关不掉时，怎么知道是被哪个程序占用了呢？ - 张大侠的回答 - 知乎](https://www.zhihu.com/question/22579281/answer/1883600510)的最后一个方法
+- 右键左下角win图标，打开事件查看器
+
+![](https://raw.githubusercontent.com/youhuangla/images/main/202202232143389.png)
+
+- 从上图中可知一个程序HiSuite停止删除或弹出一个USB设备，容易得知该程序为华为手机助手，pid（进程号）为7528
+- 从[windows使用命令行杀进程](https://www.cnblogs.com/shindo/p/5959329.html)中，得知应使用taskkill命令，但是直接在cmd中可能拒绝访问
+
+```powershell
+PS C:\Users\Administrator> taskkill /pid 7528 -t -f;
+错误: 无法终止 PID 7528 (属于 PID 21260 子进程)的进程。
+原因: 拒绝访问。
+```
+
+- 应右键左下角win图标打开Powershell(管理员)，并成功杀死进程
+- 成功拔出！
