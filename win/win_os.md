@@ -9,6 +9,9 @@
 ![高级](https://raw.githubusercontent.com/youhuangla/images/main/202202092017347.png)
 2. 更改虚拟内存后要点击设置才算保存
 
+[如何配置Windows实例的虚拟内存](https://help.aliyun.com/document_detail/40995.htm?spm=a2c4g.11186623.0.0.71af1323T7fTtH)
+[Windows虚拟内存不足问题的处理](https://help.aliyun.com/document_detail/41046.html#kzGCz)
+
 ## 语言
 
 - win输入法快捷键"Ctrl +　,"、"Ctrl + space"总是与vscode冲突的解决方案
