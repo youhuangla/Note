@@ -1,7 +1,23 @@
 # Clion
 
 * MinGW sh.exe must NOT be in your path
-<https://stackoverflow.com/questions/41333215/mingw-sh-exe-must-not-be-in-your-path>
+  <https://stackoverflow.com/questions/41333215/mingw-sh-exe-must-not-be-in-your-path>
+
+  
+
+  Just add
+
+  > ```
+  > set(DCMAKE_SH="CMAKE_SH-NOTFOUND")
+  > ```
+
+  to your
+
+  > CMakeLists.txt file
+
+  and reload project
+
+  <img src="img/image-20220321171451442.png" alt="image-20220321171451442" style="zoom:33%;" />
 
 ## Force step into
 

@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>s14线程.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="s14">s14</h1>
+<ul>
+<li><a href="#s14">s14</a>
+<ul>
+<li><a href="#%E7%BA%BF%E7%A8%8Bthread">线程(thread)</a>
+<ul>
+<li><a href="#%E7%BA%BF%E7%A8%8B%E7%9A%84%E6%A6%82%E5%BF%B5">线程的概念</a></li>
+<li><a href="#%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6">线程控制</a>
+<ul>
+<li><a href="#%E5%88%9B%E5%BB%BA%E7%BA%BF%E7%A8%8B">创建线程</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E7%BA%BF%E7%A8%8B%E7%9A%84id">获取当前线程的id</a></li>
+<li><a href="#%E7%BB%88%E6%AD%A2%E7%BA%BF%E7%A8%8B">终止线程</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E7%BA%BF%E7%A8%8B%E9%97%B4%E5%90%8C%E6%AD%A5">线程间同步</a>
+<ul>
+<li><a href="#%E4%BA%92%E6%96%A5%E9%94%81mutex">互斥锁(mutex)</a></li>
+<li><a href="#mutex%E7%9A%84init%E4%B8%8Edestroy">Mutex的init与destroy</a></li>
+<li><a href="#%E6%AD%BB%E9%94%81deadlock">死锁(Deadlock)</a>
+<ul>
+<li><a href="#%E5%A4%9A%E4%B8%AA%E9%94%81">多个锁</a></li>
+</ul>
+</li>
+<li><a href="#%E7%8A%B6%E6%80%81%E5%8F%98%E9%87%8Fcondition-variable">状态变量(Condition Variable)</a></li>
+<li><a href="#%E4%BF%A1%E5%8F%B7%E9%87%8Fsemaphore">信号量(Semaphore)</a></li>
+<li><a href="#%E4%BD%9C%E4%B8%9A">作业</a>
+<ul>
+<li><a href="#%E5%93%B2%E5%AD%A6%E5%AE%B6%E7%94%A8%E9%A4%90%E9%97%AE%E9%A2%98">哲学家用餐问题</a></li>
+<li><a href="#%E5%81%9C%E8%BD%A6%E5%9C%BA%E9%97%AE%E9%A2%98">停车场问题</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E6%96%87%E4%BB%B6%E9%94%81">文件锁</a>
+<ul>
+<li><a href="#%E8%AF%BB%E9%94%81readlock">读锁(readlock)</a></li>
+<li><a href="#%E5%86%99%E9%94%81writelock">写锁(writelock)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="%E7%BA%BF%E7%A8%8Bthread">线程(thread)</h2>
+<p>是操作系统能够进行运算调度的最小单位。它被包含在进程之中，是进程中的实际运作单位。一条线程指的是进程中一个单一顺序的控制流，一个进程中可以并发多个线程，每条线程并行执行不同的任务</p>
+<h3 id="%E7%BA%BF%E7%A8%8B%E7%9A%84%E6%A6%82%E5%BF%B5">线程的概念</h3>
+<p>线程的概念
+由于同一进程的多个线程共享同一地址空间，因此Text Segment、Data Segment都是共享的，如果定义一个函数，在各线程中都可以调用，如果定义一个全局变量，在各线程中都可以访问到，除此之外，各线程还共享以下进程资源和环境：</p>
+<ul>
+<li>地址空间
+<ul>
+<li>.rodata(readonly data段,ELF严格来说不属于data段，在全局区域中
+<img src="https://raw.githubusercontent.com/youhuangla/images/main/202202091700875.png" alt="segment"></li>
+<li>堆空间
+malloc返回的值可在函数间传递</li>
+</ul>
+</li>
+</ul>
+<ol>
+<li>文件描述符表</li>
+<li>种信号的处理方式</li>
+<li>当前工作目录</li>
+<li>用户id和组id</li>
+</ol>
+<p>但有些资源是每个线程各有一份的：</p>
+<ol>
+<li>线程id</li>
+<li>上下文，包括各种寄存器的值、程序计数器和栈指针</li>
+<li>栈空间</li>
+<li>errno变量</li>
+<li>信号屏蔽字</li>
+<li>调度优先级</li>
+</ol>
+<p>在Linux上线程函数位于libpthread共享库中，因此在编译时要加上-plthread</p>
+<h3 id="%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6">线程控制</h3>
+<h4 id="%E5%88%9B%E5%BB%BA%E7%BA%BF%E7%A8%8B">创建线程</h4>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span><span class="hljs-meta-string">&lt;pthread.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">pthread_create</span> <span class="hljs-params">(<span class="hljs-keyword">pthread_t</span> *<span class="hljs-keyword">restrict</span> thread, \
+<span class="hljs-comment">/*pthread_t类似pid_t,返回一个“pid”, 结果参数，记录子线程id，有返回值效果。restrict 加强安全性,内存只能通过该指针修改*/</span> 
+<span class="hljs-keyword">const</span> pthread <span class="hljs-keyword">attr_t</span> *<span class="hljs-keyword">restrict</span> attr, \
+<span class="hljs-comment">/*thread属性，课程中使用较少*/</span> 
+<span class="hljs-keyword">void</span> *(*start_routine)(<span class="hljs-keyword">void</span>*), \
+<span class="hljs-comment">/*start_routine函数指针，(void *传啥都可以，可传入结构体等)，子线程入口地址*/</span>
+<span class="hljs-keyword">void</span> *<span class="hljs-keyword">restrict</span> arg<span class="hljs-comment">/*传的参数列表*/</span>)</span></span>;
+</div></code></pre>
+<ul>
+<li>#a function,回调函数(call back):通过参数将函数传递到其它代码的，某一块可执行代码的引用。这一设计允许了底层代码调用在高层定义的子程序。
+<a href="https://zh.wikipedia.org/wiki/%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0">https://zh.wikipedia.org/wiki/%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0</a>
+可用于jsp前台窗口
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Callback-notitle.svg/2560px-Callback-notitle.svg.png" alt="call back function"></li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-comment">/**/</span>pcr(tid, <span class="hljs-literal">NULL</span>, func, argv)
+
+</div></code></pre>
+<p>返回值：成功返回0，失败返回错误号。以前学过的系统函数都是成功返回0，失败返回-1，而错误号保存在全局变量errno中，而pthread库的函数都是通过返回值返回错误号，虽然每个线程也都有一个errno，但这是为了兼容其它函数接口而提供的，pthread库本身并不使用它，通过返回值返回错误码更加清晰</p>
+<h4 id="%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E7%BA%BF%E7%A8%8B%E7%9A%84id">获取当前线程的id</h4>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;pthread.h&gt; </span></span>
+<span class="hljs-function"><span class="hljs-keyword">pthread_t</span> <span class="hljs-title">pthread_self</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>;
+</div></code></pre>
+<p>Compile and link with -plthread.</p>
+<p>返回值：总是成功返回，返回调用该函数线程ID</p>
+<ul>
+<li>man 3 pthread_create</li>
+</ul>
+<p>The new thread inherits a copy of the creating thread's signal mask (pthread_sigmask(3)).  The set  of  pending signals for  the  new  thread  is empty (sigpending(2)).  The new thread does not inherit the creating thread's alternate signal stack (sigaltstack(2)).</p>
+<ul>
+<li>
+<p>man 3 pthread_self</p>
+</li>
+<li>
+<p>createThread.c</p>
+<ul>
+<li>ld链接器</li>
+</ul>
+</li>
+</ul>
+<pre class="hljs"><code><div>youhuangla@Ubuntu s14 % gcc createThread.c                                                                                     [0]
+/tmp/ccnKCUYo.o: In <span class="hljs-keyword">function</span> `main<span class="hljs-string">':
+createThread.c:(.text+0x5d): undefined reference to `pthread_create'</span>
+collect2: error: ld returned 1 <span class="hljs-built_in">exit</span> status
+youhuangla@Ubuntu s14 % gcc createThread.c -lpthread                                                                           [0]
+youhuangla@Ubuntu s14 % ./a.out                                                                                                [0]
+maint thread
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-comment">/*************************************************************************
+        &gt; File Name: createThread.c
+        &gt; Author:
+        &gt; Mail:
+        &gt; Created Time: Wed 09 Feb 2022 11:08:08 PM CST
+ ************************************************************************/</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;pthread.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sys/types.h&gt;</span></span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">thr_fn</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *arg)</span> </span>{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%s\n"</span>, (<span class="hljs-keyword">char</span> *)arg);
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+}
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">pthread_t</span> ntid;
+    <span class="hljs-keyword">int</span> ret;
+    ret = pthread_create(&amp;ntid, <span class="hljs-literal">NULL</span>, thr_fn, <span class="hljs-string">"new thread"</span>);
+    <span class="hljs-keyword">if</span> (ret != <span class="hljs-number">0</span>) {
+        <span class="hljs-comment">//error</span>
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"create thread err:%s\n"</span>, strerror(ret));
+        <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>);
+    }
+    sleep(<span class="hljs-number">1</span>);<span class="hljs-comment">//missing will only print maint thread, as main terminate, thread terminate.</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"main thread\n"</span>);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<pre class="hljs"><code><div>youhuangla@Ubuntu s14 % ./a.out                                                                                                [0]
+new thread
+main thread
+</div></code></pre>
+<p><strong>Q：主线程在一个全局变量ntid中保存了新创建的线程的id，如果新创建的线程不调用pthread_self而是直接打印这个ntid，能不能达到同样的效果？</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment">/*************************************************************************
+        &gt; File Name: createThread.c
+        &gt; Author:
+        &gt; Mail:
+        &gt; Created Time: Wed 09 Feb 2022 11:08:08 PM CST
+ ************************************************************************/</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;pthread.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sys/types.h&gt;</span></span>
+
+<span class="hljs-keyword">pthread_t</span> ntid;
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">printid</span><span class="hljs-params">(<span class="hljs-keyword">char</span> *tip)</span> </span>{
+    <span class="hljs-keyword">pid_t</span> pid = getpid();
+    <span class="hljs-keyword">pthread_t</span> tid = pthread_self();
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%s pid: %u tid: %lu (%p)\n"</span>, tip, pid, tid, (<span class="hljs-keyword">void</span> *)tid);
+    <span class="hljs-keyword">return</span> ;
+}
+<span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">thr_fn</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *arg)</span> </span>{
+    printid(arg);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%s ntid = %p\n"</span>, (<span class="hljs-keyword">char</span> *)arg, (<span class="hljs-keyword">void</span> *)ntid);
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+}
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">int</span> ret;
+    ret = pthread_create(&amp;ntid, <span class="hljs-literal">NULL</span>, thr_fn, <span class="hljs-string">"new  thread"</span>);
+    <span class="hljs-keyword">if</span> (ret != <span class="hljs-number">0</span>) {
+        <span class="hljs-comment">//error</span>
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"create thread err:%s\n"</span>, strerror(ret));
+        <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>);
+    }
+    sleep(<span class="hljs-number">1</span>);<span class="hljs-comment">//missing will only print maint thread, as main terminate, thread terminate.</span>
+    printid(<span class="hljs-string">"main thread"</span>);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-comment">/*************************************************************************
+&gt; File Name: 1_createThread.c
+&gt; Author:
+&gt; Mail:
+&gt; Created Time: Thu 10 Feb 2022 05:03:39 PM CST
+************************************************************************/</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;pthread.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span>
+<span class="hljs-keyword">pthread_t</span> ntid;
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">printids</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *s)</span> </span>{
+    <span class="hljs-keyword">pid_t</span> pid;
+    <span class="hljs-keyword">pthread_t</span> tid;
+    pid = getpid();
+    tid = pthread_self();
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%s pid %u tid %u (0x%x)\n"</span>, s, (<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span>)pid, (<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span>)tid, (<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span>)tid);
+}
+<span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">thr_fn</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *arg)</span> </span>{
+    printids(arg);
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+}
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>{
+    <span class="hljs-keyword">int</span> err;
+    err = pthread_create(&amp;ntid, <span class="hljs-literal">NULL</span>, thr_fn, <span class="hljs-string">"new thread: "</span>);
+    <span class="hljs-keyword">if</span> (err != <span class="hljs-number">0</span>) {
+        <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">"can't create thread: %s\n"</span>, strerror(err));
+        <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>);
+    }
+    printids(<span class="hljs-string">"main thread:"</span>);
+    sleep(<span class="hljs-number">1</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h4 id="%E7%BB%88%E6%AD%A2%E7%BA%BF%E7%A8%8B">终止线程</h4>
+<p>如果需要只终止某个线程而不终止整个进程，可以有三种方法：</p>
+<ol>
+<li>从线程函数return。这种方法对主线程不适用，从main函数return相当于调用exit。</li>
+<li>一个线程可以调用pthread_cancel终止同一进程中的另一个线程。</li>
+<li>线程可以调用pthread_exit终止自己。</li>
+</ol>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;pthread.h&gt;void pthread_exit(void *value_ptr);</span></span>
+</div></code></pre>
+<p>value_ptr是void *类型，和线程函数返回值的用法一样，其它线程可以调用pthread_join获得这个指针。</p>
+<p>需要注意，pthread_exit或者return返回的指针所指向的内存单元必须是全局的或者是用malloc分配的，不能在线程函数的栈上分配，因为当其它线程得到这个返回指针时线程函数已经退出了。</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;pthread.h&gt;int pthread_join(pthread_t thread, void **value_ptr);</span></span>
+</div></code></pre>
+<p>返回值：成功返回0，失败返回错误号</p>
+<p>调用该函数的线程将挂起等待，直到id为thread的线程终止。thread线程以不同的方法终止，通过pthread_join得到的终止状态是不同的，总结如下：</p>
+<ol>
+<li>如果thread线程通过return返回，value_ptr所指向的单元里存放的是thread线程函数的返回值。</li>
+<li>如果thread线程被别的线程调用pthread_cancel异常终止掉，value_ptr所指向的单元里存放的是常数PTHREAD_CANCELED。</li>
+<li>如果thread线程是自己调用pthread_exit终止的，value_ptr所指向的单元存放的是传给pthread_exit的参数。</li>
+</ol>
+<p>如果对thread线程的终止状态不感兴趣，可以传NULL给value_ptr参数。</p>
+<pre class="hljs"><code><div><span class="hljs-comment">/*************************************************************************
+        &gt; File Name: pthread_exit.c
+        &gt; Author:
+        &gt; Mail:
+        &gt; Created Time: Thu 10 Feb 2022 05:03:26 PM CST
+ ************************************************************************/</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;pthread.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">thr_fn1</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *arg)</span> </span>{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"thread 1 returning\n"</span>);
+    <span class="hljs-keyword">return</span> (<span class="hljs-keyword">void</span> *)<span class="hljs-number">1</span>;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">thr_fn2</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *arg)</span> </span>{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"thread 2 exiting\n"</span>);
+    pthread_exit((<span class="hljs-keyword">void</span> *)<span class="hljs-number">2</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+}
+<span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">thr_fn3</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *arg)</span> </span>{
+    <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>) {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"thread 3 sleeping\n"</span>);
+        sleep(<span class="hljs-number">1</span>);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+}
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">pthread_t</span> tid;
+    <span class="hljs-keyword">void</span> *sts;
+    pthread_create(&amp;tid, <span class="hljs-literal">NULL</span>, thr_fn1, <span class="hljs-literal">NULL</span>);
+    pthread_join(tid, &amp;sts);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"thread 1 exit code %ld\n"</span>, (<span class="hljs-keyword">long</span>)sts);
+
+    pthread_create(&amp;tid, <span class="hljs-literal">NULL</span>, thr_fn2, <span class="hljs-literal">NULL</span>);
+    pthread_join(tid, &amp;sts);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"thread 2 exit code %ld\n"</span>, (<span class="hljs-keyword">long</span>)sts);
+
+    pthread_create(&amp;tid, <span class="hljs-literal">NULL</span>, thr_fn3, <span class="hljs-literal">NULL</span>);
+    sleep(<span class="hljs-number">3</span>);
+
+    pthread_cancel(tid);
+    pthread_join(tid, &amp;sts);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"thread 3 exit code %ld\n"</span>, (<span class="hljs-keyword">long</span>)sts);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<pre class="hljs"><code><div>youhuangla@Ubuntu s14 % vim pthread_exit.c                                                                                     [0]
+youhuangla@Ubuntu s14 % gcc pthread_exit.c -lpthread                                                                           [0]
+youhuangla@Ubuntu s14 % ./a.out                                                                                                [0]
+thread 1 returning
+thread 1 <span class="hljs-built_in">exit</span> code 1
+thread 2 exiting
+thread 2 <span class="hljs-built_in">exit</span> code 2
+thread 3 sleeping
+thread 3 sleeping
+thread 3 sleeping
+thread 3 <span class="hljs-built_in">exit</span> code -1
+youhuangla@Ubuntu s14 % nm a.out
+000000000000090f T main
+                 U <span class="hljs-built_in">printf</span>@@GLIBC_2.2.5<span class="hljs-comment">#u是未实现的函数，在动态库中实现</span>
+                 U pthread_cancel@@GLIBC_2.2.5
+                 U pthread_create@@GLIBC_2.2.5
+                 U pthread_exit@@GLIBC_2.2.5
+                 U pthread_join@@GLIBC_2.2.5
+</div></code></pre>
+<h2 id="%E7%BA%BF%E7%A8%8B%E9%97%B4%E5%90%8C%E6%AD%A5">线程间同步</h2>
+<h3 id="%E4%BA%92%E6%96%A5%E9%94%81mutex">互斥锁(mutex)</h3>
+<p>多个线程同时访问共享数据时可能会冲突，这跟前面讲信号时所说的可重入性是同样的问题。比如两个线程都要把某个全局变量增加1，这个操作在某平台需要三条指令完成：</p>
+<ol>
+<li>从内存读变量值到寄存器</li>
+<li>寄存器的值加1</li>
+<li>将寄存器的值写回内存</li>
+</ol>
+<p>假设两个线程在多处理器平台上同时执行这三条指令，则可能导致下图所示的结果，最后变量只加了一次而非两次，（下图出自[APUE2e]）。</p>
+<p><img src="https://raw.githubusercontent.com/youhuangla/images/main/202202102110083.png" alt="apue add two num"></p>
+<ul>
+<li>#以此编写下面的程序，有趣的是，隔了一段时间后运行a.out时，结果总是停在4999，连续不断运行才使得结果超过5000，而一站式编程中的程序(./my_addnum)总是&gt;=5000</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-comment">/*************************************************************************
+        &gt; File Name: addnum.c
+        &gt; Author:
+        &gt; Mail:
+        &gt; Created Time: Thu 10 Feb 2022 08:49:05 PM CST
+ ************************************************************************/</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;pthread.h&gt;</span></span>
+<span class="hljs-keyword">int</span> cnt = <span class="hljs-number">0</span>;
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">cntadd</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *arg)</span> </span>{
+    <span class="hljs-keyword">int</span> val, i;
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5000</span>; i++) {
+        val = cnt;
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%x: %d\n"</span>, (<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span>)pthread_self(), val);
+        cnt = val + <span class="hljs-number">1</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">pthread_t</span> tida, tidb;
+    pthread_create(&amp;tida, <span class="hljs-literal">NULL</span>, cntadd, <span class="hljs-literal">NULL</span>);
+    pthread_create(&amp;tidb, <span class="hljs-literal">NULL</span>, cntadd, <span class="hljs-literal">NULL</span>);
+    pthread_join(tida, <span class="hljs-literal">NULL</span>);
+    pthread_join(tidb, <span class="hljs-literal">NULL</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<pre class="hljs"><code><div>youhuangla@Ubuntu s14 %./a.out
+df801700: 1084
+df000700: 2417
+......
+df000700: 3349
+df801700: 1085
+......
+df000700: 5000
+df000700: 5001
+df000700: 5002
+df000700: 5003
+df000700: 5004
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-comment">/*************************************************************************
+        &gt; File Name: my_addnum.c
+        &gt; Author:
+        &gt; Mail:
+        &gt; Created Time: Thu 10 Feb 2022 09:04:42 PM CST
+ ************************************************************************/</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;pthread.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> NLOOP 5000</span>
+
+<span class="hljs-keyword">int</span> counter; <span class="hljs-comment">/* incremented by threads */</span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">doit</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> **argv)</span></span>{
+    <span class="hljs-keyword">pthread_t</span> tidA, tidB;
+    pthread_create(&amp;tidA, <span class="hljs-literal">NULL</span>, &amp;doit, <span class="hljs-literal">NULL</span>);
+    pthread_create(&amp;tidB, <span class="hljs-literal">NULL</span>, &amp;doit, <span class="hljs-literal">NULL</span>);
+    <span class="hljs-comment">/* wait for both threads to terminate */</span>
+    pthread_join(tidA, <span class="hljs-literal">NULL</span>);
+    pthread_join(tidB, <span class="hljs-literal">NULL</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+<span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">doit</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *vptr)</span></span>{
+    <span class="hljs-keyword">int</span> i, val;
+    <span class="hljs-comment">/* * Each thread fetches, prints, and increments the counter NLOOP times. * The value of the counter should increase monotonically. */</span>
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; NLOOP; i++) {
+       val = counter; <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%x: %d\n"</span>, (<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span>)pthread_self(), val + <span class="hljs-number">1</span>);
+        counter = val + <span class="hljs-number">1</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+}
+</div></code></pre>
+<pre class="hljs"><code><div>b27f8700: 4998
+b27f8700: 4999
+b27f8700: 5000
+</div></code></pre>
+<h3 id="mutex%E7%9A%84init%E4%B8%8Edestroy">Mutex的init与destroy</h3>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;pthread.h&gt;</span></span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">pthread_mutex_destroy</span><span class="hljs-params">(<span class="hljs-keyword">pthread_mutex_t</span> *mutex)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">pthread_mutex_init</span><span class="hljs-params">(<span class="hljs-keyword">pthread_mutex_t</span> *<span class="hljs-keyword">restrict</span> mutex, <span class="hljs-keyword">const</span> <span class="hljs-keyword">pthread_mutexattr_t</span> *<span class="hljs-keyword">restrict</span> attr)</span></span>;
+<span class="hljs-keyword">pthread_mutex_t</span> mutex = PTHREAD_MUTEX_INITIALIZER;
+</div></code></pre>
+<ul>
+<li>pthread_mutex_init函数对Mutex做初始化，参数attr设定Mutex的属性，如果attr为NULL则表示缺省属性，本章不详细介绍Mutex属性，感兴趣的读者可以参考[APUE2e]。</li>
+<li>用pthread_mutex_init函数初始化的Mutex可以用pthread_mutex_destroy销毁。</li>
+<li>如果Mutex变量是静态分配的（全局变量或static变量），也可以用宏定义PTHREAD_MUTEX_INITIALIZER来初始化，相当于用pthread_mutex_init初始化并且attr参数为NULL。</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;pthread.h&gt;</span></span>
+<span class="hljs-comment">//#include &lt;sys/types.h&gt;</span>
+
+<span class="hljs-keyword">pthread_mutex_t</span> add_lock = PTHREAD_MUTEX_INITIALIZER;
+
+<span class="hljs-keyword">int</span> cnt = <span class="hljs-number">0</span>;
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">cntadd</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *arg)</span> </span>{
+    <span class="hljs-keyword">int</span> val, i;
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5000</span>; i++) {
+        pthread_mutex_lock(&amp;add_lock);
+        val = cnt;
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%x: %d\n"</span>, (<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span>)pthread_self(), val);
+        cnt = val + <span class="hljs-number">1</span>;
+        pthread_mutex_unlock(&amp;add_lock);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">pthread_t</span> tida, tidb;
+    pthread_create(&amp;tida, <span class="hljs-literal">NULL</span>, cntadd, <span class="hljs-literal">NULL</span>);
+    pthread_create(&amp;tidb, <span class="hljs-literal">NULL</span>, cntadd, <span class="hljs-literal">NULL</span>);
+    pthread_join(tida, <span class="hljs-literal">NULL</span>);
+    pthread_join(tidb, <span class="hljs-literal">NULL</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<p><strong>“挂起等待”和“唤醒等待线程”的操作如何实现？</strong></p>
+<p>每个Mutex有一个等待队列，一个线程要在Mutex上挂起等待，首先在把自己加入等待队列中，然后置线程状态为睡眠，然后调用调度器函数切换到别的线程。一个线程要唤醒等待队列中的其它线程，只需从等待队列中取出一项，把它的状态从睡眠改为就绪，加入就绪队列，那么下次调度器函数执行时就有可能切换到被唤醒的线程。</p>
+<h3 id="%E6%AD%BB%E9%94%81deadlock">死锁(Deadlock)</h3>
+<ul>
+<li>一般情况下，如果同一个线程先后两次调用lock，在第二次调用时，由于锁已经被占用，该线程会挂起等待别的线程释放锁，然而锁正是被自己占用着的，该线程又被挂起而没有机会释放锁，因此就永远处于挂起等待状态了，这叫做死锁（Deadlock）。</li>
+<li>另一种典型的死锁情形是这样：线程A获得了锁1，线程B获得了锁2，这时线程A调用lock试图获得锁2，结果是需要挂起等待线程B释放锁2，而这时线程B也调用lock试图获得锁1，结果是需要挂起等待线程A释放锁1，于是线程A和B都永远处于挂起状态了。不难想象，如果涉及到更多的线程和更多的锁，有没有可能死锁的问题将会变得复杂和难以判断。</li>
+<li>下列程序注释掉了for loop中的unlock，死锁。</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;pthread.h&gt;</span></span>
+<span class="hljs-comment">//#include &lt;sys/types.h&gt;</span>
+
+<span class="hljs-keyword">pthread_mutex_t</span> add_lock = PTHREAD_MUTEX_INITIALIZER;
+
+<span class="hljs-keyword">int</span> cnt = <span class="hljs-number">0</span>;
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">cntadd</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *arg)</span> </span>{
+    <span class="hljs-keyword">int</span> val, i;
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5000</span>; i++) {
+        pthread_mutex_lock(&amp;add_lock);
+        val = cnt;
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%x: %d\n"</span>, (<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span>)pthread_self(), val);
+        cnt = val + <span class="hljs-number">1</span>;
+        <span class="hljs-comment">//pthread_mutex_unlock(&amp;add_lock);</span>
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">pthread_t</span> tida, tidb;
+    pthread_create(&amp;tida, <span class="hljs-literal">NULL</span>, cntadd, <span class="hljs-literal">NULL</span>);
+    pthread_create(&amp;tidb, <span class="hljs-literal">NULL</span>, cntadd, <span class="hljs-literal">NULL</span>);
+    pthread_join(tida, <span class="hljs-literal">NULL</span>);
+    pthread_join(tidb, <span class="hljs-literal">NULL</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<pre class="hljs"><code><div>youhuangla@Ubuntu s14 % vim mutex_addnum.c                                                                                     [2]
+youhuangla@Ubuntu s14 % gcc mutex_addnum.c   -lpthread -o mutex_addnu                                                          [0]
+youhuangla@Ubuntu s14 % ./mutex_addnu                                                                                          [0]
+a37f9700: 0
+^C
+</div></code></pre>
+<h4 id="%E5%A4%9A%E4%B8%AA%E9%94%81">多个锁</h4>
+<ul>
+<li>写程序时应该尽量避免同时获得多个锁，如果一定有必要这么做，则有一个原则：如果所有线程在需要多个锁时都按相同的先后顺序（常见的是按Mutex变量的地址顺序）获得锁，则不会出现死锁。比如一个程序中用到锁1、锁2、锁3，它们所对应的Mutex变量的地址是锁1&lt;锁2&lt;锁3，那么所有线程在需要同时获得2个或3个锁时都应该按锁1、锁2、锁3的顺序获得。如果要为所有的锁确定一个先后顺序比较困难，则应该尽量使用pthread_mutex_trylock调用代替pthread_mutex_lock调用，以免死锁。</li>
+</ul>
+<h3 id="%E7%8A%B6%E6%80%81%E5%8F%98%E9%87%8Fcondition-variable">状态变量(Condition Variable)</h3>
+<ul>
+<li>线程间的同步还有这样一种情况：线程A需要等某个条件成立才能继续往下执行，现在这个条件不成立，线程A就阻塞等待，而线程B在执行过程中使这个条件成立了，就唤醒线程A继续执行。在pthread库中通过条件变量（Condition Variable）来阻塞等待一个条件，或者唤醒等待这个条件的线程。Condition Variable用pthread_cond_t类型的变量表示，可以这样初始化和销毁：</li>
+<li>#蹲坑(执行)没带纸(条件)</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;pthread.h&gt;</span></span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">pthread_cond_destroy</span><span class="hljs-params">(<span class="hljs-keyword">pthread_cond_t</span> *cond)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">pthread_cond_init</span><span class="hljs-params">(<span class="hljs-keyword">pthread_cond_t</span> *<span class="hljs-keyword">restrict</span> cond, <span class="hljs-keyword">const</span> <span class="hljs-keyword">pthread_condattr_t</span> *<span class="hljs-keyword">restrict</span> attr)</span></span>;
+<span class="hljs-keyword">pthread_cond_t</span> cond = PTHREAD_COND_INITIALIZER;
+
+</div></code></pre>
+<p>可见，一个Condition Variable总是和一个Mutex搭配使用的。一个线程可以调用pthread_cond_wait在一个Condition Variable上阻塞等待，这个函数做以下三步操作：</p>
+<ol>
+<li>释放Mutex</li>
+<li>阻塞等待</li>
+<li>当被唤醒时，重新获得Mutex并返回</li>
+</ol>
+<p>pthread_cond_timedwait函数还有一个额外的参数可以设定等待超时，如果到达了abstime所指定的时刻仍然没有别的线程来唤醒当前线程，就返回ETIMEDOUT。一个线程可以调用pthread_cond_signal唤醒在某个Condition Variable上等待的另一个线程，也可以调用pthread_cond_broadcast唤醒在这个Condition Variable上等待的所有线程。</p>
+<ul>
+<li>
+<p>#broadcast来了一张纸(状态)，所有人都被惊醒了</p>
+</li>
+<li>
+<p>#Makefile中如何link lpthread(以编译mutex_addnum为例)，参考<a href="https://stackoverflow.com/questions/6332410/compile-link-error-using-pthread">https://stackoverflow.com/questions/6332410/compile-link-error-using-pthread</a>仿写，原本我写的是-lpthread</p>
+<pre class="hljs"><code><div>mutex_addnum : mutex_addnum.o
+        gcc -lpthread mutex_addnum.o
+
+mutex_addnum.o : mutex_addnum.c
+        gcc -c mutex_addnum.c -o
+</div></code></pre>
+</li>
+<li>
+<p>结果如下</p>
+<pre class="hljs"><code><div>gcc -c mutex_addnum.c
+gcc -lpthread mutex_addnum.o
+mutex_addnum.o: In function `main':
+mutex_addnum.c:(.text+0x99): undefined reference to `pthread_create'
+mutex_addnum.c:(.text+0xb6): undefined reference to `pthread_create'
+mutex_addnum.c:(.text+0xc7): undefined reference to `pthread_join'
+mutex_addnum.c:(.text+0xd8): undefined reference to `pthread_join'
+collect2: error: ld returned 1 exit status
+Makefile:2: recipe for target 'mutex_addnum' failed
+make: *** [mutex_addnum] Error 1
+</div></code></pre>
+<ul>
+<li>
+<p><a href="https://stackoverflow.com/questions/1662909/undefined-reference-to-pthread-create-in-linux">https://stackoverflow.com/questions/1662909/undefined-reference-to-pthread-create-in-linux</a>得知-lpthread是library specification的意思，修改后编译出./a.out成功，makefile看起来挺难的</p>
+<pre class="hljs"><code><div>mutex_addnum : mutex_addnum.o
+        gcc -pthread mutex_addnum.o
+
+mutex_addnum.o : mutex_addnum.c
+        gcc -c mutex_addnum.c -o
+</div></code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="%E4%BF%A1%E5%8F%B7%E9%87%8Fsemaphore">信号量(Semaphore)</h3>
+<ul>
+<li>Mutex变量是非0即1的，可看作一种资源的可用数量，初始化时Mutex是1，表示有一个可用资源，加锁时获得该资源，将Mutex减到0，表示不再有可用资源，解锁时释放该资源，将Mutex重新加到1，表示又有了一个可用资源。</li>
+<li>信号量（Semaphore）和Mutex类似，表示可用资源的数量，和Mutex不同的是这个数量可以大于1。
+本节介绍的是POSIX semaphore库函数，详见sem_overview(7)，这种信号量不仅可用于同一进程的线程间同步，也可用于不同进程间的同步。</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;semaphore.h&gt;</span></span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sem_init</span><span class="hljs-params">(<span class="hljs-keyword">sem_t</span> *sem, <span class="hljs-keyword">int</span> pshared, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> value)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sem_wait</span><span class="hljs-params">(<span class="hljs-keyword">sem_t</span> *sem)</span></span>;<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sem_trywait</span><span class="hljs-params">(<span class="hljs-keyword">sem_t</span> *sem)</span></span>;<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sem_post</span><span class="hljs-params">(<span class="hljs-keyword">sem_t</span> * sem)</span></span>;<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sem_destroy</span><span class="hljs-params">(<span class="hljs-keyword">sem_t</span> * sem)</span></span>;
+</div></code></pre>
+<p>semaphore变量的类型为sem_t，sem_init()初始化一个semaphore变量，value参数表示可用资源的数量，pshared参数为0表示信号量用于同一进程的线程间同步，本节只介绍这种情况。在用完semaphore变量之后应该调用sem_destroy()释放与semaphore相关的资源。</p>
+<p>调用sem_wait()可以获得资源，使semaphore的值减1，如果调用sem_wait()时semaphore的值已经是0，则挂起等待。如果不希望挂起等待，可以调用sem_trywait()。调用sem_post()可以释放资源，使semaphore的值加1，同时唤醒挂起等待的线程。</p>
+<ul>
+<li>#生产者与消费者，生产者有5个空位，每生产一个产品消耗一个空位，消费者每次消费一个资源，空出一个空位</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-comment">/*************************************************************************
+        &gt; File Name: sem.c
+        &gt; Author:
+        &gt; Mail:
+        &gt; Created Time: Sun 13 Feb 2022 05:26:13 PM CST
+ ************************************************************************/</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;time.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;pthread.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;semaphore.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> NUM 5</span>
+
+<span class="hljs-keyword">int</span> q[NUM];
+<span class="hljs-keyword">sem_t</span> blank_number, goods_number;
+<span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">producer</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *arg)</span> </span>{
+    <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>) {
+        sem_wait(&amp;blank_number);<span class="hljs-comment">//reduce a blank</span>
+        q[i] = rand() % <span class="hljs-number">100</span> + <span class="hljs-number">1</span>;
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"produce %d\n"</span>, q[i]);
+        sem_post(&amp;goods_number);<span class="hljs-comment">//increase a goods</span>
+        i = (i + <span class="hljs-number">1</span>) % NUM;
+        sleep(rand() % <span class="hljs-number">3</span>);
+    }
+}
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">consumer</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *arg)</span> </span>{
+    <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>) {
+        sem_wait(&amp;goods_number);
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"consume %d\n"</span>, q[i]);
+        q[i] = <span class="hljs-number">0</span>;
+        sem_post(&amp;blank_number);
+        i = (i + <span class="hljs-number">1</span>) % NUM;
+        sleep(rand() % <span class="hljs-number">3</span>);
+    }
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span> </span>{
+    srand(time(<span class="hljs-literal">NULL</span>));
+
+    sem_init(&amp;blank_number, <span class="hljs-number">0</span>, NUM);
+    sem_init(&amp;goods_number, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);<span class="hljs-comment">//0 product</span>
+
+    <span class="hljs-keyword">pthread_t</span> pid, cid;
+    pthread_create(&amp;pid, <span class="hljs-literal">NULL</span>, producer, <span class="hljs-literal">NULL</span>);
+    pthread_create(&amp;cid, <span class="hljs-literal">NULL</span>, consumer, <span class="hljs-literal">NULL</span>);
+    pthread_join(pid, <span class="hljs-literal">NULL</span>);
+    pthread_join(cid, <span class="hljs-literal">NULL</span>);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h3 id="%E4%BD%9C%E4%B8%9A">作业</h3>
+<h4 id="%E5%93%B2%E5%AD%A6%E5%AE%B6%E7%94%A8%E9%A4%90%E9%97%AE%E9%A2%98">哲学家用餐问题</h4>
+<p>哲学家就餐问题。这是由计算机科学家Dijkstra提出的经典死锁场景。
+原版的故事里有五个哲学家(不过我们写的程序可以有N个哲学家)，这些哲学家们只做两件事－－思考和吃饭，他们思考的时候不需要任何共享资源，但是吃饭的时候就必须使用餐具，而餐桌上的餐具是有限的，原版的故事里，餐具是叉子，吃饭的时候要用两把叉子把面条从碗里捞出来。很显然把叉子换成筷子会更合理，所以：一个哲学家需要两根筷子才能吃饭。
+现在引入问题的关键：这些哲学家很穷，只买得起五根筷子。他们坐成一圈，两个人的中间放一根筷子。哲学家吃饭的时候必须同时得到左手边和右手边的筷子。如果他身边的任何一位正在使用筷子，那他只有等着。
+假设哲学家的编号是A、B、C、D、E，筷子编号是1、2、3、4、5，哲学家和筷子围成一圈如下图所示：</p>
+<img src="https://raw.githubusercontent.com/youhuangla/images/main/202202132106373.png" alt="philophilo" style="zoom: 50%;">
+<ul>
+<li>#picture smaller by typora</li>
+</ul>
+<p>每个哲学家都是一个单独的线程，每个线程循环做以下动作：思考rand()%10秒，然后先拿左手边的筷子再拿右手边的筷子（筷子这种资源可以用mutex表示），有任何一边拿不到就一直等着，全拿到就吃饭rand()%10秒，然后放下筷子。
+编写程序仿真哲学家就餐的场景：</p>
+<pre class="hljs"><code><div>Philosopher A fetches chopstick 5
+
+Philosopher B fetches chopstick 1
+
+Philosopher B fetches chopstick 2
+
+Philosopher D fetches chopstick 3
+
+Philosopher B releases chopsticks 1 2
+
+Philosopher A fetches chopstick 1
+
+Philosopher C fetches chopstick 2
+
+Philosopher A releases chopsticks 5 1
+
+......
+</div></code></pre>
+<p>分析一下，这个过程有没有可能产生死锁？调用usleep(3)函数可以实现微秒级的延时，试着用usleep(3)加快仿真的速度，看能不能观察到死锁现象。然后修改上述算法避免产生死锁。</p>
+<h4 id="%E5%81%9C%E8%BD%A6%E5%9C%BA%E9%97%AE%E9%A2%98">停车场问题</h4>
+<p>编写一个程序，开启3个线程，这3个线程的ID分别为A、B、C，每个线程将自己的ID在屏幕上打印10遍，要求输出结果必须按ABC的顺序显示；如：ABCABC···.依次递推</p>
+<p>用信号量模拟一个停车场，停车场有3个进出口，总共可以停N辆车，每个出口都可以进车，出车。每个出口都是一个线程，先roll一个随机数，奇数表示进车，偶数表示出车，一个出口出车或进车后，停车场的容量发生变化，当停车场满的时候任何出口都不能再进车。</p>
+<h2 id="%E6%96%87%E4%BB%B6%E9%94%81">文件锁</h2>
+<p>在多进程对同一个文件进行读写访问时，为了保证数据的完整性，有时需要对文件进行锁定。可以通过fcntl()函数对文件进行锁定和解锁。</p>
+<p>对于写锁（F＿WRLCK独占锁），只有一个进程可以在文件的任一特定区域上享有独占锁。对于读锁（F＿RDLCK 共享锁），许多不同的进程可以同时拥有文件上同一区域上的共享锁。为了拥有共享锁，文件必须以读或者读／写的方式打开。只要任一进程拥有共享锁，那么其他进程就无法再获得独占锁。</p>
+<h3 id="%E8%AF%BB%E9%94%81readlock">读锁(readlock)</h3>
+<pre class="hljs"><code><div><span class="hljs-comment">/*************************************************************************
+        &gt; File Name: readlock.c
+        &gt; Author:
+        &gt; Mail:
+        &gt; Created Time: Sun 13 Feb 2022 09:40:06 PM CST
+ ************************************************************************/</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sys/types.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sys/stat.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;pthread.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;semaphore.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;fcntl.h&gt;</span></span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span> </span>{
+    <span class="hljs-keyword">int</span> fd = <span class="hljs-built_in">open</span>(<span class="hljs-string">"./hello.txt"</span>, O_RDONLY);
+    <span class="hljs-keyword">if</span> (fd &lt; <span class="hljs-number">0</span>) {
+        perror(<span class="hljs-string">"open"</span>);
+        <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>);
+    }
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">stat</span> <span class="hljs-title">sta</span>;</span>
+    fstat(fd, &amp;sta);
+
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">flock</span> <span class="hljs-title">lock</span>;</span>
+    lock.l_type = F_RDLCK;
+    lock.l_pid = getpid();
+
+    lock.l_whence = SEEK_SET;
+    lock.l_start = <span class="hljs-number">0</span>;
+    lock.l_len = sta.st_size;
+
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"pid: %d "</span>, lock.l_pid);<span class="hljs-comment">//can also getpid(), but slow compare to struct member</span>
+    <span class="hljs-keyword">if</span> (fcntl(fd, F_SETLK, &amp;lock)) {
+        perror(<span class="hljs-string">"fcntl"</span>);
+        <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>);
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"add read lock successfully\n"</span>);
+    }
+
+    sleep(<span class="hljs-number">10</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<pre class="hljs"><code><div>youhuangla@Ubuntu s16 % gcc readlock.c
+youhuangla@Ubuntu s16 % ./a.out                                                                                                [0]
+pid: 13590 add read lock successfully
+<span class="hljs-meta">#</span><span class="bash"> <span class="hljs-keyword">in</span> new copy </span>
+youhuangla@Ubuntu s16 % ./a.out                                                                                                [0]
+pid: 13589 add read lock successfully
+</div></code></pre>
+<h3 id="%E5%86%99%E9%94%81writelock">写锁(writelock)</h3>
+<pre class="hljs"><code><div><span class="hljs-comment">/*************************************************************************
+        &gt; File Name: readlock.c
+        &gt; Author:
+        &gt; Mail:
+        &gt; Created Time: Sun 13 Feb 2022 09:40:06 PM CST
+ ************************************************************************/</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sys/types.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sys/stat.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;pthread.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;semaphore.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;fcntl.h&gt;</span></span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span> </span>{
+    <span class="hljs-keyword">int</span> fd = <span class="hljs-built_in">open</span>(<span class="hljs-string">"./hello.txt"</span>, O_WRONLY);
+    <span class="hljs-keyword">if</span> (fd &lt; <span class="hljs-number">0</span>) {
+        perror(<span class="hljs-string">"open"</span>);
+        <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>);
+    }
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">stat</span> <span class="hljs-title">sta</span>;</span>
+    fstat(fd, &amp;sta);
+
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">flock</span> <span class="hljs-title">lock</span>;</span>
+    lock.l_type = F_WRLCK;
+    lock.l_pid = getpid();
+
+    lock.l_whence = SEEK_SET;
+    lock.l_start = <span class="hljs-number">0</span>;
+    lock.l_len = sta.st_size;
+
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"pid: %d "</span>, lock.l_pid);<span class="hljs-comment">//can also getpid(), but slow compare to struct member</span>
+    <span class="hljs-keyword">while</span> (fcntl(fd, F_SETLK, &amp;lock) &lt; <span class="hljs-number">0</span>) {
+        perror(<span class="hljs-string">"fcntl"</span>);
+
+        <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">flock</span> <span class="hljs-title">lock_1</span>;</span><span class="hljs-comment">//new lock for test</span>
+        lock_1 = lock;
+        lock_1.l_type = F_WRLCK;
+
+        fcntl(fd, F_GETLK, &amp;lock_1);
+        <span class="hljs-keyword">switch</span> (lock_1.l_type) {
+            <span class="hljs-keyword">case</span> F_UNLCK:
+                <span class="hljs-built_in">printf</span>(<span class="hljs-string">"get no lock\n"</span>);
+                <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">case</span> F_RDLCK:
+                <span class="hljs-built_in">printf</span>(<span class="hljs-string">"get read lock of pid = %d\n"</span>, lock_1.l_pid);
+                <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">case</span> F_WRLCK:
+                <span class="hljs-built_in">printf</span>(<span class="hljs-string">"get write lock of pid = %d\n"</span>, lock_1.l_pid);
+                <span class="hljs-keyword">break</span>;
+        }
+
+        sleep(<span class="hljs-number">1</span>);
+    }
+
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"set write lock successfully\n"</span>);
+    getchar();
+    <span class="hljs-built_in">close</span>(fd);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<pre class="hljs"><code><div><span class="hljs-meta">#</span><span class="bash">one shell</span>
+youhuangla@Ubuntu s16 % ./readlock                                                                                  [0]
+pid: 21678 add read lock successfully
+<span class="hljs-meta">#</span><span class="bash">another shell,<span class="hljs-built_in">wait</span> <span class="hljs-keyword">for</span> 10 sec to success.You press enter to execute getchar() and end the program.</span>
+youhuangla@Ubuntu s16 % ./writelock                                                                                 [0]
+fcntl: Resource temporarily unavailable
+pid: 21679 get read lock of pid = 21678
+fcntl: Resource temporarily unavailable
+get read lock of pid = 21678
+fcntl: Resource temporarily unavailable
+get read lock of pid = 21678
+fcntl: Resource temporarily unavailable
+get read lock of pid = 21678
+fcntl: Resource temporarily unavailable
+get read lock of pid = 21678
+fcntl: Resource temporarily unavailable
+get read lock of pid = 21678
+fcntl: Resource temporarily unavailable
+get read lock of pid = 21678
+set write lock successfully
+
+</div></code></pre>
+
+</body>
+</html>
