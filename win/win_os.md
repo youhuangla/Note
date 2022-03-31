@@ -49,3 +49,11 @@ PS C:\Users\Administrator> taskkill /pid 7528 -t -f;
 
 - 应右键左下角win图标打开Powershell(管理员)，并成功杀死进程
 - 成功拔出！
+
+## Kill-Shift-Space
+
+[Svtter/Kill\-Shift\-Space: 屏蔽掉 win10 的 shift\+space](https://github.com/Svtter/Kill-Shift-Space)
+
+[在 Windows 10 中添加在启动时自动运行的应用](https://support.microsoft.com/zh-cn/windows/%E5%9C%A8-windows-10-%E4%B8%AD%E6%B7%BB%E5%8A%A0%E5%9C%A8%E5%90%AF%E5%8A%A8%E6%97%B6%E8%87%AA%E5%8A%A8%E8%BF%90%E8%A1%8C%E7%9A%84%E5%BA%94%E7%94%A8-150da165-dcd9-7230-517b-cf3c295d89dd)
+
+[Win10 取消百度输入法 Shift\+Space 全角半角切换\_锦夏挽秋的博客\-CSDN博客\_百度输入法shift](https://blog.csdn.net/qq1337715208/article/details/103334455)
