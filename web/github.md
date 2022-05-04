@@ -4,6 +4,8 @@
 
 来自程序员鱼皮
 
+笔记地址：[Note/github\.md at main · youhuangla/Note](https://github.com/youhuangla/Note/blob/main/web/github.md)
+
 ## 1.搜索
 
 github高级搜索功能
