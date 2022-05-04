@@ -11,6 +11,9 @@ Typora使用技巧之插入图片及图片上传
 
 ### Math blocks
 
+见latex文件夹中的lshort-zh-cn.pdf
+[LaTeX 新手上路指南 \- 知乎](https://zhuanlan.zhihu.com/p/433710726)
+
 <https://support.typora.io/Markdown-Reference/#math-blocks>
 [Typora数学公式汇总（Markdown） - 点点星河的文章 - 知乎](https://zhuanlan.zhihu.com/p/261750408)
 

@@ -19,7 +19,9 @@
 
   <img src="img/image-20220321171451442.png" alt="image-20220321171451442" style="zoom:33%;" />
 
-## Force step into
+## Debug
+
+### Force step into
 
 Steps into the function even if it is skipped by the regular Step Into by default.
 
@@ -28,3 +30,9 @@ Click the Force step into button Force Step Into icon or press Alt+Shift+F7.
 In case the source code of the function that you want to step into is unavailable, you can debug disassembled code in a dedicated view.
 
 <https://www.jetbrains.com/help/clion/stepping-through-the-program.html#force-step-into>
+
+### Show in Memory view
+
+<img src="img/image-20220421123109948.png" alt="image-20220421123109948" style="zoom: 33%;" />
+
+see the content of array,etc.

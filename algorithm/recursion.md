@@ -14,7 +14,7 @@
 #include <stdio.h>
 
 int exhaustion_gcd(int a, int b) {
-    int small, big, gcd = -1;
+    int small, big, gcd = 1;//gcd must be assign 1, not -1. 5,18 will output -1,90
     if (a < b) {
         small = a;
         big = b;
