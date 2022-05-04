@@ -66,6 +66,10 @@ github高级搜索功能
 
 ## 4.在线运行项目
 
+在项目地址前加上`gitpod.io/#/`前缀
+
+https://github.com/nginx/nginx  => https://gitpod.io/#/github.com/nginx/nginx
+
 登陆：
 
 <img src="img/image-20220504230740420.png" alt="image-20220504230740420" style="zoom:50%;" />
