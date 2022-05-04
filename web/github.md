@@ -95,3 +95,11 @@ https://github.com/nginx/nginx  => https://gitpod.io/#/github.com/nginx/nginx
 获取邮件更新：
 
 ![image-20220504231259146](img/image-20220504231259146.png)
+
+
+
+更新：该文档已得到up主点赞ヾ(≧▽≦*)o
+
+![image-20220505001029728](img/image-20220505001029728.png)
+
+再纪念一下up主回复(～￣▽￣)～<img src="img/image-20220505001420933.png" alt="image-20220505001420933"  />
