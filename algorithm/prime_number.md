@@ -391,9 +391,105 @@ int countPrimes(int n){
 
 ### 哥德巴赫猜想
 
+#### 哥德巴赫猜想的循环解法
+
+![image-20220506231819696](img/image-20220506231819696.png)
+
+##### 思路
+
+素数筛肯定是可以的，尝试用循环解题。
+
+分解问题，先循环出小于 x 的所有素数 i ，判断 $x - i$ 记为 j 是否为素数。
+
+```c
+#include <stdio.h>
+//O pan to be n^3
+int main() {
+    int x;//even
+    scanf("%d", &x);
+
+    //find prime less than x
+    for (int i = 2; i < x; i++) {
+        int flag = 1;//1 prime, 0 composite
+        for (int j = 2; j * j < i; j++) {
+            if (i % j == 0) {
+                flag = 0;
+                break;
+            }
+        }
+        if (flag == 1) {
+            printf("%d ", i);//todo
+        }
+    }
+
+    return 0;
+}
+```
+
+```shell
+20
+2 3 4 5 7 9 11 13 17 19 
+```
+
+要求两次素数，故将其封装为函数
+
+```c
+#include <stdio.h>
+//n^3
+int is_prime_loop(int n) {
+    int flag = 1;  // 1 prime, 0 composite
+    for (int i = 2; i * i < n; i++) {
+        if (n % i == 0) {
+            flag = 0;
+            return 0;
+        }
+    }
+    if (flag == 1) {
+        return 1;
+    }
+}
+
+
+int main() {
+    int x;//even
+    scanf("%d", &x);
+
+    //find prime less than x
+    int flag = 0;
+    int i;
+    int j;
+    for (i = 2; i < x / 2; i++) {
+        if (is_prime_loop(i)) {
+            j = x - i;
+            if (is_prime_loop(j)) {
+                flag = 1;
+                break;
+            }
+        }
+    }
+    if (flag) {
+        printf("%d=%d+%d", x, i, j);
+    }
+    return 0;
+}
+```
+
+```shell
+20
+20=3+17
+```
+
+##### time complexity
+
+for 循环，两个求素数函数中两次 for 循环。
+
+$O(n ^ 3)$
+
+#### 路飞的猜想
+
 [OJ - Online Judge (haizeix.com)](http://oj.haizeix.com/problem/190)
 
-#### 题目描述
+##### 题目描述
 
  有一天路飞突发奇想，他有一个猜想，任意一个大于 `2` 的偶数好像总能写成 `2` 个质数的和。路飞查了资料，发现这个猜想很早就被一个叫哥德巴赫的人提出来了，称为哥德巴赫猜想。目前还没有证明这个猜想的正确性。路飞告诉你一个整数 `n` ，让你用这个数去验证。
 
@@ -401,31 +497,31 @@ int countPrimes(int n){
 
 ------
 
-#### 输入
+##### 输入
 
 输入一个偶数 `n(2≤n≤8000000)`。
 
-#### 输出
+##### 输出
 
 输出一个整数表示有多少对 (x,y) 满足 `x+y=n(x≤y)` 且x,y 均为质数。
 
 ------
 
-#### 样例
+##### 样例
 
-##### 样例输入1
+###### 样例输入1
 
 ```C++
 10
 ```
 
-##### 样例输出1
+###### 样例输出1
 
 ```c++
 2
 ```
 
-#### Solve
+##### Solve
 
 ```c
 /*************************************************************************

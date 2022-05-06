@@ -26,3 +26,7 @@ Typora使用技巧之插入图片及图片上传
 粗体2：使用`\mathbf{}`进行加粗，如：`\mathbf{x}`:$\mathbf{x}$
 
 带箭头的向量：使用`\vec{}`使向量带箭头，如`\vec{x}`:$\vec{x}$
+
+## 标题批量降级
+
+[Markdown文件标题全部降一级\_迷雾总会解的博客\-CSDN博客](https://blog.csdn.net/qq_44766883/article/details/122601949)
