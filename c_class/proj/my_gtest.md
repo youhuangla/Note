@@ -1,5 +1,17 @@
 # My gtest
 
+## 谷歌测试框架
+
+GoogleTest 是一个由谷歌开发的 c++ 测试和模拟框架，目前在github上已有 25.7k 的 star。
+
+![image-20220508213553533](img/image-20220508213553533.png)
+
+[google/googletest: GoogleTest \- Google Testing and Mocking Framework](https://github.com/google/googletest)
+
+[GoogleTest User’s Guide \| GoogleTest](https://google.github.io/googletest/)
+
+本文主要为[人人都能学会的编程入门课 (geekbang.org)](https://time.geekbang.org/column/intro/100043901?tab=catalog)的学习笔记，并在胡船长代码的基础上进行了些微的整理与完善。如有侵权请联系我删除。
+
 ## 软件开发流程
 
 在开始做项目之前呢，让我们先来了解下一般的项目开发流程。
@@ -77,8 +89,8 @@ int main(int argc, char *argv[]) {
 ```
 
 ```shell
-youhuangla@Ubuntu c_lab % g++  gtest_test.cpp   -lgtest -lpthread                                                   [0]
-youhuangla@Ubuntu c_lab % ./a.out                                                                                   [0]
+g++  gtest_test.cpp   -lgtest -lpthread
+./a.out
 ```
 
 ```shell

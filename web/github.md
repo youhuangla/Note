@@ -6,6 +6,8 @@
 
 笔记地址：[Note/github\.md at main · youhuangla/Note](https://github.com/youhuangla/Note/blob/main/web/github.md)
 
+[TOC]
+
 ## 1.搜索
 
 github高级搜索功能
@@ -103,3 +105,29 @@ https://github.com/nginx/nginx  => https://gitpod.io/#/github.com/nginx/nginx
 ![image-20220505001029728](img/image-20220505001029728.png)
 
 再纪念一下up主回复(～￣▽￣)～<img src="img/image-20220505001420933.png" alt="image-20220505001420933"  />
+
+## 更新：从 mini_gtest 的 github 实践
+
+该文档已经更新到[youhuangla/mini\_gtest](https://github.com/youhuangla/mini_gtest)
+
+在[5个隐藏的GitHub神技巧，助你秒变大佬！_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1q54y1f7h6?spm_id_from=333.337.search-card.all.click)来自程序员鱼皮的视频中，看完了视频，惊觉十分有用（当年我自己探索的时候被各种环境劝退过）。于是决定记下笔记，当一次“课代表”，所以我就（顺势）开源（复制）了我自己笔记地址：[Note/github.md at main · youhuangla/Note](https://github.com/youhuangla/Note/blob/main/web/github.md)。
+
+当时原本只是想着给大家做个图文参考，后来 star 的越来越多，竟然还有 fork 的 Σ(ﾟдﾟ；)，属实把我吓到了。由于该仓库是我的（白嫖）github做笔记及的的仓库，所以里面的笔记良莠不齐，有很多写代码时随意记录的文档，所以被 fork 了感觉挺尴尬的，所以另开一个较小的仓库将鱼皮视频的笔记放进来，毕竟为了单独下载一个小小的 md 文档，属实没必要整个 fork 我那杂乱的笔记（对网速不好的同学来说我相信更是一种煎熬）。
+
+所以在这里将鱼皮视频的笔记加到了这个小仓库里，临时整合了我自己学习，[人人都能学会的编程入门课 (geekbang.org)](https://time.geekbang.org/column/intro/100043901?tab=catalog)的学习笔记。
+
+原项目名气大（谷歌出品，原仓库 25.7k star），据说工程中也常常用到。
+
+[![image-20220508213553533](img/image-20220508213553533.png)](https://github.com/youhuangla/mini_gtest/blob/master/img/image-20220508213553533.png)
+
+[google/googletest: GoogleTest - Google Testing and Mocking Framework](https://github.com/google/googletest)
+
+[GoogleTest User’s Guide | GoogleTest](https://google.github.io/googletest/)
+
+我根据课程仿写的这个项目的特点：
+
+1. 依赖较少，对只会 C 语言又想做项目的小白友好
+2. 理解一些软件工程的思想~~也许可以对面试官吹水~~。
+3. 如果是一个自己的项目也可以轻易地在最后调用（毕竟很多语言都能调用C语言），让面试官眼前一亮~~装个小b~~，让你的项目锦上添花。ヾ(≧▽≦*)o
+
+所以，如果要 fork 或 star，请 fork 或 star 这个仓库吧，感谢各位大哥的厚爱了(￣▽￣)ノ

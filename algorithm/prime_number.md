@@ -315,6 +315,47 @@ int main() {
 }
 ```
 
+### 绝对素数
+
+[信息学奥赛一本通（C++版）1153：绝对素数](http://ybt.ssoier.cn:8088/problem_show.php?pid=1153)
+
+![image-20220508171355604](img/image-20220508171355604.png)
+
+```c
+#include <stdio.h>
+
+#define MAX_N 105
+int prime[MAX_N];//0 is prime
+
+void prime_sieve() {
+    for (int i = 2; i < MAX_N; i++) {
+        if (prime[i] == 0) {
+            for (int j =  2 * i/*not begin int i, if so, j will be marked not prime*/; j < MAX_N; j += i) {
+                prime[j] = 1;//not prime
+            }
+        }
+    }
+    return ;
+}
+
+int main() {
+    prime_sieve();
+    for (int i = 10; i < 100; i++) {
+        if (prime[i] == 0) {
+            int j = i % 10 * 10 + i / 10;
+            if (prime[j] == 0) {
+                printf("%d,", i);
+            }
+        }
+    }
+    return 0;
+}
+```
+
+```shell
+11,13,17,31,37,71,73,79,97,
+```
+
 ### 计数素数count-primes
 
 [204. 计数质数 - 力扣（LeetCode） (leetcode-cn.com)](https://leetcode-cn.com/problems/count-primes/submissions/)
