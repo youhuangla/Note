@@ -6,7 +6,13 @@
 
 笔记地址：[Note/github\.md at main · youhuangla/Note](https://github.com/youhuangla/Note/blob/main/web/github.md)
 
-[TOC]
+- [Github](#github)
+  - [1.搜索](#1搜索)
+  - [2.查找文件](#2查找文件)
+  - [3.阅读代码技巧](#3阅读代码技巧)
+  - [4.在线运行项目](#4在线运行项目)
+  - [5.项目推送](#5项目推送)
+  - [更新：从 mini_gtest 的 github 实践](#更新从-mini_gtest-的-github-实践)
 
 ## 1.搜索
 
