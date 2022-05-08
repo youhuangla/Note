@@ -12,7 +12,7 @@
   - [3.阅读代码技巧](#3阅读代码技巧)
   - [4.在线运行项目](#4在线运行项目)
   - [5.项目推送](#5项目推送)
-  - [更新：从 mini_gtest 的 github 实践](#更新从-mini_gtest-的-github-实践)
+  - [更新：从 mini_gtest 开始的 github 实践](#更新从-mini_gtest-开始的-github-实践)
 
 ## 1.搜索
 
@@ -112,7 +112,7 @@ https://github.com/nginx/nginx  => https://gitpod.io/#/github.com/nginx/nginx
 
 再纪念一下up主回复(～￣▽￣)～<img src="img/image-20220505001420933.png" alt="image-20220505001420933"  />
 
-## 更新：从 mini_gtest 的 github 实践
+## 更新：从 mini_gtest 开始的 github 实践
 
 该文档已经更新到[youhuangla/mini\_gtest](https://github.com/youhuangla/mini_gtest)
 
