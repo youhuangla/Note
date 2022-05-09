@@ -120,7 +120,11 @@ https://github.com/nginx/nginx  => https://gitpod.io/#/github.com/nginx/nginx
 
 当时原本只是想着给大家做个图文参考，后来 star 的越来越多，竟然还有 fork 的 Σ(ﾟдﾟ；)，属实把我吓到了。由于该仓库是我的（白嫖）github做笔记及的的仓库，所以里面的笔记良莠不齐，有很多写代码时随意记录的文档，所以被 fork 了感觉挺尴尬的，所以另开一个较小的仓库将鱼皮视频的笔记放进来，毕竟为了单独下载一个小小的 md 文档，属实没必要整个 fork 我那杂乱的笔记（对网速不好的同学来说我相信更是一种煎熬）。
 
-所以在这里将鱼皮视频的笔记加到了这个小仓库里，临时整合了我自己学习，[人人都能学会的编程入门课 (geekbang.org)](https://time.geekbang.org/column/intro/100043901?tab=catalog)的学习笔记。
+所以在这里已经将鱼皮视频的笔记加到了[这个小仓库youhuangla/mini\_gtest](https://github.com/youhuangla/mini_gtest)里，临时整合了我自己学习，[人人都能学会的编程入门课 (geekbang.org)](https://time.geekbang.org/column/intro/100043901?tab=catalog)的学习笔记。我在胡船长代码的基础上进行了些微的整理与完善，使得代码完成度更高，并可以作为入门实践在github上在线运行。
+
+效果如下，使用方法见[youhuangla/mini\_gtest](https://github.com/youhuangla/mini_gtest)。
+
+![](img/image-20220508223845339.png)
 
 原项目名气大（谷歌出品，原仓库 25.7k star），据说工程中也常常用到。
 
