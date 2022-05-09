@@ -141,4 +141,4 @@ https://github.com/nginx/nginx  => https://gitpod.io/#/github.com/nginx/nginx
 3. 数据结构的思维：链表
 4. 如果是一个自己的项目也可以轻易地在最后调用（毕竟很多语言都能调用C语言），让面试官眼前一亮~~装个小b~~，让你的项目锦上添花。ヾ(≧▽≦*)o
 
-所以，如果要 fork 或 star，请 fork 或 star 这个仓库吧，感谢各位大哥的厚爱了(￣▽￣)ノ
+所以，如果要 fork 或 star，请 fork 或 star [这个小仓库youhuangla/mini\_gtest](https://github.com/youhuangla/mini_gtest)吧，感谢各位大哥的厚爱了(￣▽￣)ノ
