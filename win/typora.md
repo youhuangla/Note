@@ -30,3 +30,7 @@ Typora使用技巧之插入图片及图片上传
 ## 标题批量降级
 
 [Markdown文件标题全部降一级\_迷雾总会解的博客\-CSDN博客](https://blog.csdn.net/qq_44766883/article/details/122601949)
+
+## Code Block
+
+按住 Ctrl 点击，可以选中当前一个代码块中的多处批量编辑。

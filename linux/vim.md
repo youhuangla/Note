@@ -9,3 +9,7 @@
 ## Find and replace
 
 <https://harttle.land/2016/08/08/vim-search-in-file.html>
+
+## Use K for man
+
+[manuals \- How do you use the "K"\-button in the normal mode of VIM? \- Stack Overflow](https://stackoverflow.com/questions/843823/how-do-you-use-the-k-button-in-the-normal-mode-of-vim#:~:text=Simply%20put%2C%20K%20runs%20the,the%20'iskeyword'%20option).)

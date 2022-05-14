@@ -1,14 +1,8 @@
 # Vim
 
-- [Vim](#vim)
-  - [Enable some of "ctrl"](#enable-some-of-ctrl)
-  - [Table of contents using md all in one](#table-of-contents-using-md-all-in-one)
-    - [Create table of contents](#create-table-of-contents)
-    - [Update table of contents](#update-table-of-contents)
-    - [Use](#use)
-  - [The pictures](#the-pictures)
+## search mode
 
-- search mode: /
+`/`
 
 ## Enable some of "ctrl"
 
@@ -20,20 +14,22 @@
 
 - Rember the "," before added code and the end of added code(add of delete?)
 
-![add code](https://raw.githubusercontent.com/youhuangla/images/main/202202151355080.png)
+## Use Alt + hjkl
 
-## Table of contents using md all in one
+<img src="img/image-20220510151330130.png" alt="image-20220510151330130" style="zoom:50%;" />
 
-### Create table of contents
+<img src="img/image-20220510155406128.png" alt="image-20220510155406128" style="zoom:50%;" />
 
-- After create table of contents by ctrl + Shift + P,the code block style by markdownlint will become fence,so don't use tab to create code block.
+File->Preferences->Keyboard Shortcuts
 
-### Update table of contents
+![image-20220510160044883](img/image-20220510160044883.png)
 
-### Use
+## Common Vim
 
-- Get the structure of md file, but can't directly jump to topics.You should click the #topics with ctrl.
+Use  `u`  to undo,use Ctrl + R to redo in normal mode.
 
-## The pictures
+## Man page
 
-- if you want to edit the pictures' size,you'd better use typora,but it will also poduce a warning because it's js?
+[Manpages \- Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=meronz.manpages)
+
+right click to open man page.

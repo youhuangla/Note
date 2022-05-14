@@ -77,3 +77,7 @@ VsCode 自定义代码补全 默认开启markdown代码补全<https://blog.csdn.
 ```markdown
 <center>在typora，可以顺序打到"</",typora自动补全</center>
 ```
+
+## The pictures
+
+- if you want to edit the pictures' size,you'd better use typora,but it will also poduce a warning because it's js?
