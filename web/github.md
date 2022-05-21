@@ -1,6 +1,6 @@
 # Github
 
-<u>***请看我***</u>：同学们真的不要 star 这个仓库了啊，这个是杂乱的笔记哇o(╥﹏╥)o。如果要 fork 或 star 或者想下载该文档的，请 fork 或 star [这个仓库youhuangla/mini\_gtest](https://github.com/youhuangla/mini_gtest)吧。该文档所有笔记都在 [这个仓库youhuangla/mini\_gtest](https://github.com/youhuangla/mini_gtest)里面有，并且添加了一个C语言100行内仿 [GoogleTest](https://github.com/google/googletest) 测试框架在线运行，大小才11mb。这个文档所在的仓库是我杂乱的笔记，100+mb，大部分都是我还没整理的笔记啊。
+<u>***请看我***</u>：同学们真的不要 fork 这个仓库了啊，这个是杂乱的笔记哇o(╥﹏╥)o。如果要 fork 或 star 或者想下载该文档的，请 fork 或 star [这个仓库youhuangla/mini\_gtest](https://github.com/youhuangla/mini_gtest)吧。该文档所有笔记都在 [这个仓库youhuangla/mini\_gtest](https://github.com/youhuangla/mini_gtest)里面有，并且添加了一个C语言100行内仿 [GoogleTest](https://github.com/google/googletest) 测试框架，并写了编写与在GitHub上运行的教程，大小才11mb。这个文档所在的仓库是我杂乱的笔记，100+mb，大部分都是我还没整理的私人笔记啊，被fork了感觉怪怪的。Σ(ﾟдﾟ；)
 
 [5个隐藏的GitHub神技巧，助你秒变大佬！\_哔哩哔哩\_bilibili](https://www.bilibili.com/video/BV1q54y1f7h6?spm_id_from=333.337.search-card.all.click)
 
