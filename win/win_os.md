@@ -57,3 +57,9 @@ PS C:\Users\Administrator> taskkill /pid 7528 -t -f;
 [在 Windows 10 中添加在启动时自动运行的应用](https://support.microsoft.com/zh-cn/windows/%E5%9C%A8-windows-10-%E4%B8%AD%E6%B7%BB%E5%8A%A0%E5%9C%A8%E5%90%AF%E5%8A%A8%E6%97%B6%E8%87%AA%E5%8A%A8%E8%BF%90%E8%A1%8C%E7%9A%84%E5%BA%94%E7%94%A8-150da165-dcd9-7230-517b-cf3c295d89dd)
 
 [Win10 取消百度输入法 Shift\+Space 全角半角切换\_锦夏挽秋的博客\-CSDN博客\_百度输入法shift](https://blog.csdn.net/qq1337715208/article/details/103334455)
+
+## 取消自动更新
+
+[Lenovo Quick Fix 联想智能解决工具-联想知识库](https://iknow.lenovo.com.cn/detail/dc_172545.html)
+
+[**关闭或开启Win10系统自动更新**](https://box.lenovo.com/l/t5dQKH)
