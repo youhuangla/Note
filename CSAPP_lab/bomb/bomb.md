@@ -123,6 +123,117 @@ Search function name quickly
 >
 > [viemu \- Search for selection in Vim \- Stack Overflow](https://stackoverflow.com/questions/363111/search-for-selection-in-vim)
 
+### CGDB
+
+在[《深入理解计算机系统》配套实验：Bomblab - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/31269514)找了个貌似更好用的cgdb，可视化支持更方便。
+
+#### 简介
+
+[cgdb/cgdb: Console front\-end to the GNU debugger](https://github.com/cgdb/cgdb)
+
+CGDB是GNU调试器的一个非常轻量级的控制台前端。它提供了一个分屏界面，显示下面的GDB会话和上面的程序源代码。这个界面是模仿vim的，所以vim用户使用它应该感觉很舒服。
+
+#### 安装
+
+```shell
+sudo apt install cgdb
+```
+
+但是读上文时卡在了
+
+> 在最新版本的cgdb中，在cgdb模式下输入
+>
+> ```text
+> ：set disasm
+> ```
+
+没啥反应。。
+
+在[macos \- How to make cgdb show assembly code? \- Stack Overflow](https://stackoverflow.com/questions/9142889/how-to-make-cgdb-show-assembly-code)发现 cgdb 的机制类似于 vim，要先按esc，但是
+
+还是没用，但在 stackoverflow 中发现
+
+> You will need cgdb version 0.7.0 or newer.
+
+会不会是版本问题？
+
+##### 再次安装0.0.8版本
+
+```shell
+youhuangla@Ubuntu Software_Source_Code % ls                                                                         [0]
+cgdb-0.8.0
+youhuangla@Ubuntu Software_Source_Code % cd cgdb-0.8.0/                                                             [0]
+youhuangla@Ubuntu cgdb-0.8.0 % ls                                                                                   [0]
+AUTHORS          ChangeLog  Makefile.am  autogen.sh      cgdb_custom_config.h.in  doc       release-todo.txt
+CONTRIBUTING.md  FAQ        NEWS         autorelease.sh  config                   lib       roadmap.txt
+COPYING          INSTALL    README.md    cgdb            configure.ac             packages  test
+```
+
+考虑到以后可能还要放源代码，新建一个目录。
+
+官网上有一堆包要装
+
+> sh
+> autoconf
+> automake
+> aclocal
+> autoheader
+> libtool
+> flex
+> bison
+> gcc/g++ (c11/c++11 support)
+
+关于 autogen\.sh 可看 [What is the job of autogen\.sh when building a c\+\+ package on Linux \- Stack Overflow](https://stackoverflow.com/questions/50044091/what-is-the-job-of-autogen-sh-when-building-a-c-package-on-linux)
+
+```shell
+# sh是啥子？可能就是shell脚本？apt没找到
+sudo apt install automake
+sudo apt install autoconf 
+# 一堆没找到
+sudo apt install flex
+sudo apt install bison
+```
+
+仍然无法直接执行，算了，用sh执行。
+
+```shell
+youhuangla@Ubuntu cgdb-0.8.0 % sudo sh ./autogen.sh                                                                 [1]
+[sudo] password for youhuangla: 
+fatal: not a git repository (or any of the parent directories): .git
+-- Running aclocal
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+        LANGUAGE = (unset),
+        LC_ALL = "",
+        LANG = "zh_CN.GBK"
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+.....
+youhuangla@Ubuntu cgdb-0.8.0 % mkdir ../build                                                                       [0]
+cd ../build
+# same as README
+youhuangla@Ubuntu build % ../cgdb-0.8.0/configure  --prefix=$PWD/../prefix
+# add version name to cgdb
+......
+checking for makeinfo... no
+configure: error: Please install makeinfo before installing
+```
+
+Learn from [ubuntu \- What is makeinfo, and how do I get it? \- Stack Overflow](https://stackoverflow.com/questions/338317/what-is-makeinfo-and-how-do-i-get-it)
+
+```shell
+youhuangla@Ubuntu build % sudo apt-get install texinfo
+......
+youhuangla@Ubuntu build % ls                                                                                        [0]
+Makefile  cgdb  cgdb_custom_config.h  config.h  config.log  config.status  doc  lib  stamp-h1  test
+youhuangla@Ubuntu build % make -srj4 
+# a lot of warning
+```
+
+<img src="img/image-20220522200234819.png" alt="image-20220522200234819" style="zoom: 50%;" />
+
+界面变好看了，但是命令好像还不行。。`cgdb -v`也没变
+
 ## Begin
 
 ```shell
@@ -161,6 +272,8 @@ So , the second one .
 
 <img src="img/image-20220519162401375.png" alt="image-20220519162401375" style="zoom: 50%;" />
 
+
+
 ### phase_1
 
 ```c
@@ -196,4 +309,16 @@ What's 0x402400?
 ```asm
   400e32:	e8 67 06 00 00       	callq  40149e <read_line>
 ```
+
+
+
+
+
+[【深入理解计算机系统 实验2 CSAPP】bomb lab 炸弹实验 CMU bomblab_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1vu411o7QP?spm_id_from=333.337.search-card.all.click)
+
+[【彻底搞懂C指针】Malloc 和 Free 的具体实现_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1aZ4y1P7fs?spm_id_from=333.999.0.0)
+
+
+
+
 

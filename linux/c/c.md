@@ -2,7 +2,9 @@
 
 * C语言实现在控制台同一行覆盖刷新输出，以及'\b'退格控制字符的使用https://blog.csdn.net/zhanghuoding/article/details/52041120
 
-# Debug
+## Debug
+
+### GDB
 
 ```shell
 youhuangla@Ubuntu c_lab % gcc -g hello.c                                                                     [0]
@@ -22,3 +24,17 @@ Temporary breakpoint 1, main () at hello.c:4
 ```
 
 ![image-20220516001703557](img/image-20220516001703557.png)
+
+#### Input
+
+[io \- How to use gdb with input redirection? \- Stack Overflow](https://stackoverflow.com/questions/4758175/how-to-use-gdb-with-input-redirection)
+
+### CGDB
+
+[终端调试哪家强？ - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/32843449)
+
+[《深入理解计算机系统》配套实验：Bomblab - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/31269514)
+
+[GDB/CGDB 入门与拆弹游戏 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/120378884)
+
+另见CSAPP_lab中的bomb lab
