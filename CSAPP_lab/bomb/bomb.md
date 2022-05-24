@@ -228,11 +228,49 @@ youhuangla@Ubuntu build % ls                                                    
 Makefile  cgdb  cgdb_custom_config.h  config.h  config.log  config.status  doc  lib  stamp-h1  test
 youhuangla@Ubuntu build % make -srj4 
 # a lot of warning
+youhuangla@Ubuntu build % make install 
 ```
 
 <img src="img/image-20220522200234819.png" alt="image-20220522200234819" style="zoom: 50%;" />
 
 界面变好看了，但是命令好像还不行。。`cgdb -v`也没变
+
+另外就是scanf没法输入
+
+> 
+> Hi,
+>
+> Please try the new-ui branch. The inferior pty is no longer set and I believe your issue may be resolved. Let me know.
+>
+> [Ctrl \- T doesn't seem to work \(cgdb 0\.7\.0\) · Issue \#193 · cgdb/cgdb](https://github.com/cgdb/cgdb/issues/193)
+
+尝试换一个branch(new issue)构建
+
+注意，要attach 的话使用 sudo！
+
+受到[我的cgdb无法通过在CGDB模式下键入I T两个命令打开tty窗口进行i/o输入 · Issue \#22 · leeyiw/cgdb\-manual\-in\-chinese](https://github.com/leeyiw/cgdb-manual-in-chinese/issues/22)启发可以了！
+
+<img src="img/image-20220523020400532.png" alt="image-20220523020400532" style="zoom: 33%;" />
+
+CGDB模式同 vim 的normal模式，要esc返回，然后大写的`I`就可以到 `pty` 了，里面可以正常输入，大写`T`将该终端 pty 折叠。
+
+服了，最后发现其实根本没装上
+
+```shell
+youhuangla@Ubuntu bin % sudo mv ~/Software_Source_Code/cgdb/build/cgdb/cgdb ./  
+```
+
+装上后
+
+```shell
+:set dis# show assembly
+```
+
+<img src="img/image-20220523093358849.png" alt="image-20220523093358849" style="zoom:50%;" />
+
+但是这样 pty 就没用了。
+
+
 
 ## Begin
 
@@ -244,6 +282,8 @@ which to blow yourself up. Have a nice day!
 ^CWell...OK. :-)
 youhuangla@Ubuntu bomb % objdump -d ./bomb > bomb.asm
 ```
+
+Use two signal(^C) to stop bomb.(why?)
 
 Right side maybe is orignal address? We can see every address gap 8 bytes.
 
@@ -304,21 +344,752 @@ So it calls:
 
 What's 0x402400?
 
-### read_line
+这样调试有点慢了，还要一个个搜函数名字，不是很方便。
 
-```asm
-  400e32:	e8 67 06 00 00       	callq  40149e <read_line>
+故使用 cgdb。
+
+[【深入理解计算机系统 实验2 CSAPP】bomb lab 炸弹实验 CMU bomblab_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1vu411o7QP?spm_id_from=333.337.search-card.all.click)
+
+[【彻底搞懂C指针】Malloc 和 Free 的具体实现_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1aZ4y1P7fs?spm_id_from=333.999.0.0)TODO
+
+按照[《深入理解计算机系统》配套实验：Bomblab - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/31269514)使 cgdb 显示反汇编。
+
+gdb 先`start`，再不断 `n`，在输入时随便输一个字符串 "123"，直到进入phase_1函数前，使用`:set dis`打开汇编窗口。
+
+<img src="img/image-20220523101639104.png" alt="image-20220523101639104" style="zoom:50%;" />
+
+<img src="img/image-20220523101929779.png" alt="image-20220523101929779" style="zoom:50%;" />
+
+执行到`line74: phase_1(input)`后，逐步 `stepi`(`si`) ，不能用`n`或者`s`(`step`)。
+
+[Continuing and Stepping \(Debugging with GDB\)](https://sourceware.org/gdb/download/onlinedocs/gdb/Continuing-and-Stepping.html)
+
+一直`s`，则在下图5行中，爆炸。
+
+<img src="img/image-20220523102515314.png" alt="image-20220523102515314" style="zoom:50%;" />
+
+重新来，step into phase_1函数
+
+<img src="img/image-20220523104017295.png" alt="image-20220523104017295" style="zoom:50%;" />
+
+好，现在逐语句分析，%esi 是什么呢？如果还没记住寄存器，可以翻 CSAPP Figure 3.2(English p180/pdf p216, Chinese p120)，可知 esi 是 rsi 的32位
+
+>  <img src="img/image-20220523110511693.png" alt="image-20220523110511693" style="zoom:50%;" />
+>
+> 《CSAPP》 3.4 访问信息
+
+故
+
+```assembly
+ 3├──> 0x0000000000400ee4 <+4>:     mov    $0x402400,%esi
+```
+
+将 0x402400 传入 %esi，即传入 %rsi ，即作为第 2 个参数传入函数 `strings_not_equal`。
+
+#### strings_not_equal
+
+既然要传第2个参数，那么第1个参数 %rdi 是否已经存入了我们的输入值？继续`si`进入`strings_not_equal`函数，并重点关注 %rsi 和 %rdi。可以看到在  `strings_not_equal` 函数中也有两寄存器的 mov 指令。故确定两个寄存器都是传入函数 `strings_not_equal`的两个存 string 首地址的寄存器。
+
+<img src="img/image-20220523111833538.png" alt="image-20220523111833538" style="zoom:50%;" />
+
+通过`info register`查看寄存器内的值
+
+```gdb
+rsi            0x402400 4203520
+rdi            0x603780 6305664
+```
+
+根据
+
+> x/s 0xbffff890 Examine a string stored at 0xbffff890
+>
+> ——《gdb-notes-x86-64》
+
+显示字符串
+
+```shell
+(gdb) x/s 0x402400
+0x402400:       "Border relations with Canada have never been better."
+(gdb) x/s 0x603780
+0x603780 <input_strings>:       "123" # I type 123
+```
+
+所以很明显，地址 0x402400 里存的就是第一个谜题的答案！
+
+```shell
+youhuangla@Ubuntu bomb % ./bomb                                                                            [0]
+Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Border relations with Canada have never been better.
+Phase 1 defused. How about the next one?
+```
+
+#### Answer
+
+```shell
+Border relations with Canada have never been better.
+```
+
+### phase_2
+
+照葫芦画瓢，先输入第一个谜题答案后，输入"456"
+
+有了上一题的经验，单步执行到这里，发现有寄存器 rsi，也就是说是函数的第二个参数。
+
+![image-20220523144911982](img/image-20220523144911982.png)
+
+```shell
+(gdb) x/s 0x6037d0
+0x6037d0 <input_strings+80>:    "456"
+```
+
+#### read_six_numbers
+
+` 6│    0x0000000000400f05 <+9>:     callq  0x40145c <read_six_numbers>`
+
+```assembly
+000000000040145c <read_six_numbers>:;从一个长的字符串(可视作字符数组)中读入 6 个 int，传入的只能是该字符串的首地址
+  40145c:	48 83 ec 18          	sub    $0x18,%rsp; 24 byte
+  401460:	48 89 f2             	mov    %rsi,%rdx ; rsi中应该是字符串input的首地址，rdx是sscanf的第3个参数，即第一个读入的
+  401463:	48 8d 4e 04          	lea    0x4(%rsi),%rcx; rcx = *(rsi + 4) rcx第4个参数
+  401467:	48 8d 46 14          	lea    0x14(%rsi),%rax; rax = *(rsi + 20) 
+  40146b:	48 89 44 24 08       	mov    %rax,0x8(%rsp); *(rsp + 8) = *(rsi + 20)
+  401470:	48 8d 46 10          	lea    0x10(%rsi),%rax; rax = *(rsi + 16)
+  401474:	48 89 04 24          	mov    %rax,(%rsp); *(rsp) = *(rsi + 16)
+  401478:	4c 8d 4e 0c          	lea    0xc(%rsi),%r9; r9 = *(rsi + 13) r9第6个参数
+  40147c:	4c 8d 46 08          	lea    0x8(%rsi),%r8; r8 = *(rsi + 8) r8第5个参数
+  401480:	be c3 25 40 00       	mov    $0x4025c3,%esi; esi = 0x4025c3   等价于rsi，第2个参数。(gdb) x/s 0x4025c3 => 0x4025c3:       "%d %d %d %d %d %d"
+  401485:	b8 00 00 00 00       	mov    $0x0,%eax; eax = 0x0
+  40148a:	e8 61 f7 ff ff       	callq  400bf0 <__isoc99_sscanf@plt>
+  40148f:	83 f8 05             	cmp    $0x5,%eax; eax存储返回值，从0到5，代表sscanf读出的数字个数 - 1 
+  401492:	7f 05                	jg     401499 <read_six_numbers+0x3d>;if (%eax > 0x5) {goto 401499 <read_six_numbers+0x3d>} else explode_bomb
+  401494:	e8 a1 ff ff ff       	callq  40143a <explode_bomb>
+  401499:	48 83 c4 18          	add    $0x18,%rsp ;24 byte = 6 * (4 byte) //sscanf从左到右依次读入6个数字并将数字压入栈，所以现在栈指针加回24
+  40149d:	c3                   	retq   
+```
+
+> 有些时候，局部数据必须存放在内存中，常见的情况包括：
+>
+> - 寄存器不足够存放所有的本地数据。 
+> - 对一个局部变量使用地址运算符`&`，因此必须能够为它产生一个地址。 
+> - 某些局部变量是数组或结构，因此必须能够通过数组或结构引用被访问到。 # 例如这里的 read_six_numbers
+>
+> 3.7.4 栈上的局部存储
+
+```assembly
+  40145c:	48 83 ec 18          	sub    $0x18,%rsp; 24 byte
+```
+
+这里就是分配栈上的局部内存。
+
+```assembly
+  401480:	be c3 25 40 00       	mov    $0x4025c3,%esi; esi = 0x4025c3   等价于rsi，第2个参数。(gdb) x/s 0x4025c3 0x4025c3:       "%d %d %d %d %d %d"
+```
+
+[Bomb\-Lab/Phase2 at master · sc2225/Bomb\-Lab](https://github.com/sc2225/Bomb-Lab/blob/master/Phase2#L52)
+
+由 ssanf 函数的格式我们可以推测这确实是要我们读入 6 个 int 。
+
+##### sscanf
+
+继续`si`，进入一个（也许）叫`sscanf`的函数，明显我们想起了C标准库中的同名函数。
+
+```gdb
+1│ Dump of assembler code for function __isoc99_sscanf@plt:
+2├──> 0x0000000000400bf0 <+0>:     jmpq   *0x202492(%rip)        # 0x603088 <
+3│    0x0000000000400bf6 <+6>:     pushq  $0x11
+4│    0x0000000000400bfb <+11>:    jmpq   0x400ad0
+5│ End of assembler dump.
+~│
+```
+
+> | (3)                                                          |             |
+> | ------------------------------------------------------------ | ----------- |
+> | int sscanf( const char      *buffer, const char      *format, ... ); | (until C99) |
+> | int sscanf( const char *restrict buffer, const char *restrict format, ... ); | (since C99) |
+>
+> 3) reads the data from null-terminated character string `buffer`. Reaching the end of the string is equivalent to reaching the end-of-file condition for `fscanf`
+
+可以看出应该是读入字符串，并转为一个整数。
+
+第二次，输入 "1 2 3 4 5 6 7"，怕输入不满足条件，输入 7 个 int。
+
+```gdb
+(gdb) info reg
+rsi            0x6037d0 6305744
+rdi            0x6037d0 6305744
+(gdb) x/s 0x6037d0
+0x6037d0 <input_strings+80>:    "1 2 3 4 5 6 7"
+```
+
+`si`又进入了无限循环。。。
+
+> 提示：这里如果陷入了一个共享库函数（sscanf之类),可以用finish命令快速退出 
+>
+> [《深入理解计算机系统》配套实验：Bomblab - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/31269514)
+
+复制第一个答案累了，将测试数据输入test2.txt
+
+```shell
+youhuangla@Ubuntu bomb % cat test2.txt                                   [0]
+Border relations with Canada have never been better.
+1 2 3 4 5 6
+```
+
+打断点
+
+<img src="img/image-20220523160427309.png" alt="image-20220523160427309" style="zoom:50%;" />
+
+用`finish`跳出`sscanf`共享库函数
+
+```gdb
+rax 0x0 -> 0x6
+```
+
+说明返回的确实是 6 ，6 > 5 满足 jg 的条件。不会炸
+
+<img src="img/image-20220523160847329.png" alt="image-20220523160847329" style="zoom: 50%;" />
+
+```assembly
+  401480:	be c3 25 40 00       	mov    $0x4025c3,%esi; esi = 0x4025c3   等价于rsi，第2个参数。(gdb) x/s 0x4025c3 0x4025c3:       "%d %d %d %d %d %d"
+```
+
+finish 后，可以查看 sscanf 中存的第二个参数，即格式字符串，见 [###back to phase_2](###back to phase_2)中的注释。
+
+##### back to read_six_numbers
+
+```assembly
+  40148f:	83 f8 05             	cmp    $0x5,%eax; eax存储返回值，从0到5，代表sscanf读出的数字个数 - 1 
+  401492:	7f 05                	jg     401499 <read_six_numbers+0x3d>;if (%eax > 0x5) {goto 401499 <read_six_numbers+0x3d>} else explode_bomb
+```
+
+如果输入的数字为 6 个及以上，那么炸弹不会爆炸。
+
+`si`直到`retq`
+
+#### back to phase_2
+
+```assembly
+0000000000400efc <phase_2>:
+  400efc:	55                   	push   %rbp
+  400efd:	53                   	push   %rbx
+  400efe:	48 83 ec 28          	sub    $0x28,%rsp; %rsp -= 40
+  400f02:	48 89 e6             	mov    %rsp,%rsi; %rsi = %rsp 
+  400f05:	e8 52 05 00 00       	callq  40145c <read_six_numbers>
+  400f0a:	83 3c 24 01          	cmpl   $0x1,(%rsp); %rsp: Register of Stack Pointer 
+  400f0e:	74 20                	je     400f30 <phase_2+0x34>; if (*(%rsp) == 1) {goto line20} 
+  400f10:	e8 25 05 00 00       	callq  40143a <explode_bomb>
+  400f15:	eb 19                	jmp    400f30 <phase_2+0x34>
+  400f17:	8b 43 fc             	mov    -0x4(%rbx),%eax; %eax = (%rbx) - 0x4 //(%rbx) store the address of the array
+  400f1a:	01 c0                	add    %eax,%eax; %eax += %eax double
+  400f1c:	39 03                	cmp    %eax,(%rbx)
+  400f1e:	74 05                	je     400f25 <phase_2+0x29>; if (%eax == (%rbx)) {goto line16} else explode_bomb;
+  400f20:	e8 15 05 00 00       	callq  40143a <explode_bomb>
+  400f25:	48 83 c3 04          	add    $0x4,%rbx; %rbx += 4
+  400f29:	48 39 eb             	cmp    %rbp,%rbx
+  400f2c:	75 e9                	jne    400f17 <phase_2+0x1b>; if (%rbx != %rbx) {goto line 11}/*loop continue*/ 
+  400f2e:	eb 0c                	jmp    400f3c <phase_2+0x40>; else {goto line23}
+  400f30:	48 8d 5c 24 04       	lea    0x4(%rsp),%rbx; %rbx = *((%rsp) + 4) //%rbx now store the address of second element of input int array
+  400f35:	48 8d 6c 24 18       	lea    0x18(%rsp),%rbp; %rbp = *((%rsp) + 24)
+  400f3a:	eb db                	jmp    400f17 <phase_2+0x1b>; goto line11
+  400f3c:	48 83 c4 28          	add    $0x28,%rsp; %rsp += 40 // save by caller , see line4
+  400f40:	5b                   	pop    %rbx; 
+  400f41:	5d                   	pop    %rbp
+  400f42:	c3                   	retq   
+```
+
+从 `read_six_numbers`函数中出来。
+
+<img src="img/image-20220523162331069.png" alt="image-20220523162331069" style="zoom:50%;" />
+
+继续`si`，到这条指令
+
+```gdb
+22├──> 0x0000000000400f3a <+62>:    jmp    0x400f17 <phase_2+27>
+```
+
+跳到
+
+```gdb
+11├──> 0x0000000000400f17 <+27>:    mov    -0x4(%rbx),%eax
+```
+
+<img src="img/image-20220523165158453.png" alt="image-20220523165158453" style="zoom:50%;" />
+
+两次大的循环，第三次跳到了`explode bomb`函数，说明头两次“瞎猫碰到死耗子”了。蒙对了？回想一下，我们输入的是
+
+```shell
+1 2 3 4 5 6 7
+```
+
+也就是 1 和 2 满足条件，不会爆炸。
+
+鉴于`si`老是按的太快，学习反向调试`reverse-stepi`
+
+[GDB 反向調試（Reverse Debugging） \| Jason note](https://jasonblog.github.io/note/gdb/gdb_fan_xiang_diao_shi_ff08_reverse_debugging.html)
+
+```gdb
+(gdb) reverse-stepi
+Target native does not support this command.
+```
+
+貌似不支持。。。
+
+慢慢单步调试(我sb了，可以打断点的`b explode_bomb`)，分析到底是什么条件？
+
+<img src="img/image-20220523171843473.png" alt="image-20220523171843473" style="zoom:50%;" />
+
+```gdb
+13│    0x0000000000400f1c <+32>:    cmp    %eax,(%rbx)
+14│    0x0000000000400f1e <+34>:    je     0x400f25 <phase_2+41>
+15├──> 0x0000000000400f20 <+36>:    callq  0x40143a <explode_bomb>
+```
+
+见汇编中的注释
+
+##### cmp
+
+```gdb
+13│    0x0000000000400f1c <+32>:    cmp    %eax,(%rbx)
+```
+
+> ZF: 零标志。最近的操作得出的结果为0。
+>
+> 除了只设置条件码而不更新目的寄存器之外，CMP 指令与SUB 指令的行为是一样的。
+>
+> 《CSAPP》Eng p201 -> 3.6 控制 -> 3.6.1 状态码
+
+##### je
+
+```gdb
+14│    0x0000000000400f1e <+34>:    je     0x400f25 <phase_2+41>
+```
+
+> <img src="img/image-20220523175154191.png" alt="image-20220523175154191" style="zoom:50%;" />
+>
+> 《CSAPP》Eng p201 -> 3.6 控制 -> 3.6.3 跳转指令 Figure 3.15
+
+也就是 %eax 和 (%rbx) 相等
+
+> print /x $rax 				Print contents of %rax in hex
+>
+> 《gdb-notes》
+
+```gdb
+(gdb) print /x $eax
+$2 = 0x4
+```
+
+(%rbx) 说明取的寄存器 rbx 存的是一个指针的地址，(%rbx) 取该指针所指向的地址值。
+
+<img src="img/image-20220523174934815.png" alt="image-20220523174934815" style="zoom:50%;" />
+
+原图中有 rbx 是64位，没截全。但是存的应该只有 32 位的 4 字节 int 型。
+
+![image-20220523172811216](img/image-20220523172811216.png)
+
+> print *(int *) ($rsp+8) 		Print integer at address %rsp + 8
+>
+> 《gdb-notes》
+
+```gdb
+(gdb) print *(int *)($rbx)
+$4 = 3
+```
+
+左边的`$`表示 print 的变量个数
+
+```gdb
+(gdb) print $rbx  
+$1 = 140737488347064
+(gdb) print x $eax
+No symbol "x" in current context.
+(gdb) print /x $eax
+$2 = 0x4
+(gdb) print /x ($rbx)
+$3 = 0x7fffffffdfb8
+(gdb) print *(int *)($rbx)
+$4 = 3
+```
+
+可以看到这就是我输入的 3，那么比较的数
+
+```gdb
+(gdb) print $eax
+$10 = 4
+```
+
+$eax 中存的才是正确答案 4
+
+那么，前三个数分别是 1 2 4，即如果你耐心点一个个跑，在`explode bomb`打断点，跑六次即可。
+
+#### 循环分析
+
+<img src="img/image-20220523180640510.png" alt="image-20220523180640510" style="zoom: 80%;" />
+
+```gdb
+ 7├──> 0x0000000000400f0a <+14>:    cmpl   $0x1,(%rsp)
+```
+
+说明第 (%rsp) 所存的数一定是 1，不然爆炸。
+
+其实在`strings_not_equal`函数中就有了 rsp 寄存器的出现。
+
+在[strings_not_equal](###strings_not_equal)的图片中，我们可以发现
+
+<img src="img/image-20220523144911982.png" alt="image-20220523144911982" style="zoom:50%;" />
+
+```gdb
+line 4: sub $0x28,%rsp
+```
+
+这条指令中，寄存器 %rsp 用作栈指针，去分配栈上的内存。
+
+![image-20220523182412866](img/image-20220523182412866.png)
+
+并自减了 40 个字节（其实也没啥用，只是想起来）
+
+我们仔细分析循环就行，见 [###back to phase_2](###back to phase_2)中的注释。
+
+<img src="img/image-20220523180840377.png" alt="image-20220523180840377" style="zoom:50%;" />
+
+可以发现每次要对比的数都变为原来的两倍，而要求输入六个数字，故得出答案。
+
+##### lea
+
+```gdb
+ 20├──> 0x0000000000400f30 <+52>:    lea    0x4(%rsp),%rbx
+```
+
+这是一个加载有效地址(csapp 3.5.1)指令
+
+> 加载有效地址（load effective address)指令leaq 实际上是movq 指令的变形。它的指令形式是从内存读数据到寄存器，但实际上它根本就没有引用内存。它的第一个操作数看上去是一个内存引用，但该指令并不是从指定的位置读人数据，而是将有效地址写入到目的操作数。
+
+将 0x4(%rsp) (基址 + 偏移地址寻址)寻到的地址写入到 %rbx 中，这样
+
+##### jmp 
+
+> jmp 指令是无条件跳转。它可以是直接跳转，即跳转目标是作为指令的一部分编码的；也可以是间接跳转，即跳转目标是从寄存器或内存位置中读出的。汇编语言中，直接跳转是给出一个标号作为跳转目标的，例如上面所示代码中的标号 “.L1” 。
+>
+> 间接跳转的写法是`*`后面跟一个操作数指示符，使用图3-3 中描述的内存操作数格式中的一种。举个例子，指令
+>
+> `jmp * %rax`
+>
+> 用寄存器 %rax 中的值作为跳转目标，而指令
+>
+> `jmp *(%rax)`
+>
+> 以 %rax 中的值作为读地址，从内存中读出跳转目标。
+>
+> 《CSAPP》Eng p201 -> 3.6 控制 -> 3.6.3 跳转指令
+
+#### Answer
+
+```shell
+Border relations with Canada have never been better.
+1 2 4 8 16 32
+```
+
+### phase_3
+
+```assembly
+0000000000400f43 <phase_3>:
+  400f43:	48 83 ec 18          	sub    $0x18,%rsp; %rsp -= 18
+  400f47:	48 8d 4c 24 0c       	lea    0xc(%rsp),%rcx; %rcx = *((%rsp) + 12)
+  400f4c:	48 8d 54 24 08       	lea    0x8(%rsp),%rdx; %rdx = *((%rsp) + 8)
+  400f51:	be cf 25 40 00       	mov    $0x4025cf,%esi; %esi = $0x4025cf
+  400f56:	b8 00 00 00 00       	mov    $0x0,%eax; %eax = 0
+  400f5b:	e8 90 fc ff ff       	callq  400bf0 <__isoc99_sscanf@plt>
+  400f60:	83 f8 01             	cmp    $0x1,%eax; 
+  400f63:	7f 05                	jg     400f6a <phase_3+0x27>; if (%eax > 1) {goto line11} else explode_bomb //input must have at least 2 number,else bomb
+  400f65:	e8 d0 04 00 00       	callq  40143a <explode_bomb>
+  400f6a:	83 7c 24 08 07       	cmpl   $0x7,0x8(%rsp); 
+  400f6f:	77 3c                	ja     400fad <phase_3+0x6a>; if (7 > *((%rsp) + 8)) {bomb} 7 must be greater than input number to explode, so input a number less or qual to 7
+  400f71:	8b 44 24 08          	mov    0x8(%rsp),%eax; %eax = *((%rsp) + 8) assign first number to %eax
+  400f75:	ff 24 c5 70 24 40 00 	jmpq   *0x402470(,%rax,8); goto *M[0x402470 + 0 + R[%rax] * 8] , that is *M[0x402470 + R[%rax] * 8], as %rax include %eax, -> *M[0x402470 + R[%eax] * 8] -> *M[0x402470 + fir_num * 8]
+  400f7c:	b8 cf 00 00 00       	mov    $0xcf,%eax
+  400f81:	eb 3b                	jmp    400fbe <phase_3+0x7b>
+  400f83:	b8 c3 02 00 00       	mov    $0x2c3,%eax; 6 false
+  400f88:	eb 34                	jmp    400fbe <phase_3+0x7b>
+  400f8a:	b8 00 01 00 00       	mov    $0x100,%eax
+  400f8f:	eb 2d                	jmp    400fbe <phase_3+0x7b>
+  400f91:	b8 85 01 00 00       	mov    $0x185,%eax
+  400f96:	eb 26                	jmp    400fbe <phase_3+0x7b>
+  400f98:	b8 ce 00 00 00       	mov    $0xce,%eax
+  400f9d:	eb 1f                	jmp    400fbe <phase_3+0x7b>
+  400f9f:	b8 aa 02 00 00       	mov    $0x2aa,%eax; 6 true
+  400fa4:	eb 18                	jmp    400fbe <phase_3+0x7b>; goto line33
+  400fa6:	b8 47 01 00 00       	mov    $0x147,%eax
+  400fab:	eb 11                	jmp    400fbe <phase_3+0x7b>
+  400fad:	e8 88 04 00 00       	callq  40143a <explode_bomb>
+  400fb2:	b8 00 00 00 00       	mov    $0x0,%eax
+  400fb7:	eb 05                	jmp    400fbe <phase_3+0x7b>
+  400fb9:	b8 37 01 00 00       	mov    $0x137,%eax
+  400fbe:	3b 44 24 0c          	cmp    0xc(%rsp),%eax;
+  400fc2:	74 05                	je     400fc9 <phase_3+0x86>; if (%eax > *(%rsp) + 12) // 0xc == 12. {goto }
+  400fc4:	e8 71 04 00 00       	callq  40143a <explode_bomb>
+  400fc9:	48 83 c4 18          	add    $0x18,%rsp
+  400fcd:	c3                   	retq   
+
+```
+
+```gdb
+(gdb) b explode_bomb
+Breakpoint 1 at 0x40143a
+(gdb) b phase_3
+Breakpoint 2 at 0x400f43
+(gdb) run test3.txt
+Starting program: /home/youhuangla/cmu_lab_csapp/labs/bomb/bomb test3.txt
+Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Phase 1 defused. How about the next one?
+That's number 2.  Keep going!
+1 2 3 4
+
+Breakpoint 2, 0x0000000000400f43 in phase_3 ()
+```
+
+`si` 直到 `sscanf`
+
+```gdb
+(gdb) finish
+Run till exit from #0  __isoc99_sscanf (s=0x603820 <input_strings+160> "121 144 169 196",
+    format=0x4025cf "%d %d") at isoc99_sscanf.c:26
+0x0000000000400f60 in phase_3 ()
+Value returned is $2 = 2
+```
+
+sscanf 返回了一个 2，即参数个数为 2 ，可猜测应读入两个 int。
+
+和前面一样，`sscanf`函数前应该先传入一个格式化字符串给 %esi （存第二个参数的寄存器的 32 位名称）。
+
+所以第 5 行即将被存入 %esi 的地址即为格式化字符串的地址。
+
+```gdb
+ 1│ Dump of assembler code for function phase_3:
+ 2│    0x0000000000400f43 <+0>:     sub    $0x18,%rsp
+ 3│    0x0000000000400f47 <+4>:     lea    0xc(%rsp),%rcx
+ 4│    0x0000000000400f4c <+9>:     lea    0x8(%rsp),%rdx
+ 5│    0x0000000000400f51 <+14>:    mov    $0x4025cf,%esi
+ 6│    0x0000000000400f56 <+19>:    mov    $0x0,%eax
+ 7│    0x0000000000400f5b <+24>:    callq  0x400bf0 <__isoc99_sscanf@plt>
+ 8├──> 0x0000000000400f60 <+29>:    cmp    $0x1,%eax
+ 
+ (gdb) x/s 0x4025cf
+0x4025cf:       "%d %d"
+```
+
+然后 si 在这里爆了
+
+```gdb
+  400f6a:	83 7c 24 08 07       	cmpl   $0x7,0x8(%rsp); 
+  400f6f:	77 3c                	ja     400fad <phase_3+0x6a>; if (*((%rsp) + 8) > 7) {bomb} 
+
+(gdb) print /x *(int *)($rsp+8)
+$4 = 0xffffe0d8
+```
+
+所以试着改成 6 ？
+
+```shell
+1 6#1 7
+
+BOOM!!!
+```
+
+看来不是那么简单，这次输入 1 再次来到生死关
+
+```gdb
+ 6│    0x0000000000400f56 <+19>:    mov    $0x0,%eax
+ 7│    0x0000000000400f5b <+24>:    callq  0x400bf0 <__isoc99_sscanf@plt>
+ 8│    0x0000000000400f60 <+29>:    cmp    $0x1,%eax
+ 9│    0x0000000000400f63 <+32>:    jg     0x400f6a <phase_3+39>
+10│    0x0000000000400f65 <+34>:    callq  0x40143a <explode_bomb>
+11├──> 0x0000000000400f6a <+39>:    cmpl   $0x7,0x8(%rsp)
+12│    0x0000000000400f6f <+44>:    ja     0x400fad <phase_3+106>
+
+(gdb) print /x *(int *)($rsp+8)
+$5 = 0x1
+```
+
+爆炸。
+
+```assembly
+  400f60:	83 f8 01             	cmp    $0x1,%eax; 
+  400f63:	7f 05                	jg     400f6a <phase_3+0x27>; if (%eax > 1) {goto line11} else explode_bomb //input must have at least 2 number,else bomb
+```
+
+我们要输入两个数字。输入 22 33 ，再次来到这里
+
+```gdb
+ 4│    0x0000000000400f4c <+9>:     lea    0x8(%rsp),%rdx
+ 5│    0x0000000000400f51 <+14>:    mov    $0x4025cf,%esi
+ 6│    0x0000000000400f56 <+19>:    mov    $0x0,%eax
+ 7│    0x0000000000400f5b <+24>:    callq  0x400bf0 <__isoc99_sscanf@plt>
+ 8│    0x0000000000400f60 <+29>:    cmp    $0x1,%eax
+ 9│    0x0000000000400f63 <+32>:    jg     0x400f6a <phase_3+39>
+10│    0x0000000000400f65 <+34>:    callq  0x40143a <explode_bomb>
+11├──> 0x0000000000400f6a <+39>:    cmpl   $0x7,0x8(%rsp)
+12│    0x0000000000400f6f <+44>:    ja     0x400fad <phase_3+106>
+
+(gdb) print /x *(int *)($rsp+8) 
+$7 = 0x16
+```
+
+0x16 即 22，由
+
+```assembly
+  400f6a:	83 7c 24 08 07       	cmpl   $0x7,0x8(%rsp); 
+  400f6f:	77 3c                	ja     400fad <phase_3+0x6a>; if (7 > *((%rsp) + 8)) {bomb} 7 must be greater than input number to explode, so input a number less or qual to 7
+```
+
+所以这个第一个输入的数字必须小于等于 7， 22 > 7 故爆炸。
+
+cmp 等价于 sub，<img src="img/image-20220524174017925.png" alt="image-20220524174017925" style="zoom:50%;" />
+
+```gdb
+29├──> 0x0000000000400fad <+106>:   callq  0x40143a <explode_bomb>
+```
+
+[x86 \- Difference between JA and JG in assembly \- Stack Overflow](https://stackoverflow.com/questions/20906639/difference-between-ja-and-jg-in-assembly) 注意，so中的回答里，寄存器顺序不一样
+
+>  注意cmpq 指令的比较顺序（第2 行）。虽然参数列出的顺序先是％rsi(b)再是％rdi(a),实际上比较的是a 和b
+>
+> p173 3.6.2
+
+再来，输入6 22，在这炸了
+
+```gdb
+32│    0x0000000000400fb9 <+118>:   mov    $0x137,%eax
+33├──> 0x0000000000400fbe <+123>:   cmp    0xc(%rsp),%eax
+34│    0x0000000000400fc2 <+127>:   je     0x400fc9 <phase_3+134>
+35│    0x0000000000400fc4 <+129>:   callq  0x40143a <explode_bomb>
+36│    0x0000000000400fc9 <+134>:   add    $0x18,%rsp
+37│    0x0000000000400fcd <+138>:   retq
+```
+
+从
+
+```assembly
+  400f75:	ff 24 c5 70 24 40 00 	jmpq   *0x402470(,%rax,8); goto *M[0x402470 + 0 + R[%rax] * 8] , that is *M[0x402470 + R[%rax] * 8], as %rax include %eax, -> *M[0x402470 + R[%eax] * 8] -> *M[0x402470 + fir_num * 8]
+```
+
+这是个 比例变址寻址 指令。
+
+![image-20220524180454883](img/image-20220524180454883.png)
+
+开始分析，这个jmpq，[assembly \- What does this Intel jmpq instruction do? \- Stack Overflow](https://stackoverflow.com/questions/20251097/what-does-this-intel-jmpq-instruction-do)可知等价于 jmp
+
+```gdb
+13├──> 0x0000000000400f71 <+46>:    mov    0x8(%rsp),%eax
+14|    0x0000000000400f75 <+50>:    jmpq   *0x402470(,%rax,8)
+
+(gdb) print /x *(0x402470 + $rax * 8)
+$14 = 0x400f83
+```
+
+所以跳到这里
+
+```assembly
+  400f83:	b8 c3 02 00 00       	mov    $0x2c3,%eax; %eax = 0x2c3
+  400f88:	eb 34                	jmp    400fbe <phase_3+0x7b>
+```
+
+个锤子，过早打印了`*(0x402470 + $rax * 8)`的值，导致
+
+```assembly
+  400f71:	8b 44 24 08          	mov    0x8(%rsp),%eax; %eax = *((%rsp) + 8) assign first number to %eax
+```
+
+还没有执行，而该指令执行后改变了后面的 rax 中存的值
+
+<img src="img/image-20220524190829879.png" alt="image-20220524190829879" style="zoom: 67%;" />
+
+```assembly
+  400f71:	8b 44 24 08          	mov    0x8(%rsp),%eax; %eax = *((%rsp) + 8) assign first number to %eax
+  400f75:	ff 24 c5 70 24 40 00 	jmpq   *0x402470(,%rax,8); goto *M[0x402470 + 0 + R[%rax] * 8] , that is *M[0x402470 + R[%rax] * 8], as %rax include %eax, -> *M[0x402470 + R[%eax] * 8] -> *M[0x402470 + fir_num * 8]
+```
+
+#### Bug
+
+上一步中过早打印了，要到这里才能打印，故
+
+```gdb
+13│    0x0000000000400f71 <+46>:    mov    0x8(%rsp),%eax
+14├──> 0x0000000000400f75 <+50>:    jmpq   *0x402470(,%rax,8)
+
+(gdb) print /x *(0x402470 + $rax * 8)
+$4 = 0x400f9f
+```
+
+故应该跳到这里
+
+```assembly
+  400f9f:	b8 aa 02 00 00       	mov    $0x2aa,%eax; 6 true 
+  400fa4:	eb 18                	jmp    400fbe <phase_3+0x7b>; goto line33
+```
+
+$eax ==  0x2aa == 682
+
+查看汇编可知有很多个`  400f88:	eb 34                	jmp    400fbe <phase_3+0x7b>`语句，但是前一个`mov`语句却不相同。
+
+所以我们来到这里后都有这样两条指令：
+
+```assembly
+  400fbe:	3b 44 24 0c          	cmp    0xc(%rsp),%eax; 
+  400fc2:	74 05                	je     400fc9 <phase_3+0x86>; if (%eax == *(%rsp) + 12) // 0xc == 12. {goto ...}
+```
+
+```gdb
+33├──> 0x0000000000400fbe <+123>:   cmp    0xc(%rsp),%eax
+34│    0x0000000000400fc2 <+127>:   je     0x400fc9 <phase_3+134>
+
+(gdb) print $eax
+$21 = 682
+(gdb) print /x $eax
+$22 = 0x2aa
+(gdb) print *(int *)($rsp+0xc)
+$23 = 22
+```
+
+![image-20220524183421026](img/image-20220524183421026.png)
+
+%eax == 682
+
+*(%rsp + 0xc) : 22 ，即我们输入的第二个值！
+
+if (%eax == *(%rsp) + 12)	goto :
+
+```assembly
+  400fc9:	48 83 c4 18          	add    $0x18,%rsp
+  400fcd:	c3                   	retq   
+```
+
+正常返回，故原本的 22 应该写 682 。
+
+> 这段代码的后面有很多的jmp语句，而且极其的有规律，估计是个跳转表即switch语句，要跳转过去的地址是0x402470+%rax+8,而eax就是我们输入的第一个数，然后每一个jmp可以看做是一个case语句，每一个case语句我们看到都是在将一个参数赋值给eax,比如0xcf、0x2c3等，然后所有case统一跳转到0x400fbe(#这里可以等价于做break)，而在这个地方则是将我们输入的第二个数和eax中的值比较，相等就跳过炸弹否则爆炸，而刚才分析了eax的值是根据第一个值跳转到不同的case得到的。那么有多少个case就应该有多少个解题的答案，我们只需要确定第一个数然后顺着挑战到其中一个case，然后看这个case中的常量值是多少即为我们输入的第二个值。
+>
+>
+> 作者：编程指北
+> 链接：https://juejin.cn/post/6874568541229334541
+> 来源：稀土掘金
+> 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+#### Answer
+
+```shell
+youhuangla@Ubuntu bomb % ./bomb test3.txt                                                         [0]
+Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Phase 1 defused. How about the next one?
+That's number 2.  Keep going!
+6 682
+Halfway there!
 ```
 
 
 
-
-
-[【深入理解计算机系统 实验2 CSAPP】bomb lab 炸弹实验 CMU bomblab_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1vu411o7QP?spm_id_from=333.337.search-card.all.click)
-
-[【彻底搞懂C指针】Malloc 和 Free 的具体实现_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1aZ4y1P7fs?spm_id_from=333.999.0.0)
-
-
+### phase_4
 
 
 

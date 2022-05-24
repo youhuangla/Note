@@ -1,5 +1,7 @@
 # Common
 
+## Install and unistall
+
 * Search for software to be installed
 
 ```zsh
@@ -13,6 +15,8 @@ apt-get remove: 卸载软件
 apt-get purge: 卸载软件和配置文件
 
 apt-get autoremove: 移除没有使用的依赖
+
+[command line \- What is the correct way to completely remove an application? \- Ask Ubuntu](https://askubuntu.com/questions/187888/what-is-the-correct-way-to-completely-remove-an-application)
 
 ## Copy folder
 
