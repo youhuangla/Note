@@ -551,7 +551,7 @@ rax 0x0 -> 0x6
 <img src="img/image-20220523160847329.png" alt="image-20220523160847329" style="zoom: 50%;" />
 
 ```assembly
-  401480:	be c3 25 40 00       	mov    $0x4025c3,%esi; esi = 0x4025c3   等价于rsi，第2个参数。(gdb) x/s 0x4025c3 0x4025c3:       "%d %d %d %d %d %d"
+  401480:	be c3 25 40 00       	mov    $0x4025c3,%esi; esi = 0x4025c3   等价于rsi，第2个参数。(gdb) x/s 0x4025c3           0x4025c3:       "%d %d %d %d %d %d"
 ```
 
 finish 后，可以查看 sscanf 中存的第二个参数，即格式字符串，见 [###back to phase_2](###back to phase_2)中的注释。
@@ -1012,7 +1012,7 @@ $14 = 0x400f83
 
 #### Bug
 
-上一步中过早打印了，要到这里才能打印，故
+上一步中过早打印了，要到这里才能打印
 
 ```gdb
 13│    0x0000000000400f71 <+46>:    mov    0x8(%rsp),%eax
@@ -1051,6 +1051,8 @@ $22 = 0x2aa
 (gdb) print *(int *)($rsp+0xc)
 $23 = 22
 ```
+
+这里 0xc(%rsp) 是 （基址+偏移量）寻址
 
 ![image-20220524183421026](img/image-20220524183421026.png)
 
@@ -1091,5 +1093,750 @@ Halfway there!
 
 ### phase_4
 
+```assembly
+000000000040100c <phase_4>:
+  40100c:	48 83 ec 18          	sub    $0x18,%rsp
+  401010:	48 8d 4c 24 0c       	lea    0xc(%rsp),%rcx
+  401015:	48 8d 54 24 08       	lea    0x8(%rsp),%rdx
+  40101a:	be cf 25 40 00       	mov    $0x4025cf,%esi
+  40101f:	b8 00 00 00 00       	mov    $0x0,%eax; $eax = 0
+  401024:	e8 c7 fb ff ff       	callq  400bf0 <__isoc99_sscanf@plt>
+  401029:	83 f8 02             	cmp    $0x2,%eax; 
+  40102c:	75 07                	jne    401035 <phase_4+0x29>; if ($eax != 2) {goto explode} else continue
+  40102e:	83 7c 24 08 0e       	cmpl   $0xe,0x8(%rsp)
+  401033:	76 05                	jbe    40103a <phase_4+0x2e>; if (*(int *)($rsp+8) <= 0xe) {goto line13} else explode
+  401035:	e8 00 04 00 00       	callq  40143a <explode_bomb>
+  40103a:	ba 0e 00 00 00       	mov    $0xe,%edx; $edx = e
+  40103f:	be 00 00 00 00       	mov    $0x0,%esi; $esi = 0
+  401044:	8b 7c 24 08          	mov    0x8(%rsp),%edi; $edi = *(int *)($rsp + 8) = 1
+  401048:	e8 81 ff ff ff       	callq  400fce <func4>
+  40104d:	85 c0                	test   %eax,%eax
+  40104f:	75 07                	jne    401058 <phase_4+0x4c>; if fir_num = 4, jump from here to explode. if ($eax != 0) {explode}
+  401051:	83 7c 24 0c 00       	cmpl   $0x0,0xc(%rsp);
+  401056:	74 05                	je     40105d <phase_4+0x51>; if (*(int *)($rsp + 8) == 0) {not explode} else {explode}
+  401058:	e8 dd 03 00 00       	callq  40143a <explode_bomb>; if fir_num = 4, explode here.
+  40105d:	48 83 c4 18          	add    $0x18,%rsp
+  401061:	c3                   	retq   
+```
 
+由汇编中
+
+```assembly
+  401029:	83 f8 02             	cmp    $0x2,%eax
+  40102c:	75 07                	jne    401035 <phase_4+0x29>
+```
+
+和
+
+```gdb
+ 2│    0x000000000040100c <+0>:     sub    $0x18,%rsp
+ 3│    0x0000000000401010 <+4>:     lea    0xc(%rsp),%rcx
+ 4│    0x0000000000401015 <+9>:     lea    0x8(%rsp),%rdx
+ 5├──> 0x000000000040101a <+14>:    mov    $0x4025cf,%esi
+ 
+ 
+(gdb) x/s 0x4025cf
+0x4025cf:       "%d %d"
+```
+
+得知要输入两个数字，如果输入数字个数错了就炸，我们输入数字 1 2 。
+
+```gdb
+ 8│    0x0000000000401029 <+29>:    cmp    $0x2,%eax
+ 9│    0x000000000040102c <+32>:    jne    0x401035 <phase_4+41>
+10├──> 0x000000000040102e <+34>:    cmpl   $0xe,0x8(%rsp)
+```
+
+第一关过
+
+```gdb
+10├──> 0x000000000040102e <+34>:    cmpl   $0xe,0x8(%rsp)
+11│    0x0000000000401033 <+39>:    jbe    0x40103a <phase_4+46>
+
+(gdb) print *(int *)($rsp+8)
+$1 = 1
+(gdb) print *(int *)($rsp+12)
+$2 = 2
+```
+
+<img src="img/image-20220525085721659.png" alt="image-20220525085721659" style="zoom:67%;" />
+
+那么这里，jbe 的作用：输入的第一个数一定要小于等于 14 。
+
+```assembly
+  40102e:	83 7c 24 08 0e       	cmpl   $0xe,0x8(%rsp)
+  401033:	76 05                	jbe    40103a <phase_4+0x2e>; if (*(int *)($rsp+8) <= 0xe) {goto line13} else explode
+; ......
+  40103a:	ba 0e 00 00 00       	mov    $0xe,%edx ; line13, jump to here
+```
+
+继续 si 后在 func4 返回 phase_4 然后在这里爆炸
+
+```gdb
+0x0000000000401058 in phase_4 ()                                                         
+(gdb) 
+Breakpoint 2, 0x000000000040143a in explode_bomb ()
+(gdb)
+```
+
+即在这里条件跳转不符合拆弹条件
+
+```assembly
+  401051:	83 7c 24 0c 00       	cmpl   $0x0,0xc(%rsp)
+  401056:	74 05                	je     40105d <phase_4+0x51>
+  401058:	e8 dd 03 00 00       	callq  40143a <explode_bomb>
+```
+
+逆向分析
+
+```assembly
+  401051:	83 7c 24 0c 00       	cmpl   $0x0,0xc(%rsp);
+  401056:	74 05                	je     40105d <phase_4+0x51>; if (*(int *)($rsp + 8) == 0) {not explode} else {explode}
+```
+
+*(int *)($rsp + 8) 要等于 0 。再逆向走到 40104f，分析跳转条件。
+
+```assembly
+  40104d:	85 c0                	test   %eax,%eax;
+  40104f:	75 07                	jne    401058 <phase_4+0x4c>; if ($eax & $eax != 0/*$eax != 0*/) {goto explode} else continue
+  401051:	83 7c 24 0c 00       	cmpl   $0x0,0xc(%rsp);
+  401056:	74 05                	je     40105d <phase_4+0x51>; if (*(int *)($rsp + 8) == 0) {not explode} else {explode}
+```
+
+> CF: 进位标志。最近的操作使最高位产生了进位。可用来检査无符号操作的溢出。
+> ZF: 零标志。最近的操作得出的结果为0。
+> SF: 符号标志。最近的操作得到的结果为负数。
+> OF: 溢出标志。最近的操作导致一个补码溢出—— 正溢出或负溢出。
+>
+> TEST 指令的行为与AND 指令一样，除了它们只设置条件码而不改变目的寄存器的值。
+> 典型的用法是，两个操作数是一样的（例如，testq %rax, %rax 用来检查 %rax 是负数、零，还是正数）， 或其中的一个操作数是一个掩码，用来指示哪些位应该被测试。
+>
+> CSAPP 3.6.1
+
+<img src="img/image-20220525092447987.png" alt="image-20220525092447987" style="zoom:67%;" />
+
+所以为了不 explode ，
+
+```assembly
+  40104d:	85 c0                	test   %eax,%eax; $eax should be 0
+```
+
+$eax == 0
+
+综上，炸弹要不炸
+
+```shell
+*(int *)($rsp + 8) == 0 && $eax == 0
+```
+
+故逆向分析
+
+```assembly
+  40103a:	ba 0e 00 00 00       	mov    $0xe,%edx
+  40103f:	be 00 00 00 00       	mov    $0x0,%esi
+  401044:	8b 7c 24 08          	mov    0x8(%rsp),%edi
+  401048:	e8 81 ff ff ff       	callq  400fce <func4>
+```
+
+时，应抓住 $eax 和`*(int *)($rsp + 8)` 的变化，也等价于 `$rax` 和 `$esp` 的变化。
+
+由
+
+```assembly
+  401044:	8b 7c 24 08          	mov    0x8(%rsp),%edi; 
+```
+
+得知`*(int *)($rsp + 8)` 的变化等价于 `*(int *)($edi + 8)`的变化。
+
+<img src="img/image-20220525094557937.png" alt="image-20220525094557937" style="zoom: 67%;" />
+
+所以等价于 `*(int *)($rdi + 8)`
+
+#### func4
+
+即将进入 func4 的寄存器`i r` 。
+
+```gdb
+16├──> 0x0000000000401048 <+60>:    callq  0x400fce <func4>
+
+rax            0x2      2
+rbx            0x7fffffffe0d8   140737488347352
+rcx            0x0      0
+rdx            0xe      14
+rsi            0x0      0
+rdi            0x1      1
+rbp            0x402210 0x402210 <__libc_csu_init>
+rsp            0x7fffffffdfd0   0x7fffffffdfd0
+r8             0x0      0
+```
+
+进入 func4 分析
+
+```assembly
+0000000000400fce <func4>:
+  400fce:	48 83 ec 08          	sub    $0x8,%rsp; $rsp -= 8
+  400fd2:	89 d0                	mov    %edx,%eax; $eax = $edx = $rdx = 0xe = 14
+  400fd4:	29 f0                	sub    %esi,%eax; $eax -= $esi -> $eax -= $rsi -> %eax = 14
+  400fd6:	89 c1                	mov    %eax,%ecx; $ecx = 14
+  400fd8:	c1 e9 1f             	shr    $0x1f,%ecx; shift logic right 31; $ecx = 0
+  400fdb:	01 c8                	add    %ecx,%eax; $eax += $ecx -> $eax = 14
+  400fdd:	d1 f8                	sar    %eax; shift arithmetic right $eax = 7
+  400fdf:	8d 0c 30             	lea    (%rax,%rsi,1),%ecx; $ecx = $rax + $rsi * 1
+  400fe2:	39 f9                	cmp    %edi,%ecx; edi
+  400fe4:	7e 0c                	jle    400ff2 <func4+0x24>; if ($ecx <= $edi(first_num) ) {goto line 16} else continue;
+  400fe6:	8d 51 ff             	lea    -0x1(%rcx),%edx; $edx = $rcx - 1
+  400fe9:	e8 e0 ff ff ff       	callq  400fce <func4>; back to the beginning of func4
+  400fee:	01 c0                	add    %eax,%eax
+  400ff0:	eb 15                	jmp    401007 <func4+0x39>; maybe
+  400ff2:	b8 00 00 00 00       	mov    $0x0,%eax
+  400ff7:	39 f9                	cmp    %edi,%ecx; edi
+  400ff9:	7d 0c                	jge    401007 <func4+0x39>; maybe
+  400ffb:	8d 71 01             	lea    0x1(%rcx),%esi
+  400ffe:	e8 cb ff ff ff       	callq  400fce <func4>
+  401003:	8d 44 00 01          	lea    0x1(%rax,%rax,1),%eax; $eax = ($rax + $rax * 1) + 1 = 2 * $rax + 1
+  401007:	48 83 c4 08          	add    $0x8,%rsp; rsp
+  40100b:	c3                   	retq   
+```
+
+在 line 2, 22 有两处 rsp 的变化，两处 edi (lnie 10, 17) 变化，没有 rdi
+
+但有多处 eax
+
+```assembly
+  400fd8:	c1 e9 1f             	shr    $0x1f,%ecx; logic right shift 31
+```
+
+> 左移指令有两个名字：SAL 和SHL 两者的效果是一样的，都是将右边填上 0 。
+>
+> 右移指令不同，SAR 执行算术移位（填上符号位）, 而SHR 执行逻辑移位（填上 0 ）。
+>
+> 移位操作的目的操作数可以是一个寄存器或是一个内存位置。图 3-10 中用 $>>_a$ （算术）和$>>_d$（逻辑）来表示这两种不同的右移运算。
+>
+> 3.5.3
+
+[assembly \- Which operators use sal, shl, sar or shr \- Reverse Engineering Stack Exchange](https://reverseengineering.stackexchange.com/questions/20513/which-operators-use-sal-shl-sar-or-shr#:~:text=In%20C%20the%20operator%20for,arithmetic%20or%20a%20logical%20shift.)
+
+可知 shr 代表 C语言中的`>>`，csapp里在哪讲过来着？
+
+```assembly
+ 5│    0x0000000000400fd6 <+8>:     mov    %eax,%ecx
+ 6│    0x0000000000400fd8 <+10>:    shr    $0x1f,%ecx
+ 7├──> 0x0000000000400fdb <+13>:    add    %ecx,%eax
+ 
+(gdb) print $ecx
+$14 = 0
+```
+
+迷惑汇编，没有第一个操作数的算数右移。
+
+```assembly
+  400fdd:	d1 f8                	sar    %eax; shift arithmetic right
+```
+
+```gdb
+ 7│    0x0000000000400fdb <+13>:    add    %ecx,%eax
+ 8│    0x0000000000400fdd <+15>:    sar    %eax
+ 9├──> 0x0000000000400fdf <+17>:    lea    (%rax,%rsi,1),%ecx
+
+0x0000000000400fdd in func4 ()
+(gdb) print $eax
+$15 = 14
+(gdb) si    
+0x0000000000400fdf in func4 ()
+(gdb) print $eax
+$16 = 7
+```
+
+> Looks like the dissembler used short-hand for `SAR EAX,1` which has an opcode of `0xD1F8`.
+>
+> [SAR command in X86 assembly with one parameter \- Stack Overflow](https://stackoverflow.com/questions/12813962/sar-command-in-x86-assembly-with-one-parameter)
+
+> ### IA32 and x86-64 Documentation
+>
+> The definitive [Intel 64 and IA-32 Architectures Software Developer's Manuals](http://www.intel.com/products/processor/manuals/) are available online. These include:
+>
+> - *Volume 1: Basic Architecture*
+> - *Volume 2a: Instruction Set Reference, A-M*
+> - *Volume 2b: Instruction Set Reference, N-Z*
+> - *Volume 3a: System Programming Guide, Part 1*
+> - *Volume 3b: System Programming Guide, Part 2*
+>
+> [CS:APP2e, Bryant and O'Hallaron](http://csapp.cs.cmu.edu/public/students.html)
+
+在 CSAPP 官网的提供的[Intel 64 and IA-32 Architectures Software Developer's Manuals](http://www.intel.com/products/processor/manuals/) 上能下载到 SO 第一个回答的文档
+
+> [Intel® 64 and IA-32 Architectures Software Developer's Manual Combined Volumes 2A, 2B, 2C, and 2D: Instruction Set Reference, A- Z 英特尔64和 ia-32架构软件开发人员手册合并卷2a，2B，2C 和2d: 指令集参考，a-z](https://cdrdv2.intel.com/v1/dl/getContent/671110)
+>
+> [Intel® 64 and IA\-32 Architectures Software Developer Manuals](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html)
+
+ [325383-sdm-vol-2abcd.pdf](materia\csapp\325383-sdm-vol-2abcd.pdf) 
+
+我也没找到。按 SO 的回答理解，与 gdb 的 print 结果来看，应该是算数右移了一位，即 `$eax /= 2` 。
+
+
+
+```assembly
+  400fdf:	8d 0c 30             	lea    (%rax,%rsi,1),%ecx; 
+```
+
+比例变址寻址
+
+<img src="img/image-20220525112035881.png" alt="image-20220525112035881" style="zoom:80%;" />
+
+3.4.1
+
+```gdb
+ 9├──> 0x0000000000400fdf <+17>:    lea    (%rax,%rsi,1),%ecx
+
+(gdb) i r
+rax            0x7      7
+......
+rsi            0x0      0
+......
+(gdb) print ($rax + $rsi * 1)
+$18 = 7
+```
+
+```assembly
+  400fe2:	39 f9                	cmp    %edi,%ecx; edi
+  400fe4:	7e 0c                	jle    400ff2 <func4+0x24>; if ($ecx <= $edi(first_num) ) {goto line 16} else continue;
+```
+
+```gdb
+ 9├──> 0x0000000000400fdf <+17>:    lea    (%rax,%rsi,1),%ecx
+10│    0x0000000000400fe2 <+20>:    cmp    %edi,%ecx
+11│    0x0000000000400fe4 <+22>:    jle    0x400ff2 <func4+36>
+
+(gdb) print $edi
+$19 = 1
+```
+
+所以第一个输入的是 1 放在 $edi 中，在这里与 7 比较。
+
+现对该 lea 语句分析
+
+```assembly
+  400fe6:	8d 51 ff             	lea    -0x1(%rcx),%edx
+```
+
+```gdb
+10│    0x0000000000400fe2 <+20>:    cmp    %edi,%ecx
+11│    0x0000000000400fe4 <+22>:    jle    0x400ff2 <func4+36>
+12├──> 0x0000000000400fe6 <+24>:    lea    -0x1(%rcx),%edx
+13│    0x0000000000400fe9 <+27>:    callq  0x400fce <func4>
+
+0x0000000000400fe6 in func4 ()
+(gdb) print ($rcx - 1)
+$24 = 6
+(gdb) print $edx
+$25 = 14
+
+10│    0x0000000000400fe2 <+20>:    cmp    %edi,%ecx
+11│    0x0000000000400fe4 <+22>:    jle    0x400ff2 <func4+36>
+12│    0x0000000000400fe6 <+24>:    lea    -0x1(%rcx),%edx
+13├──> 0x0000000000400fe9 <+27>:    callq  0x400fce <func4>
+
+0x0000000000400fe9 in func4 ()
+(gdb) print ($rcx - 1)
+$27 = 6
+(gdb) print $edx
+$28 = 6
+```
+
+[assembly \- What is the difference between MOV and LEA? \- Stack Overflow](https://stackoverflow.com/questions/1699748/what-is-the-difference-between-mov-and-lea/58981392#58981392)
+
+所以这里等价于`$edx = $rcx - 1`
+
+所以想要打破循环，唯一的方法就是在下面第 2 行跳出去。
+
+```assembly
+  400fe2:	39 f9                	cmp    %edi,%ecx; edi
+  400fe4:	7e 0c                	jle    400ff2 <func4+0x24>; if ($ecx <= $edi(first_num) ) {goto line 16} else continue;
+  400fe6:	8d 51 ff             	lea    -0x1(%rcx),%edx; $edx = $rcx - 1
+  400fe9:	e8 e0 ff ff ff       	callq  400fce <func4>; back to the beginning of func4
+```
+
+条件是
+
+`$ecx > $edi(first_num)`
+
+#### reverse and back to phase_4
+
+寄了，回看想到，第二个数字由 phase_3 中的
+
+```assembly
+  400fbe:	3b 44 24 0c          	cmp    0xc(%rsp),%eax;
+  400fc2:	74 05                	je     400fc9 <phase_3+0x86>; if (%eax > *(%rsp) + 12) // 0xc == 12. {goto }
+```
+
+可知，只要第二个数字为 0 即可。
+
+第一个数字填入 3 ，居然可以
+
+```shell
+youhuangla@Ubuntu bomb % ./bomb test4.txt                                                                                         [8]
+Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Phase 1 defused. How about the next one?
+That's number 2.  Keep going!
+Halfway there!
+3 0
+So you got that one.  Try this one.
+^CSo you think you can stop the bomb with ctrl-c, do you?
+Well...OK. :-)
+```
+
+我只能说瞎猫了，这里第一个数字只能为 3 。
+
+输入 4 0 试试，在这里炸了
+
+```gdb
+0x000000000040100b in func4 ()
+(gdb) 
+0x000000000040104d in phase_4 ()
+(gdb) 
+0x000000000040104f in phase_4 ()
+(gdb) 
+0x0000000000401058 in phase_4 ()
+(gdb) 
+
+Breakpoint 2, 0x000000000040143a in explode_bomb ()
+```
+
+phase_4()
+
+```assembly
+  40104d:	85 c0                	test   %eax,%eax
+  40104f:	75 07                	jne    401058 <phase_4+0x4c>; if fir_num = 4, jump from here to explode. if ($eax & $eax != 0 /*$eax < 0*/) {goto explode}
+
+  401058:	e8 dd 03 00 00       	callq  40143a <explode_bomb>; if fir_num = 4, explode here.
+```
+
+which return from func4()
+
+```assembly
+  40100b:	c3                   	retq   
+```
+
+这个 test 语句后面的 jne 很关键，要想不寄， `$eax == 0`。
+
+所以在这里打断点
+
+```assembly
+  40104f:	75 07                	jne    401058 <phase_4+0x4c>; if fir_num = 4, jump from here to explode.
+```
+
+```gdb
+(gdb) b *0x40104f
+Breakpoint 3 at 0x40104f
+```
+
+看看输入 3 和 4 时有什么区别。
+
+输入 4 。
+
+```gdb
+Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Phase 1 defused. How about the next one?
+That's number 2.  Keep going!
+Halfway there!
+4 0
+
+Breakpoint 1, 0x000000000040100c in phase_4 ()
+(gdb) continue
+Continuing.
+
+Breakpoint 3, 0x000000000040104f in phase_4 ()
+(gdb) print $eax
+$32 = 2
+```
+
+输入 3 。到相同断点
+
+```gdb
+Breakpoint 3, 0x000000000040104f in phase_4 ()
+(gdb) print $eax
+$33 = 0
+```
+
+所以关键是 `$eax` ，即 `$rax` 。逆向可知
+
+```assembly
+  401048:	e8 81 ff ff ff       	callq  400fce <func4>
+  40104d:	85 c0                	test   %eax,%eax
+  40104f:	75 07                	jne    401058 <phase_4+0x4c>; if fir_num = 4, jump from here to explode. if ($eax != 0) {explode}
+```
+
+出 func4 后的 `$eax == 0`.
+
+#### reverse back to func4
+
+观察最后四条指令
+
+```assembly
+  400ffe:	e8 cb ff ff ff       	callq  400fce <func4>
+  401003:	8d 44 00 01          	lea    0x1(%rax,%rax,1),%eax; $eax = ($rax + $rax * 1) + 1 = 2 * $rax + 1
+  401007:	48 83 c4 08          	add    $0x8,%rsp; rsp
+  40100b:	c3                   	retq  
+```
+
+如果执行了第一条，又返回 func4 ，故只能找一个跳转到第二条或者第三条的指令逆向
+
+观察发现，只有 15 ， 18 两行可以
+
+```assembly
+;line15
+  400ff0:	eb 15                	jmp    401007 <func4+0x39>
+
+;line18
+  400ff9:	7d 0c                	jge    401007 <func4+0x39>
+```
+
+##### line 18
+
+18 这里如果通过第一条指令，`$eax == 0`，满足。
+
+第二条和第三条指令均没有直接跳转的。
+
+```assembly
+  400ff2:	b8 00 00 00 00       	mov    $0x0,%eax
+  400ff7:	39 f9                	cmp    %edi,%ecx; edi
+  400ff9:	7d 0c                	jge    401007 <func4+0x39>; maybe
+```
+
+第一条指令
+
+```assembly
+  400ff2:	b8 00 00 00 00       	mov    $0x0,%eax
+```
+
+只能从 line 11 条件跳转
+
+```assembly
+  400fe4:	7e 0c                	jle    400ff2 <func4+0x24>; if ($ecx <= $edi(first_num) ) {goto line 16} else continue;
+```
+
+也就是要达成 11 行的条件
+
+```assembly
+```
+
+即 `$ecx <= $edi`，设现在的 ecx 为 x ，edi 为 y 。x <= y 。
+
+现在只需要关注 ecx 和 edi 。
+
+```c
+//reverse fake code
+x = rax + rsi;// l 9
+rax = eax;
+eax *= 2;// 8
+eax -= ecx;     // 7
+```
+
+观察发现这样的分析复杂度过高了，放弃。
+
+#### disassembly
+
+查看 [CSAPP: Bomb Lab 详细实验解析 \- 掘金](https://juejin.cn/post/6874568541229334541#heading-6) 可以发现反汇编是可行的，自己也察觉到是一个递归函数，所以用C语言模拟汇编，编程实现输出。
+
+屏蔽外部细节，尝试反汇编
+
+```assembly
+0000000000400fce <func4>:
+  400fce:	48 83 ec 08          	sub    $0x8,%rsp; 创建栈帧
+  400fd2:	89 d0                	mov    %edx,%eax; r = c
+  400fd4:	29 f0                	sub    %esi,%eax; r -= b
+  400fd6:	89 c1                	mov    %eax,%ecx; d = r;
+  400fd8:	c1 e9 1f             	shr    $0x1f,%ecx; d >>= 31;
+  400fdb:	01 c8                	add    %ecx,%eax; r += d;
+  400fdd:	d1 f8                	sar    %eax; r /= 2;
+  400fdf:	8d 0c 30             	lea    (%rax,%rsi,1),%ecx; d = r + b;
+  400fe2:	39 f9                	cmp    %edi,%ecx;
+  400fe4:	7e 0c                	jle    400ff2 <func4+0x24>; if (d <= a ) {goto line 16} else continue;
+  400fe6:	8d 51 ff             	lea    -0x1(%rcx),%edx; $edx = $rcx - 1
+  400fe9:	e8 e0 ff ff ff       	callq  400fce <func4>; back to the beginning of func4
+  400fee:	01 c0                	add    %eax,%eax
+  400ff0:	eb 15                	jmp    401007 <func4+0x39>; maybe
+  400ff2:	b8 00 00 00 00       	mov    $0x0,%eax
+  400ff7:	39 f9                	cmp    %edi,%ecx; edi
+  400ff9:	7d 0c                	jge    401007 <func4+0x39>; maybe
+  400ffb:	8d 71 01             	lea    0x1(%rcx),%esi
+  400ffe:	e8 cb ff ff ff       	callq  400fce <func4>
+  401003:	8d 44 00 01          	lea    0x1(%rax,%rax,1),%eax; $eax = ($rax + $rax * 1) + 1 = 2 * $rax + 1
+  401007:	48 83 c4 08          	add    $0x8,%rsp;
+  40100b:	c3                   	retq   
+```
+
+要注意的是
+
+1. 根据寄存器的名字看出在<u>**函数内声明**</u>变量个数。
+2. 根据汇编指令看出<u>**声明但不初始化**</u>的变量个数。
+3. 注意递归地调用函数后， <u>**递归函数返回的值**</u> 也要赋给虚拟的返回值 r 。
+
+```c
+#include <stdio.h>
+
+int func4(int a, int b, int c) {//第二行可看出桟帧上至少三个变量（为参数？）存在。第五行可以看出有第四个，但第四个可以没有初始值。
+    //建立桟帧
+    int r;
+    int d;
+    r = c;
+    r -= b;
+    d = r;//这里看出第四个可以没有初始值
+    d >>= 31;
+    r += d;
+    r /= 2;
+    d = r + b;
+line11:
+    if (d <= a) {
+        goto line16;
+    }
+line12:
+    c = d - 1;
+    r = func4(a, b, c);//每次的%eax仍保留着，所以返回给一个变量r
+    r *= 2;
+    goto line22;
+line16:
+    r = 0;
+    if (d >= a) {
+        goto line22;
+    }
+    b = d + 1;
+    r = func4(a, b, c);
+    r = 2 * r + 1;
+line22:
+    //恢复栈帧
+    return r;// 前面已经分析，eax == 0才能满足，所以最后应该 r == 0 后返回
+}
+
+int main() {
+
+    for (int i = 0; i <= 14; i++) {//有phase_2中得出范围
+        int a = i;
+        int b = 0;
+        int c = 14;
+        int res = func4(a, b, c);
+        if (res == 0) {
+            printf("%d\n", i);
+        }
+    }
+
+    return 0;
+}
+```
+
+```shell
+0
+1
+3
+7
+```
+
+所以第一个数为上述C语言的输出，第二个数为 0 。
+
+经验证上述四个都可行。
+
+```shell
+youhuangla@Ubuntu bomb % ./bomb test4.txt                                                                                         [0]
+Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Phase 1 defused. How about the next one?
+That's number 2.  Keep going!
+Halfway there!
+0 0
+So you got that one.  Try this one.
+^CSo you think you can stop the bomb with ctrl-c, do you?
+Well...OK. :-)
+youhuangla@Ubuntu bomb % ./bomb test4.txt                                                                                        [16]
+Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Phase 1 defused. How about the next one?
+That's number 2.  Keep going!
+Halfway there!
+1 0
+So you got that one.  Try this one.
+^CSo you think you can stop the bomb with ctrl-c, do you?
+Well...OK. :-)
+youhuangla@Ubuntu bomb % ./bomb test4.txt                                                                                        [16]
+Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Phase 1 defused. How about the next one?
+That's number 2.  Keep going!
+Halfway there!
+3 0
+So you got that one.  Try this one.
+^CSo you think you can stop the bomb with ctrl-c, do you?
+Well...OK. :-)
+youhuangla@Ubuntu bomb % ./bomb test4.txt                                                                                        [16]
+Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Phase 1 defused. How about the next one?
+That's number 2.  Keep going!
+Halfway there!
+7 0
+So you got that one.  Try this one.
+^CSo you think you can stop the bomb with ctrl-c, do you?
+Well...OK. :-)
+```
+
+代码可简化为
+
+```c
+#include <stdio.h>
+
+int func4_2(int a, int b, int c) { //第二行可看出桟帧上至少三个变量（为参数？）存在。第五行可以看出有第四个，但第四个可以没有初始值。
+    //建立桟帧
+    int r;
+    int d;
+    r = c;
+    r -= b;
+    d = r; //这里看出第四个可以没有初始值
+    d >>= 31;
+    r += d;
+    r /= 2;
+    d = r + b;
+    if (d <= a) {
+        r = 0;
+        if (d >= a) {
+            return r;
+        }
+        b = d + 1;
+        r = func4_2(a, b, c);
+        r = 2 * r + 1;
+        return r; // 前面已经分析，eax == 0才能满足，所以最后应该 r == 0 后返回
+    }
+    c = d - 1;
+    r = func4_2(a, b, c); //每次的%eax仍保留着，所以返回给一个变量r
+    r *= 2;
+    return r;
+}
+
+int main() {
+    for (int i = 0; i <= 14; i++) { //有phase_2中得出范围
+        int a = i;
+        int b = 0;
+        int c = 14;
+        int res = func4_2(a, b, c);
+        if (res == 0) {
+            printf("%d\n", i);
+        }
+    }
+
+    return 0;
+}
+```
+
+#### Answer
+
+其中一个为
+
+```shell
+Border relations with Canada have never been better.
+1 2 4 8 16 32
+6 682
+0 0
+```
+
+### phase_5
 
