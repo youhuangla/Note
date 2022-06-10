@@ -84,7 +84,9 @@ _IO_new_file_underflow (fp=0x7f106f9c8a00 <_IO_2_1_stdin_>)
 youhuangla@Ubuntu bomb % sudo cgdb --p 30184      [0]
 ```
 
+#### Reverse
 
+[debugging \- Target child does not support this command error when running reverse\-step \- Stack Overflow](https://stackoverflow.com/questions/17561638/target-child-does-not-support-this-command-error-when-running-reverse-step)
 
 
 

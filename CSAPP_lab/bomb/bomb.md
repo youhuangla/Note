@@ -1840,3 +1840,592 @@ Border relations with Canada have never been better.
 
 ### phase_5
 
+```assembly
+0000000000401062 <phase_5>:
+  401062:	53                   	push   %rbx
+  401063:	48 83 ec 20          	sub    $0x20,%rsp
+  401067:	48 89 fb             	mov    %rdi,%rbx
+  40106a:	64 48 8b 04 25 28 00 	mov    %fs:0x28,%rax
+  401071:	00 00 
+  401073:	48 89 44 24 18       	mov    %rax,0x18(%rsp)
+  401078:	31 c0                	xor    %eax,%eax
+  40107a:	e8 9c 02 00 00       	callq  40131b <string_length>
+  40107f:	83 f8 06             	cmp    $0x6,%eax; string lenth have to be 6
+  401082:	74 4e                	je     4010d2 <phase_5+0x70>; if ($eax == 6) {goto line32} else explode;
+  401084:	e8 b1 03 00 00       	callq  40143a <explode_bomb>
+  401089:	eb 47                	jmp    4010d2 <phase_5+0x70>
+  40108b:	0f b6 0c 03          	movzbl (%rbx,%rax,1),%ecx; $ecx = *($rbx + $rax) //loop from line22  $rax is an index, *($rbx) is a literal array.
+  40108f:	88 0c 24             	mov    %cl,(%rsp); mov the 1 byte to *($rsp)
+  401092:	48 8b 14 24          	mov    (%rsp),%rdx; than the 1 byte to $rdx
+  401096:	83 e2 0f             	and    $0xf,%edx; $edx &= binary 1111 // 1 byte only left 0.5 byte, 1 hex
+  401099:	0f b6 92 b0 24 40 00 	movzbl 0x4024b0(%rdx),%edx; *(0x4024b0 + $rdx) is a string's first character, mov the character of index hex in *(0x4024b0) to $edx.
+  4010a0:	88 54 04 10          	mov    %dl,0x10(%rsp,%rax,1);mov the lowest 1 byte of $edx
+  4010a4:	48 83 c0 01          	add    $0x1,%rax; $rax += 1
+  4010a8:	48 83 f8 06          	cmp    $0x6,%rax; 
+  4010ac:	75 dd                	jne    40108b <phase_5+0x29>; if ($rax != 6) {goto line14}
+  4010ae:	c6 44 24 16 00       	movb   $0x0,0x16(%rsp);mov '\0' to the end of a string in *($rsp)
+  4010b3:	be 5e 24 40 00       	mov    $0x40245e,%esi
+  4010b8:	48 8d 7c 24 10       	lea    0x10(%rsp),%rdi; $rdi = $rsp + 10 // $rdi point to the last 6 hex,see line19
+  4010bd:	e8 76 02 00 00       	callq  401338 <strings_not_equal>; goto strings_not equal
+  4010c2:	85 c0                	test   %eax,%eax
+  4010c4:	74 13                	je     4010d9 <phase_5+0x77>; if ($eax == 0) goto line34
+  4010c6:	e8 6f 03 00 00       	callq  40143a <explode_bomb>; input "aduier" explode here
+  4010cb:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
+  4010d0:	eb 07                	jmp    4010d9 <phase_5+0x77>
+  4010d2:	b8 00 00 00 00       	mov    $0x0,%eax; $eax = 0
+  4010d7:	eb b2                	jmp    40108b <phase_5+0x29>; goto line25
+  4010d9:	48 8b 44 24 18       	mov    0x18(%rsp),%rax
+  4010de:	64 48 33 04 25 28 00 	xor    %fs:0x28,%rax
+  4010e5:	00 00 
+  4010e7:	74 05                	je     4010ee <phase_5+0x8c>
+  4010e9:	e8 42 fa ff ff       	callq  400b30 <__stack_chk_fail@plt>
+  4010ee:	48 83 c4 20          	add    $0x20,%rsp
+  4010f2:	5b                   	pop    %rbx
+  4010f3:	c3                   	retq   
+
+```
+
+#### string_length
+
+```assembly
+000000000040131b <string_length>:
+  40131b:	80 3f 00             	cmpb   $0x0,(%rdi); $rdi the ?
+  40131e:	74 12                	je     401332 <string_length+0x17>; if ($rdi = 0) jump to 11
+  401320:	48 89 fa             	mov    %rdi,%rdx;
+  401323:	48 83 c2 01          	add    $0x1,%rdx
+  401327:	89 d0                	mov    %edx,%eax
+  401329:	29 f8                	sub    %edi,%eax
+  40132b:	80 3a 00             	cmpb   $0x0,(%rdx)
+  40132e:	75 f3                	jne    401323 <string_length+0x8>
+  401330:	f3 c3                	repz retq 
+  401332:	b8 00 00 00 00       	mov    $0x0,%eax
+  401337:	c3                   	retq   
+```
+
+```gdb
+b string_length
+run test5.txt
+```
+
+隔得有段时间了，忘记第一个谜题的函数中也有 string_length 了。
+
+```shell
+(gdb) print *(char *)($rdi)
+$3 = 66 'B'
+(gdb) print *(char *)($rdi + 1)
+$4 = 111 'o'
+(gdb) print *(char *)($rdi + 2)
+$5 = 114 'r'
+(gdb) print *(char *)($rdi + 3)
+$6 = 100 'd'
+(gdb) print *(char *)($rdi + 4)
+$7 = 101 'e'
+```
+
+#### strings_not_equal
+
+```assembly
+0000000000401338 <strings_not_equal>:
+  401338:	41 54                	push   %r12
+  40133a:	55                   	push   %rbp
+  40133b:	53                   	push   %rbx
+  40133c:	48 89 fb             	mov    %rdi,%rbx
+  40133f:	48 89 f5             	mov    %rsi,%rbp
+  401342:	e8 d4 ff ff ff       	callq  40131b <string_length>
+  401347:	41 89 c4             	mov    %eax,%r12d; %r12d := length of string // assign
+  40134a:	48 89 ef             	mov    %rbp,%rdi; 
+  40134d:	e8 c9 ff ff ff       	callq  40131b <string_length>
+  401352:	ba 01 00 00 00       	mov    $0x1,%edx
+  401357:	41 39 c4             	cmp    %eax,%r12d
+  40135a:	75 3f                	jne    40139b <strings_not_equal+0x63>; goto line35
+  40135c:	0f b6 03             	movzbl (%rbx),%eax
+  40135f:	84 c0                	test   %al,%al
+  401361:	74 25                	je     401388 <strings_not_equal+0x50>; goto line30
+  401363:	3a 45 00             	cmp    0x0(%rbp),%al
+  401366:	74 0a                	je     401372 <strings_not_equal+0x3a>; goto line23
+  401368:	eb 25                	jmp    40138f <strings_not_equal+0x57>; goto line32
+  40136a:	3a 45 00             	cmp    0x0(%rbp),%al
+  40136d:	0f 1f 00             	nopl   (%rax)
+  401370:	75 24                	jne    401396 <strings_not_equal+0x5e>
+  401372:	48 83 c3 01          	add    $0x1,%rbx
+  401376:	48 83 c5 01          	add    $0x1,%rbp
+  40137a:	0f b6 03             	movzbl (%rbx),%eax
+  40137d:	84 c0                	test   %al,%al
+  40137f:	75 e9                	jne    40136a <strings_not_equal+0x32>
+  401381:	ba 00 00 00 00       	mov    $0x0,%edx
+  401386:	eb 13                	jmp    40139b <strings_not_equal+0x63>
+  401388:	ba 00 00 00 00       	mov    $0x0,%edx
+  40138d:	eb 0c                	jmp    40139b <strings_not_equal+0x63>
+  40138f:	ba 01 00 00 00       	mov    $0x1,%edx
+  401394:	eb 05                	jmp    40139b <strings_not_equal+0x63>
+  401396:	ba 01 00 00 00       	mov    $0x1,%edx
+  40139b:	89 d0                	mov    %edx,%eax
+  40139d:	5b                   	pop    %rbx
+  40139e:	5d                   	pop    %rbp
+  40139f:	41 5c                	pop    %r12
+  4013a1:	c3                   	retq   
+
+```
+
+重来，输入 "abcdef"。
+
+```shell
+ 1│ Dump of assembler code for function strings_not_equal:
+ 2├──> 0x0000000000401338 <+0>:     push   %r12
+ 3│    0x000000000040133a <+2>:     push   %rbp
+ 4│    0x000000000040133b <+3>:     push   %rbx
+
+(gdb) b phase_5
+Breakpoint 1 at 0x401062
+(gdb) run test5.txt
+......
+(gdb) b strings_not_equal
+Breakpoint 2 at 0x401338
+(gdb) continue
+Continuing.
+
+Breakpoint 2, 0x0000000000401338 in strings_not_equal ()
+(gdb) x/s $rdi
+0x7fffffffdfd0: "aduier"
+```
+
+就这？
+
+```shell
+youhuangla@Ubuntu bomb % ./bomb test5.txt                                                       [0]
+Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Phase 1 defused. How about the next one?
+That's number 2.  Keep going!
+Halfway there!
+So you got that one.  Try this one.
+aduier
+
+BOOM!!!
+```
+
+输入 aduier 后
+
+```shell
+0x00000000004010c6 in phase_5 ()
+(gdb) 
+0x000000000040143a in explode_bomb ()
+```
+
+
+
+```shell
+(gdb) b strings_not_equal
+Breakpoint 2 at 0x401338
+(gdb) continue
+Continuing.
+
+Breakpoint 2, 0x0000000000401338 in strings_not_equal ()
+(gdb) x/s $rdi
+0x7fffffffdfd0: "aiefed" # change 
+```
+
+注意到
+
+```shell
+abcdef # 1
+aduier # 2
+aiefed 
+```
+
+中第一位是 a ，第五位是e。推测在函数 `strings_not_equal` 前可能会有字符串的改变。
+
+输入 aaaaea
+
+```shell
+Phase 1 defused. How about the next one?
+That's number 2.  Keep going!
+Halfway there!
+So you got that one.  Try this one.
+aaaaea
+
+Breakpoint 1, 0x0000000000401062 in phase_5 ()
+(gdb) x/s $rax
+0x6038c0 <input_strings+320>:   "aaaaea"
+```
+
+
+
+```shell
+13│    0x000000000040108b <+41>:    movzbl (%rbx,%rax,1),%ecx
+14├──> 0x000000000040108f <+45>:    mov    %cl,(%rsp)
+
+(gdb) p $ecx
+$2 = 97 # same as character a's ASCII
+(gdb) x/s ($rsp)
+0x7fffffffdfc0: "\020\"@" # what is this?
+(gdb) p ($c1)
+$4 = void
+```
+
+
+
+```shell
+13│    0x000000000040108b <+41>:    movzbl (%rbx,%rax,1),%ecx
+14│    0x000000000040108f <+45>:    mov    %cl,(%rsp)
+15├──> 0x0000000000401092 <+48>:    mov    (%rsp),%rdx
+
+(gdb) x/s ($rsp)
+0x7fffffffdfc0: "a\"@"
+(gdb) p/x $edx
+$6 = 0x6038c6
+```
+
+第一次循环（此时还不知道是循环）
+
+```shell
+16│    0x0000000000401096 <+52>:    and    $0xf,%edx
+17│    0x0000000000401099 <+55>:    movzbl 0x4024b0(%rdx),%edx
+18├──> 0x00000000004010a0 <+62>:    mov    %dl,0x10(%rsp,%rax,1)
+
+(gdb) p $edx
+$11 = 97
+(gdb) x/s (0x4024b0 + ($rdx))
+0x402511:       "secret phase!" 
+(gdb) p $dl # dl is edx(4byte)'s 1byte reg
+$31 = 97
+(gdb) p (0x10 + $rsp + $rax * 1)
+$32 = (void *) 0x7fffffffdfd0
+```
+
+[拆除csapp二进制炸弹超详细的解析之phase\_5 \| mkzpd](https://mkzpd.github.io/2019/09/12/%E6%8B%86%E9%99%A4csapp%E4%BA%8C%E8%BF%9B%E5%88%B6%E7%82%B8%E5%BC%B9%E8%B6%85%E8%AF%A6%E7%BB%86%E7%9A%84%E8%A7%A3%E6%9E%90%E4%B9%8Bphase_5/)
+
+输入 secret phase! 后依然炸。
+
+```shell
+16│    0x0000000000401096 <+52>:    and    $0xf,%edx
+17│    0x0000000000401099 <+55>:    movzbl 0x4024b0(%rdx),%edx
+18│    0x00000000004010a0 <+62>:    mov    %dl,0x10(%rsp,%rax,1)
+19├──> 0x00000000004010a4 <+66>:    add    $0x1,%rax
+
+(gdb) x/s (0x10 + $rsp + $rax * 1)
+0x7fffffffdfd0: "a\340\377\377\377\177"
+```
+
+第二次循环
+
+```shell
+15│    0x0000000000401092 <+48>:    mov    (%rsp),%rdx
+16│    0x0000000000401096 <+52>:    and    $0xf,%edx
+17├──> 0x0000000000401099 <+55>:    movzbl 0x4024b0(%rdx),%edx
+
+(gdb) x/s (0x4024b0 + $rdx)
+0x4024b1 <array.3449+1>:        "aduiersnfotvbylSo you think you can stop the bomb with ctrl-c, do y
+ou?"
+# third loop
+0x00000000004010a0 in phase_5 ()
+(gdb) x/s (0x4024b0 + $rdx)
+0x402511:       "secret phase!"
+# forth
+(gdb) x/s (0x4024b0 + $rdx)
+0x402511:       "secret phase!"
+# fifth
+0x00000000004010a0 in phase_5 ()
+(gdb) x/s (0x4024b0 + $rdx)
+0x402515:       "et phase!"
+# sixth
+(gdb) x/s (0x4024b0 + $rdx)
+0x402511:       "secret phase!"
+```
+
+第六次后跳出循环
+
+```shell
+20│    0x00000000004010a8 <+70>:    cmp    $0x6,%rax
+21│    0x00000000004010ac <+74>:    jne    0x40108b <phase_5+41>
+22├──> 0x00000000004010ae <+76>:    movb   $0x0,0x16(%rsp)
+```
+
+在`strings_not_equal`
+
+```shell
+0x000000000040139e in strings_not_equal ()
+(gdb) p $eax
+1
+```
+
+后出函数，爆炸
+
+```shell
+25│    0x00000000004010bd <+91>:    callq  0x401338 <strings_not_equal>
+26│    0x00000000004010c2 <+96>:    test   %eax,%eax
+27│    0x00000000004010c4 <+98>:    je     0x4010d9 <phase_5+119>
+```
+
+也就是判字符串相等才不炸。
+
+这里可以看到 rdi 和 esi 分别是函数传入的第一、二个参数，那么`strings_not_equal`函数传入的两个字符串，而 esi 寄存器中的值永远是 `$0x40245e` 。
+
+```assembly
+  4010ae:	c6 44 24 16 00       	movb   $0x0,0x16(%rsp)
+  4010b3:	be 5e 24 40 00       	mov    $0x40245e,%esi
+  4010b8:	48 8d 7c 24 10       	lea    0x10(%rsp),%rdi
+  4010bd:	e8 76 02 00 00       	callq  401338 <strings_not_equal>
+```
+
+故`$0x40245e`存的字符串就是要比较相等的字符串，刚好 6 个。
+
+```shell
+22├──> 0x00000000004010ae <+76>:    movb   $0x0,0x16(%rsp)
+23│    0x00000000004010b3 <+81>:    mov    $0x40245e,%esi
+24│    0x00000000004010b8 <+86>:    lea    0x10(%rsp),%rdi
+25│    0x00000000004010bd <+91>:    callq  0x401338 <strings_not_equal>
+
+(gdb) x/s 0x40245e
+0x40245e:       "flyers"
+```
+
+
+
+```shell
+22│    0x00000000004010ae <+76>:    movb   $0x0,0x16(%rsp)
+23│    0x00000000004010b3 <+81>:    mov    $0x40245e,%esi
+24│    0x00000000004010b8 <+86>:    lea    0x10(%rsp),%rdi
+25├──> 0x00000000004010bd <+91>:    callq  0x401338 <strings_not_equal>
+
+(gdb) x/s $rdi
+0x7fffffffdfd0: "aduier"
+```
+
+但是第一个字符串是一个奇怪的字符串，所以显然不能直接输入 flyers ，因为输入的字符串改变了。而传入的第一个字符串不仅和输入字符串有关，还和之前的循环有关。(如果输入和传入第一个字符串中字符一一对应，那这里就可以看出来是~~~ef~)
+
+```assembly
+  40108b:	0f b6 0c 03          	movzbl (%rbx,%rax,1),%ecx; $ecx = *($rbx + $rax) //loop from line22 cl only change here, before the first loop, cl = 0x61, maybe because input "aaaaaa"
+  40108f:	88 0c 24             	mov    %cl,(%rsp); *($rsp) = $cl //ecx的最低1字节
+  401092:	48 8b 14 24          	mov    (%rsp),%rdx; $rdx = *($rsp) //最低1字节
+  401096:	83 e2 0f             	and    $0xf,%edx; $edx &= 0xf//
+  401099:	0f b6 92 b0 24 40 00 	movzbl 0x4024b0(%rdx),%edx; *(0x4024b0 + $rdx) is a string's first character ,take the byte of first operand to second operand
+  4010a0:	88 54 04 10          	mov    %dl,0x10(%rsp,%rax,1); mov the lowest byte to             *($rsp + $rax + 0x10)
+  4010a4:	48 83 c0 01          	add    $0x1,%rax; $rax += 1
+  4010a8:	48 83 f8 06          	cmp    $0x6,%rax; 
+  4010ac:	75 dd                	jne    40108b <phase_5+0x29>; if ($rax != 6) {goto line14}
+```
+
+输入 "aaaaaa" ，因为输入的 a 存在 `*($rbx + $rax)`处，故头两行指令将首字符存入 1 字节寄存器 cl 中，再存到
+
+```assembly
+13│    0x000000000040108b <+41>:    movzbl (%rbx,%rax,1),%ecx
+14│    0x000000000040108f <+45>:    mov    %cl,(%rsp)
+15├──> 0x0000000000401092 <+48>:    mov    (%rsp),%rdx
+
+(gdb) p /x *($rbx + $rax)
+$6 = 0x61616161 # this is input
+(gdb) p *(char *)($rsp)
+$9 = 97 'a'
+(gdb) p $cl 
+$17 = 97
+```
+
+这里看了好久才明白，第二条指令只移动了 1 byte 的数据，所以只有最低位两个 16 进制改为 0x61 。
+
+```assembly
+  40108f:	88 0c 24             	mov    %cl,(%rsp); 
+  401092:	48 8b 14 24          	mov    (%rsp),%rdx;
+```
+
+```shell
+13│    0x000000000040108b <+41>:    movzbl (%rbx,%rax,1),%ecx
+14│    0x000000000040108f <+45>:    mov    %cl,(%rsp)
+15│    0x0000000000401092 <+48>:    mov    (%rsp),%rdx
+16├──> 0x0000000000401096 <+52>:    and    $0xf,%edx
+
+(gdb) p *(char *)$rdx
+$14 = -119 '\211'
+(gdb) p /x $rdx
+$18 = 0x402261
+```
+
+而在执行
+
+```assembly
+  401096:	83 e2 0f             	and    $0xf,%edx; $edx &= 0xf; //fir $edx = 1
+```
+
+时，置 edx 的高 28 位二进制为 0，edx (即 64 位寄存器 rdx 的 32 位寄存器)只取最低的 4 位二进制，也就是最低的一位 16 进制，所以变为 1 。
+
+由后面
+
+```assembly
+  401099:	0f b6 92 b0 24 40 00 	movzbl 0x4024b0(%rdx),%edx; *(0x4024b0 + $rdx) is a string's first character ,take the lowest byte of first operand to second operand
+```
+
+可知 rdx 是存在 0x4024b0 的字符串的索引。
+
+```clike
+$edx = *(0x4024b0 + $rdx);
+```
+
+突然麻了，mov 没有后缀是什么情况？只能两边相同吗？书上好像没讲（其实 3.4 讲了
+
+[【CSAPP笔记】5\. 汇编语言——数据 \- 畅畅1 \- 博客园](https://www.cnblogs.com/ZCplayground/p/6698899.html)
+
+```assembly
+  40108f:	88 0c 24             	mov    %cl,(%rsp); *($rsp) = $cl //ecx的最低1字节
+  401092:	48 8b 14 24          	mov    (%rsp),%rdx; $rdx = *($rsp) //最低1字节
+```
+
+将 cl 寄存器中的 1 字节覆盖掉 rdx 的最小的 1 字节，其余不变。
+
+```assembly
+  401096:	83 e2 0f             	and    $0xf,%edx; $edx &= 0xf//最低1个十六进制
+```
+
+将 rdx 的 8 ~ 31位清零，因为它的 32 位寄存器 edx 的 8 ~ 31 位是 0 。
+
+```assembly
+  401099:	0f b6 92 b0 24 40 00 	movzbl 0x4024b0(%rdx),%edx; *(0x4024b0 + $rdx) is a string's $edx index character ,take the byte of first operand to second operand
+```
+
+>  rdx作为以0x4024b0为起始地址的数组偏移量，以我们输入的字符串的第一个字符对应的ascii码的低4位表示的值。
+>
+> [【CSAPP笔记】5\. 汇编语言——数据 \- 畅畅1 \- 博客园](https://www.cnblogs.com/ZCplayground/p/6698899.html)
+
+这里我还纠结了一会 rdx 的 32 ~ 63 位是啥，但是从一开始就在 4 字节内，也就是那些位都是 0 。所以 rdx 一开始表示啥来着？
+
+```assembly
+  4010a0:	88 54 04 10          	mov    %dl,0x10(%rsp,%rax,1);mov the lowest 1 byte of $edx
+```
+
+所以这里只取最后两个 16 位。
+
+所以只要用输入的字符的 ASCII 码对应`0x4024b0`字符串中的字符即可。
+
+那么我们要找 "flyers" 对应的索引。
+
+而第一次循环的字符串在第 5 行的固定地址中的字符串如下
+
+```shell
+(gdb) x/s 0x4024b0
+0x4024b0 <array.3449>:  "maduiersnfotvbylSo you think you can stop the bomb with ctrl-c, do you?"
+```
+
+flyers 对应索引为
+
+```c
+//9 15 14 5 6 7
+```
+
+所以只要 ASCII 码的低 4 位字符是上面这几个数字就行。
+
+好困，先用博主的程序了
+
+```c
+/*************************************************************************
+	> File Name: hello.c
+	> Author: 
+	> Mail: 
+	> Created Time: Sat May 28 11:50:22 2022
+ ************************************************************************/
+
+#include <stdio.h>
+int main()       // 9 15 14 5 6 7
+{
+    int wantP, c;
+    char a[10] = {'?', '?', '?', '?', '?', '?'};
+    for(c = 'a'; c <= 'z'; c++){
+        wantP = c & 0xF;
+        switch(wantP){
+            case(9):
+                a[0] = c;
+                break;
+            case(15):
+                a[1] = c;
+                break;
+            case(14):
+                a[2] = c;
+                break;
+            case(5):
+                a[3] = c;
+                break;
+            case(6):
+                a[4] = c;
+                break;
+            case(7):
+                a[5] = c;
+                break;
+        }
+    }
+    printf("%s\n",a);
+    return 0;
+}
+```
+
+```shell
+yonuvw
+```
+
+```shell
+youhuangla@Ubuntu bomb % ./bomb test5.txt                                                       [8]
+Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Phase 1 defused. How about the next one?
+That's number 2.  Keep going!
+Halfway there!
+So you got that one.  Try this one.
+yonuvw
+Good work!  On to the next...
+^CSo you think you can stop the bomb with ctrl-c, do you?
+Well...OK. :-)
+```
+
+但是我有一次搞出个 secret phase! 是为啥？
+
+```shell
+16│    0x0000000000401096 <+52>:    and    $0xf,%edx
+17│    0x0000000000401099 <+55>:    movzbl 0x4024b0(%rdx),%edx
+18├──> 0x00000000004010a0 <+62>:    mov    %dl,0x10(%rsp,%rax,1)
+
+(gdb) b *0x4010a0
+Breakpoint 1 at 0x4010a0
+(gdb) run test5.txt
+Starting program: /home/youhuangla/cmu_lab_csapp/labs/bomb/bomb test5.txt
+Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Phase 1 defused. How about the next one?
+That's number 2.  Keep going!
+Halfway there!
+So you got that one.  Try this one.
+abcdef
+
+Breakpoint 1, 0x00000000004010a0 in phase_5 ()
+(gdb) x/s (0x4024b0 + $rdx)
+0x402511:       "secret phase!"
+(gdb) x/s (0x4024b0)
+0x4024b0 <array.3449>:  "maduiersnfotvbylSo you think you can stop the bomb with ctrl-c, do you?"
+```
+
+这里因为已经执行完第二条语句，rdx 中存的值为 97 ，超过了存在`(0x4024b0)`的字符串长度，所以打印了一个其他值。
+
+```shell
+(gdb) x/s (0x4024b0 + 97)
+0x402511:       "secret phase!"
+```
+
+所以没问题，理解透彻了
+
+```shell
+youhuangla@Ubuntu bomb % ./bomb test6.txt                                                       [0]
+Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Phase 1 defused. How about the next one?
+That's number 2.  Keep going!
+Halfway there!
+So you got that one.  Try this one.
+Good work!  On to the next...
+```
+
+#### Answer
+
+```shell
+Border relations with Canada have never been better.
+1 2 4 8 16 32
+6 682
+0 0
+yonuvw
+```
+

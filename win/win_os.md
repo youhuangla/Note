@@ -1,5 +1,11 @@
 # Windows
 
+## 高级系统设置
+
+[How to: Add Tool Locations to the PATH Environment Variable \| Microsoft Docs](https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-2010/ee537574(v=office.14))
+
+这配完后要重启 vsc 或 shell 。
+
 ## 虚拟内存
 
 1. 右键计算机->属性->高级系统设置->高级->性能->设置->高级->虚拟内存->更改
@@ -63,3 +69,4 @@ PS C:\Users\Administrator> taskkill /pid 7528 -t -f;
 [Lenovo Quick Fix 联想智能解决工具-联想知识库](https://iknow.lenovo.com.cn/detail/dc_172545.html)
 
 [**关闭或开启Win10系统自动更新**](https://box.lenovo.com/l/t5dQKH)
+

@@ -21,3 +21,9 @@
 > you can simply yank the selected text with **y** and go to search mode **/**, then you can paste the last yanked text with **Ctrl+R 0**
 >
 > [viemu \- Search for selection in Vim \- Stack Overflow](
+
+## Delete a character
+
+[How do I delete the previous character in vim? \- Stack Overflow](https://stackoverflow.com/questions/41491763/how-do-i-delete-the-previous-character-in-vim)
+
+simply use `X` (which is shift+x)
