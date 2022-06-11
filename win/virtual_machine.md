@@ -80,3 +80,6 @@ VMware Tools 安装程序是 ISO 映像文件。客户机操作系统中的 CD-R
 
 ### 腾讯会议
 
+### Edge
+
+[Vmware虚拟机中Edge浏览器右键弹出窗口模糊问题\_YuMonster的博客\-CSDN博客\_虚拟机显示模糊](https://blog.csdn.net/YYBHAHAHA/article/details/123836495)
