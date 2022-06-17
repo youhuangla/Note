@@ -40,6 +40,8 @@ win10 vmware没有可用的映像
 
 [windows虚拟机中没有摄像头的解决方法+win10开启摄像头方法_A&&K的博客-CSDN博客_win10 虚拟摄像头](https://blog.csdn.net/weixin_46709219/article/details/110099171)
 
+虚拟机 -> 可移动设备 -> integrated camera -> 连接
+
 某个 USB 设备将要从主机拔出并连接到该虚拟机。该设备将先停止以实现安全移除。对于某些设备，主机可能会显示消息“现在可以安全地移除设备。”
 
 ## 工具栏配置
@@ -83,3 +85,36 @@ VMware Tools 安装程序是 ISO 映像文件。客户机操作系统中的 CD-R
 ### Edge
 
 [Vmware虚拟机中Edge浏览器右键弹出窗口模糊问题\_YuMonster的博客\-CSDN博客\_虚拟机显示模糊](https://blog.csdn.net/YYBHAHAHA/article/details/123836495)
+
+解决方案为：打开虚拟机设置，找到显示器——>加速3D图形，将前面对话框取消勾选
+
+## 网络不能连接
+
+在“服务”中，确认相关服务，右键保证服务已经启动。
+
+![image-20220614165613440](img/image-20220614165613440.png)
+
+
+
+## Ubuntu踩坑记
+
+未挂起虚拟机前强制关闭，即关闭电源，出现虚拟机无法启动的情况。
+
+具体表现为只有光标闪动。
+
+只能用如下方法登陆，但是仍无法打开图形界面。
+
+> 解决方法： 黑屏后按Ctrl+ALT+F5（或者Ctrl+ALT+F1~F6）进入命令行界面，输入账号、密码，登陆。
+
+[Ubuntu blank screen with blinking cursor on start after stopping bleachbit process \- Stack Overflow](https://stackoverflow.com/questions/69751468/ubuntu-blank-screen-with-blinking-cursor-on-start-after-stopping-bleachbit-proce#:~:text=This%20can%20be%20resolved%20by,%2F...%22).)
+
+![image-20220613085829131](img/image-20220613085829131.png)
+
+通过这里可以看到是 sda3 已经满了，我们要清理出一些空间，重启即可。
+
+```shell
+df -h
+```
+
+
+

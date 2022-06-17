@@ -10,6 +10,8 @@
 
 ## input
 
+### ignore space
+
 scanf，cin 这两个输入都不计入空格
 
 ```cpp
@@ -18,10 +20,17 @@ scanf("%s", s + 2);
 cin >> s + 2;
 ```
 
-计入空格
+### count space
 
 - cpp string
-  - std::getline
+
+  - std::getline 
+
+    [std::getline \- cppreference\.com](https://zh.cppreference.com/w/cpp/string/basic_string/getline) 
+
+    ```cpp
+    getline(cin, str);
+    ```
 
 - c char array 
   - cin.getline
@@ -839,4 +848,439 @@ int main() {
 ```
 
 
+
+### 766
+
+[766. 去掉多余的空格 - AcWing题库](https://www.acwing.com/problem/content/768/)
+
+#### Solution1
+
+利用 cin 和 scanf 忽略读入空字符。
+
+```cpp
+/*************************************************************************
+	> File Name: 2_766.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Tue Jun 14 15:34:29 2022
+ ************************************************************************/
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+	string s;
+	while (cin >> s) {
+		cout << s << ' ';
+	}
+	return 0;
+}
+```
+
+#### Solution2
+
+##### 第一类双指针算法
+
+```cpp
+/*************************************************************************
+	> File Name: 766.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Tue Jun 14 15:25:11 2022
+ ************************************************************************/
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+	string s;
+	string r;	
+	getline(cin, s);
+	for (int i = 0; i < s.size(); i++) {
+		if (s[i] != ' ') {
+			r += s[i];
+		} else {
+			r += ' ';
+			int j = i;
+			while (j < s.size() && s[j] == ' ') {
+				j++;
+			}
+			i = j - 1;
+		}
+	}
+	cout << r << endl;
+    return 0;
+}
+
+```
+
+#### Solution3
+
+判断局部性，每次只判断相邻两个字符。
+
+```cpp
+/*************************************************************************
+	> File Name: 766.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Tue Jun 14 15:25:11 2022
+ ************************************************************************/
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+	string s;
+	string r;	
+	getline(cin, s);
+	for (int i = 0; i < s.size(); i++) {
+		if (s[i] != ' ') {
+			r += s[i];
+		} else {
+		/*
+			r += ' ';
+			int j = i;
+			while (j < s.size() && s[j] == ' ') {
+				j++;
+			}
+			i = j - 1;
+		*/
+			if (!i || s[i - 1] != ' ') {//i not the first char of string OR s[i] is the first space
+				r += ' ';
+			}	
+		}
+	}
+	cout << r << endl;
+    return 0;
+}
+
+```
+
+#### 764
+
+```cpp
+/*************************************************************************
+	> File Name: 764.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Tue Jun 14 15:58:45 2022
+ ************************************************************************/
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+	string s;
+	string r;
+	getline(cin, s);
+    for (int i = 0; i < s.size(); i++) {
+		if (i == s.size() - 1) {
+			r += (s[i] + s[0]);
+		} else {
+            r += (s[i] + s[i + 1]);
+        }
+    }
+    cout << r << endl;
+	return 0;
+}
+```
+
+### stringstream
+
+#### 770
+
+[770. 单词替换 - AcWing题库](https://www.acwing.com/problem/content/772/)
+
+从 `<sstream>` 头文件引入。
+
+把一个 string 当作 cin 读入。
+
+类似 sscanf ，但是不限制读入的数目。所以我们可以命名为 `ssin` 。
+
+弹幕说可以用
+
+```cpp
+getline(cin, str, ' ');
+//b) the next available input character is delim, as tested by Traits::eq(c, delim),in which case the delimiter character is extracted from input, but is not appended to str.
+```
+
+```cpp
+/*************************************************************************
+	> File Name: 774.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Fri Jun 17 15:29:59 2022
+ ************************************************************************/
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+	string s;
+	getline(cin, s, '.');
+	cout << s << endl;
+	return 0;
+}
+```
+
+```shell
+youhuangla@Ubuntu 774 % ./a.out                                                                                             [0]
+hello world.
+hello world
+```
+
+##### Solution
+
+```cpp
+/*************************************************************************
+	> File Name: 770.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Fri Jun 17 11:12:55 2022
+ ************************************************************************/
+
+#include <iostream> 
+#include <sstream>
+
+using namespace std;
+
+int main() {
+	string s, a, b;
+	getline(cin, s);
+	cin >> a >> b;
+
+	stringstream ssin(s);// like cin, can read from s like s is a cin
+	string str;
+	while (ssin >> str) {
+		if (str == a) {
+			cout << b << ' ';
+		} else {
+			cout << str << ' ';
+		}
+	}
+
+	return 0;
+}
+```
+
+```shell
+输入
+You want someone to help you
+You
+I
+
+输出
+I want someone to help you 
+```
+
+##### 774
+
+[774. 最长单词 - AcWing题库](https://www.acwing.com/problem/content/description/776/)
+
+如果不用`getline(cin, s, '.');` ，则最后一个单词要特殊判断：
+
+```cpp
+if (str.back() == '.') {
+    str.pop_back();//C++ 11
+}
+```
+
+ 这样做的好处是可以不用 `stringstream` 。
+
+可以直接比较当前单词和上一个最大长度单词的长度，不用单独存上一个最大长度单词的长度。
+
+```cpp
+/*************************************************************************
+	> File Name: 774.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Fri Jun 17 15:29:59 2022
+ ************************************************************************/
+
+#include <iostream>
+#include <sstream>
+#include <string>
+using namespace std;
+
+int main() {
+	string s;
+	getline(cin, s, '.');
+	int max_len = 0;
+	string longest_w;
+	stringstream ssin(s);
+	string w;
+	while (ssin >> w) {
+		/*
+		if (w.size() > max_len) {
+			max_len = w.size();
+			longest_w = w;
+		}
+		*/
+		if (w.size() > longest_w.size()) {
+			longest_w = w;
+		}
+	}
+	cout << longest_w << endl;
+
+
+	/*
+	//below: first I think about double pointer,but the longest word's string is difficult to store
+	for (int i = 0; i < s.size(); i++) {
+		int j = i;
+		while (j < s.size() && s[j] != ' ') {
+			j++;
+		}
+		int cur_len = j - i;
+		if (cur_len > max_len) {
+			max_len = cur_len;
+		}
+	}
+	*/
+	return 0;
+}
+```
+
+### 771
+
+### 第一类双指针
+
+见 [766](##766) 。
+
+```cpp
+for (int i = 0; i < s.size(); i++) {
+    int j = i;
+    while (j < s.size() && s[j] == s[i]) {
+        j++;
+    }
+    r = j - i;
+}
+```
+
+```cpp
+/*************************************************************************
+	> File Name: 771.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Fri Jun 17 13:58:51 2022
+ ************************************************************************/
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+    string s;
+	int n;
+	cin >> n;
+	for (int i = 0; i < n; i++) {//can be replace: while (n--)
+		cin >> s;
+		int j = 0;
+		int max = 0;
+		char c_max;
+		while (j != s.size()) {
+			int k = j;
+			while (s[k] == s[k + 1]) {//different from yxc here
+				k++;
+			}
+			int len = k - j + 1;// as I compare s[k] with s[k + 1],length should + 1.
+			if (len > max) {
+				max = len;
+				c_max = s[k];
+			}
+			j = k + 1;
+		}
+		cout << c_max << ' ' << max << endl;
+	}
+    return 0;
+}
+
+```
+
+### 775
+
+[775. 倒排单词 - AcWing题库](https://www.acwing.com/problem/content/777/)
+
+#### Solution1
+
+`stringstream` 将所有单词存入一个 vector 中，使用库 `<algorithm>`函数 `reverse(begin, end)` 快速反转。
+
+```cpp
+/*************************************************************************
+	> File Name: 775.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Fri Jun 17 16:23:47 2022
+ ************************************************************************/
+
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main() {
+	string s;
+	getline(cin, s);
+	stringstream ssin(s);
+	string w;
+	vector<string> w_vec;
+	while (ssin >> w) {
+		w_vec.push_back(w);
+	}
+	reverse(w_vec.begin(), w_vec.end());
+	for (string t : w_vec) {
+		if (t == w_vec.back()) {
+            cout << t;
+        } else {
+            cout << t << " ";
+        } 
+	}
+	cout << endl;
+	return 0;
+}
+
+```
+
+#### Solution2
+
+将所有单词存入数组后逆序输出。
+
+```cpp
+/*************************************************************************
+	> File Name: 2_775.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Fri Jun 17 16:40:40 2022
+ ************************************************************************/
+
+#include <iostream>
+using namespace std;
+
+int main() {
+	string s_a[105];
+	int n = 0;
+	while (cin >> s_a[n]) {
+		n++;
+	}
+	n--;// important ,without this line will print one more space in the begining.
+	do {
+		cout << s_a[n] << " ";
+		n--;
+	} while (n != -1);
+	cout << endl;
+#if 0	
+	for (int i = n - 1; i >= 0; i--) {
+		cout << s_a[i] << ' ';
+	}
+	cout << endl;
+#endif	
+	return 0;
+}
+```
 
