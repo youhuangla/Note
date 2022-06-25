@@ -1284,3 +1284,56 @@ int main() {
 }
 ```
 
+### 776
+
+#### Solution1
+
+```cpp
+/*************************************************************************
+	> File Name: 776.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Fri Jun 17 17:30:53 2022
+ ************************************************************************/
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+	string s, n_s;
+	string s1, s2;
+	cin >> s1 >> s2;
+	if (s1.size() > s2.size()) {
+		s = s1;
+		n_s = s2;
+	} else {
+		s = s2;
+		n_s = s1;
+	}
+	bool is_true = false;
+	// "abcd" 's fifth loop move, back to it self, so only need to loop s.size() times.
+	int s_size = s.size();
+	for (int i = 0; i < s_size; i++) {
+		for (int j = 0, k = n_s.size(); k <= s_size; j++, k++) {
+			if (s.substr(j, k) == n_s) {
+				is_true = true;
+				break;
+			}
+		}
+		if (is_true) {
+			break;
+		} else {
+			s = s.substr(1, s_size) + s.substr(0, 1);// not (2, size), substr [)
+			//cout << s << endl;
+		}
+	}
+	if (is_true) {
+		cout << "true" << endl;
+	} else {
+		cout << "false" << endl;
+	}
+	return 0;
+}
+```
+

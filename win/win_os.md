@@ -70,3 +70,6 @@ PS C:\Users\Administrator> taskkill /pid 7528 -t -f;
 
 [**关闭或开启Win10系统自动更新**](https://box.lenovo.com/l/t5dQKH)
 
+## 开机自启动
+
+[Win10怎么设置开机自启动软件 如何打开指定应用-百度经验 (baidu.com)](https://jingyan.baidu.com/article/5d368d1ebfdf1a3f60c057f8.html)
