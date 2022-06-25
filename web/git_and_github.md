@@ -1,6 +1,8 @@
-# git and github
+# Git and GitHub
 
-- [git and github](#git-and-github)
+[学Git/GitHub前，请务必先看完这个！\_哔哩哔哩\_bilibili](https://www.bilibili.com/video/BV1KZ4y1e7cG?spm_id_from=333.999.0.0&vd_source=187217104dfd0bc027cc65f8420627b0)
+
+- [Git and GitHub](#git-and-github)
   - [是什么](#是什么)
     - [Git](#git)
     - [GitHub](#github)
@@ -18,7 +20,6 @@
       - [How](#how-1)
   - [面试会考什么](#面试会考什么)
   - [学习路线](#学习路线)
-[学Git/GitHub前，请务必先看完这个！\_哔哩哔哩\_bilibili](https://www.bilibili.com/video/BV1KZ4y1e7cG?spm_id_from=333.999.0.0&vd_source=187217104dfd0bc027cc65f8420627b0)
 
 ## 是什么
 
