@@ -56,6 +56,14 @@ Please reinstall IntelliJ IDEA from scratch.
 
 [Missing essential plugin: com\.intellij \(platform prefix: WebStorm\) Please reinstall WebStorm from scratch\. : WEB\-55054](https://youtrack.jetbrains.com/issue/WEB-55054/Missing-essential-plugin-comintellij-platform-prefix-WebStorm-Please-reinstall-WebStorm-from-scratch)
 
+没找到 plugins 文件夹，我则将
+
+```
+C:\Users\Administrator\AppData\Roaming\JetBrains\IntelliJIdea2022.1
+```
+
+文件夹直接删掉
+
 ### IDEA Settings
 
 <img src="img/image-20220628155524984.png" alt="image-20220628155524984" style="zoom:50%;" />
