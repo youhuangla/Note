@@ -699,6 +699,8 @@ h e l l o
 
 找最大数索引的 O(n) 方法。
 
+[std::basic\_string<CharT,Traits,Allocator>::substr \- cppreference\.com](https://zh.cppreference.com/w/cpp/string/basic_string/substr)
+
 ##### Bug
 
 substr 使用的参数 pos 和 npos 是左闭右开的，也就是返回的 string 中不包括 `str[npos]` 。
@@ -1147,7 +1149,7 @@ int main() {
 
 ### 771
 
-### 第一类双指针
+#### 第一类双指针
 
 见 [766](##766) 。
 
@@ -1333,6 +1335,453 @@ int main() {
 	} else {
 		cout << "false" << endl;
 	}
+	return 0;
+}
+```
+
+#### Solution2
+
+yxc
+
+```clike
+for () {
+    //当前循环移位得到 a' ,判断 b 是否是 a' 的子串
+    for(起点) {
+        for(枚举对应位置) {
+        	//字符不一致则终止
+        }
+        //判断索引位置是否等于字符串长度，等于则“包含”，结束程序
+    }
+}
+//不包含
+```
+
+理解该算法是 KMP 算法的基础。KMP 算法卡住 80% 的学生。
+
+##### substr(count)
+
+[std::basic\_string<CharT,Traits,Allocator>::substr \- cppreference\.com](https://zh.cppreference.com/w/cpp/string/basic_string/substr)
+
+```cpp
+    std::string a = "0123456789abcdefghij";
+ 
+    // count 为 npos ，返回 [pos, size())
+    std::string sub1 = a.substr(10);
+    std::cout << sub1 << '\n';
+```
+
+> 这是特殊值，等于 `size_type` 类型可表示的最大值。准确含义依赖于语境，但通常，期待 string 下标的函数以之为字符串尾指示器，返回 string 下标的函数以之为错误指示器。
+>
+> [std::basic\_string<CharT,Traits,Allocator>::npos \- cppreference\.com](https://zh.cppreference.com/w/cpp/string/basic_string/npos)
+
+##### code
+
+```cpp
+/*************************************************************************
+	> File Name: std_776.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Tue Jun 28 09:23:25 2022
+ ************************************************************************/
+
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int main() {
+	string a, b;
+	cin >> a >> b;
+	if (a.size() < b.size()) {
+		swap(a, b);
+	}
+	for (int i = 0; i < a.size(); i++) {
+		a = a.substr(1) + a[0];// count 为 npos ，返回 [pos, size())
+		//cout << a << endl;
+		for (int j = 0; j + b.size() <= a.size(); j++) {
+			int k = 0;
+			for (; k < b.size(); k++) {
+				if (a[j + k] != b[k]) {
+					break;
+				}
+            }
+            if (k == b.size()) {
+                puts("true");
+                return 0;
+            }
+        }
+    }
+    puts("false");
+    return 0;
+}
+```
+
+```cpp
+/*************************************************************************
+	> File Name: 2_776.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Wed Jun 29 08:54:58 2022
+ ************************************************************************/
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+	string s1, s2;// assume that s2 is s1's substring after some shift loop.
+	cin >> s1 >> s2;
+	if (s1.size() < s2.size()) {
+		string temp;
+		temp = s1;
+		s1 = s2;
+		s2 = temp;
+	}
+    //cout << s1 << " " << s2 << endl;
+	for (int i = 0; i < s1.size(); i++) {
+		//shift loop
+		s1 = s1.substr(1) + s1[0];
+		//judge if s2 is s1's substr
+		for (int j = 0; j < s1.size() - s2.size() + 1; j++) {// the + 1 is important. if s1.size = s2.size, j < 0, than loop will not execute
+			int k = 0;
+			for (; k < s2.size(); k++) {
+                if (s2[k] != s1[j + k]) {
+					break;
+				}
+            }
+			if (k == s2.size()) {
+				cout << "true" << endl;
+				return 0;
+			}
+		}
+	}
+	cout << "false" << endl;
+    return 0;
+}
+```
+
+### 777
+
+[AcWing 777. 字符串乘方 - AcWing](https://www.acwing.com/activity/content/problem/content/1967/)
+
+```clike
+for (从字符串str的长度开始递减到1，作为段数) {
+    if (该段数可以等分str) {
+       	计算每个子串长度;
+        建立空字符串r;
+        for (段数次) {
+            r与每个子串拼接一次;
+        }
+        if (拼接后的字符串与str相同) {
+            输出结果;
+        }
+    }
+}
+```
+
+
+
+```cpp
+/*************************************************************************
+	> File Name: std_777.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Tue Jun 28 12:01:21 2022
+ ************************************************************************/
+
+#include <iostream>
+using namespace std;
+
+int main() {
+	string str;
+	while (cin >> str, str != ".") {
+		int len = str.size();
+		for (int n = len; n != 0; n--) {//count from max, so if a (r == str) is find, the n is max,no need to loop and compare
+			if (len % n == 0) {
+				int m = len / n;
+				string s = str.substr(0, m);
+				string r;
+				for (int i = 0; i < n; i++) {
+					r += s;
+				}
+				if (r == str) {
+					cout << n << endl;
+					break;
+				}
+			}
+		}
+	}
+	return 0;
+}
+```
+
+```cpp
+/*************************************************************************
+	> File Name: 777.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Wed Jun 29 09:46:35 2022
+ ************************************************************************/
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+	string s;
+	while (cin >> s, s != ".") {
+		int max = 0;
+		for (int i = 1; i <= s.size(); i++) {
+			int n = 0;
+			if (s.size() % i == 0) {
+				//may be the connection factor, judge if it is
+				string f = s.substr(0, i);
+				string s1 = "";
+				while (s1.size() <= s.size()) {
+					if (s1 == s) {
+                        if (n > max) {
+                            max = n;
+                        }
+                        break;
+                    } else {
+                        s1 = s1 + f;
+						n++;
+                    }
+				}
+			}
+
+		}
+		cout << max << endl;
+	}	
+	return 0;
+}
+```
+
+
+
+### 778
+
+[AcWing 778. 字符串最大跨距 - AcWing](https://www.acwing.com/activity/content/problem/content/1968/)
+
+强烈建议自己去实现一遍，不用库函数，如 find 等。
+
+```cpp
+/*************************************************************************
+	> File Name: std_778.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Tue Jun 28 12:14:43 2022
+ ************************************************************************/
+
+#include <cstdio>
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+	string s1, s2, s;
+	char c;
+	while (cin >> c, c != ',') {
+		s += c;
+	}
+	while (cin >> c, c != ',') {
+		s1 += c;
+	}
+	while (cin >> c) {
+		s2 += c;
+	}
+	if (s.size() < s1.size() || s.size() < s2.size()) {
+		puts("-1");
+    } else {
+		// search s1 from left, get the left first s1
+        int l = 0;
+        while (l + s1.size() <= s.size()) {
+            int k = 0;
+            while (k < s1.size()) {//search s1
+                if (s[l + k] != s1[k]) {
+                    break;
+                }
+                k++;
+            }
+            if (k == s1.size()) {
+                break;
+            }
+            l++;
+        }
+		// search s2 from right, get the right first s2
+		int r = s.size() - s2.size();
+        while (r >= 0) {
+            int k = 0;
+            while (k < s2.size()) {
+                if (s[r + k] != s2[k]) {
+                    break;
+                }
+                k++;
+            }
+            if (k == s2.size()) {
+                break;
+            }
+            r--;
+        }
+        l += s1.size() - 1;
+		if (l >= r) {
+			puts("-1");
+		} else {
+			printf("%d\n", r - l - 1);
+		}
+    }
+    return 0;
+}
+```
+
+```cpp
+/*************************************************************************
+	> File Name: 778.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Wed Jun 29 20:16:18 2022
+ ************************************************************************/
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+	string s, s1, s2;
+	char c;
+	while (cin >> c, c != ',') {
+		s += c;
+	}
+	while (cin >> c, c != ',') {
+		s1 += c;
+	}
+	while (cin >> c) {
+		s2 += c;
+	}
+	//search for s1
+	int f_s1 = 0;
+	int i;
+	for (i = 0; i <= s.size() - s1.size(); i++) {// <=
+		int j;
+		for (j = 0; j < s1.size(); j++) {
+			if (s[i + j] != s1[j]) {
+				//f_s1 = i;// need this when s1 cannot found
+				break;
+			}
+		}
+		if (j == s1.size()) {
+			f_s1 = i;
+			break;
+		}
+	}
+	//when s1 not found, yxc is simpler but not common
+	if (i == s.size() - s1.size() + 1) {
+		cout << -1 << endl;
+		return 0;
+	}
+	
+	// reverse search for s2
+	int f_s2 = 0;
+	for (i = s.size() - s2.size(); i >= 0; i--) {
+		int j;
+		for (j = 0; j < s2.size(); j++) {
+			if (s[i + j] != s2[j]) {
+				//f_s2 = i;
+				break;
+			}
+		}
+		if (j == s2.size()) {
+			f_s2 = i;
+			break;
+		}
+	}
+	//when s2 not found
+	if (i == -1) {
+		cout << -1 << endl;
+		return 0;
+	}
+	
+/*
+	cout << f_s1 << endl;
+	cout << f_s2 << endl;
+*/
+	int len = f_s2 - (f_s1 + s1.size());
+	if (len < 0) {
+		cout << -1 << endl;
+	} else {
+		cout << len << endl;
+	}
+	return 0;
+}
+```
+
+### 779
+
+[779. 最长公共字符串后缀 - AcWing题库](https://www.acwing.com/problem/content/781/)
+
+弹幕说这是 KMP 算法里找 k 的最大后缀的前身
+
+```clike
+for (枚举后缀长度) {
+    for(r = 1; r < n; r++) {
+        for (枚举比较str[0]与str[i]的第n个字符) {
+            若有不同则终止比较,n即最长后缀的长度;
+        }
+    }
+}
+```
+
+yxc
+
+TODO: comprehension
+
+```cpp
+/*************************************************************************
+	> File Name: std_779.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Wed Jun 29 22:53:19 2022
+ ************************************************************************/
+
+#include <iostream>
+using namespace std;
+
+const int N = 200;// constant
+
+int n;
+string str[N];// don't write a variable inside an array as the array length
+
+int main() {
+	while (cin >> n, n) {
+		int len = 1000;
+		for (int i = 0; i < n; i++) {
+			cin >> str[i];
+			if (len > str[i].size()) {
+				len = str[i].size();
+			}
+		}
+        while (len) {
+			//with suffix
+			bool success = true;
+			for (int i = 1; i < n; i++) {
+				bool is_same = true;
+				for (int j = 1; j <= len; j++) {
+					if (str[0][str[0].size() - j] != str[i][str[i].size() - j]) {
+						is_same = false;
+						break;
+					}
+				}
+				if (!is_same) {
+					success = false;
+					break;
+                }
+            }
+			if (success) {
+				break;
+			}
+			len--;
+		}
+		cout << str[0].substr(str[0].size() - len) << endl;
+    }
 	return 0;
 }
 ```
