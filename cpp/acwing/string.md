@@ -1732,8 +1732,6 @@ for (枚举后缀长度) {
 
 yxc
 
-TODO: comprehension
-
 ```cpp
 /*************************************************************************
 	> File Name: std_779.cpp
@@ -1745,43 +1743,100 @@ TODO: comprehension
 #include <iostream>
 using namespace std;
 
-const int N = 200;// constant
+const int N = 200; // constant
 
 int n;
-string str[N];// don't write a variable inside an array as the array length
+string str[N]; // don't write a variable inside an array as the array length
 
 int main() {
+    while (cin >> n, n) {
+        int len = 1000;
+        for (int i = 0; i < n; i++) {
+            cin >> str[i];
+            if (len > str[i].size()) {
+                len = str[i].size();
+            }
+        }
+        while (len) {
+            //with suffix
+            bool success = true;
+            for (int i = 1; i < n; i++) {
+                bool is_same = true;
+                for (int j = 1; j <= len; j++) {
+                    if (str[0][str[0].size() - j] != str[i][str[i].size() - j]) {
+                        is_same = false;
+                        break;
+                    }
+                }
+                if (!is_same) {
+                    success = false;
+                    break;
+                }
+            }
+            if (success) {
+                break;
+            }
+            len--;
+        }
+        cout << str[0].substr(str[0].size() - len) << endl;
+    }
+    return 0;
+}
+```
+
+```cpp
+/*************************************************************************
+	> File Name: 779.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Wed Jun 29 22:44:14 2022
+ ************************************************************************/
+
+#include <iostream>
+#include <string>
+
+#define N 205
+
+using namespace std;
+
+string str[N];
+
+int main() {
+	int n;
 	while (cin >> n, n) {
-		int len = 1000;
+		//input and find the smallest length to decide the suffix's possible max length
+		int len = 1000;// a big num
 		for (int i = 0; i < n; i++) {
 			cin >> str[i];
-			if (len > str[i].size()) {
+			if (str[i].size() < len) {
 				len = str[i].size();
 			}
 		}
-        while (len) {
-			//with suffix
-			bool success = true;
-			for (int i = 1; i < n; i++) {
-				bool is_same = true;
-				for (int j = 1; j <= len; j++) {
-					if (str[0][str[0].size() - j] != str[i][str[i].size() - j]) {
-						is_same = false;
-						break;
-					}
-				}
-				if (!is_same) {
-					success = false;
+        
+		int l;
+		string s0;
+        for (l = len; l >= 0; l--) {
+			//enumerate every length possible
+            s0 = str[0].substr(str[0].size() - l); // first string 's suffix
+            int i;
+			for (i = 1; i < n; i++) {
+                //compare each string
+				if (l > str[i].size()) {
 					break;
-                }
+				}
+				string s1 = str[i].substr(str[i].size() - l);
+				if (s0 != s1) {
+					// not the same
+					// string 's "==", can be replace easily, like in yxc's code
+					break;
+				}
             }
-			if (success) {
+			if (i == n) {
 				break;
 			}
-			len--;
 		}
-		cout << str[0].substr(str[0].size() - len) << endl;
-    }
+		cout << s0 << endl;
+	}
 	return 0;
 }
 ```
