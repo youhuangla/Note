@@ -1805,22 +1805,22 @@ int main() {
 	int n;
 	while (cin >> n, n) {
 		//input and find the smallest length to decide the suffix's possible max length
-		int len = 1000;// a big num
+		int len = 1000; // a big num
 		for (int i = 0; i < n; i++) {
 			cin >> str[i];
 			if (str[i].size() < len) {
 				len = str[i].size();
 			}
 		}
-        
+
 		int l;
 		string s0;
-        for (l = len; l >= 0; l--) {
+		for (l = len; l >= 0; l--) {
 			//enumerate every length possible
-            s0 = str[0].substr(str[0].size() - l); // first string 's suffix
-            int i;
+			s0 = str[0].substr(str[0].size() - l); // first string 's suffix
+			int i;
 			for (i = 1; i < n; i++) {
-                //compare each string
+				//compare each string
 				if (l > str[i].size()) {
 					break;
 				}
@@ -1830,7 +1830,7 @@ int main() {
 					// string 's "==", can be replace easily, like in yxc's code
 					break;
 				}
-            }
+			}
 			if (i == n) {
 				break;
 			}
