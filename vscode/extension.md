@@ -318,3 +318,10 @@ TabWidth: 4
 UseTab: Never
 ```
 
+为了对齐，不出现空格和混杂的缩进，最后一行改为
+
+```
+UseTab: Never
+```
+
+[How make clang\-format indent using tabs instead of spaces? \- Stack Overflow](https://stackoverflow.com/questions/69135590/how-make-clang-format-indent-using-tabs-instead-of-spaces)

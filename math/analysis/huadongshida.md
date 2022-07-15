@@ -54,13 +54,9 @@
 
 ### 4.两个重要的极限
 
-1. $$
-\lim _ { x \rightarrow 0 } \frac { \sin x } { x } = 1
-$$
+1. $ \lim _ { x \rightarrow 0 } \frac { \sin x } { x } = 1 $
 
-2. $$
-\lim _ { x \rightarrow \infty } ( 1 + \frac { 1 } { x } ) ^ { x } = e
-$$
+2. $ \lim _ { x \rightarrow \infty } ( 1 + \frac { 1 } { x } ) ^ { x } = e$
 
 ### 5. 无穷小量与无穷大量
 

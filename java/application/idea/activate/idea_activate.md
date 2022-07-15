@@ -6,6 +6,14 @@
 
 > 1.下载工具箱 2.安装IDEA 3.下载并替换插件参数 4.在工具箱配置IDEA的vm参数增加 5.启动程序输入激活码
 
+> 在这推荐另一个白嫖方法，用toolbox安装之后再安装eap版
+>
+> 这个连付费插件都能拦截
+>
+> 在神key网站上有激活码的都能行
+>
+> 原理是插件和程序都是使用的JetBrains服务器，拦截后自然都可以
+
 插件仓库地址：https://gitee.com/ja-netfilter/ja-netfilter 
 
 疑似插件作者博客：[ja-netfilter 2022.1 配置_Resourceful!的博客-CSDN博客](https://blog.csdn.net/qq_44866828/article/details/122365934)

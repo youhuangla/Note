@@ -118,3 +118,6 @@ df -h
 
 
 
+## 关闭自动更新
+
+[WINDOWS 10 自动更新彻底关闭！](https://aopos.es/pages/windows-10-%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0%E5%BD%BB%E5%BA%95%E5%85%B3%E9%97%AD)
