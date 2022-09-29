@@ -73,3 +73,29 @@ PS C:\Users\Administrator> taskkill /pid 7528 -t -f;
 ## 开机自启动
 
 [Win10怎么设置开机自启动软件 如何打开指定应用-百度经验 (baidu.com)](https://jingyan.baidu.com/article/5d368d1ebfdf1a3f60c057f8.html)
+
+>   在Windows10桌面，右键点击桌面左下角的开始按钮，在弹出的菜单中选择“运行”菜单项。
+>
+>   这时就会打开Windows10的运行窗口，在窗口中输入命令shell:startup，然后点击确定按钮。
+>
+>   这时就可以打开Windows10系统的启动文件夹
+>
+>   把需要开机启动的应用或是程序的快捷方式拖动到该文件夹中，这样以后电脑开机的时候，就会自动启动这些应用。
+
+可以把该文件夹快捷方式发送到桌面
+
+[Win10如何设置一个程序开机启动-腾讯电脑管家官网 (qq.com)](https://guanjia.qq.com/web_clinic/s8/1670.html)
+
+## 桌面
+
+win10桌面空出来一部分
+
+原因:图标过大,可以点击桌面用`Ctrl + 滑轮`缩放图标。
+
+## 空间清理
+
+### SpaceSniffer
+
+### Disc++
+
+如何对Windows系统盘下的Installer文件夹以及WinSxS文件夹进行清理？ - yichya QC的回答 - 知乎 https://www.zhihu.com/question/34964216/answer/60559237

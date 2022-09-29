@@ -151,3 +151,69 @@ int main() {
 }
 ```
 
+## 821
+
+
+
+画出递归搜索树。
+
+### Sol1
+
+```cpp
+/*************************************************************************
+	> File Name: 821.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Tue Jul 19 12:59:04 2022
+ ************************************************************************/
+
+#include <iostream>
+using namespace std;
+
+int step(int n) {
+	if (n == 0) {
+		return 1;
+	} else if (n == 1) {
+		return 1;
+	}
+	return step(n - 1) + step(n - 2);
+}
+
+int main() {
+	int n;
+	cin >> n;
+	cout << step(n) << endl;// step[] store in memory
+	return 0;
+}
+```
+
+### Sol
+
+记忆化
+
+```cpp
+/*************************************************************************
+	> File Name: 2_821.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: Tue Jul 19 13:18:59 2022
+ ************************************************************************/
+
+#include <iostream>
+using namespace std;
+
+int step[20];
+
+int main() {
+	int n;
+	cin >> n;
+	step[0] = 1;
+	step[1] = 1;
+	for (int i = 2; i <= n; i++) {
+		step[i] = step[i - 1] + step[i - 2];
+	}
+	cout << step[n] << endl;// step[] store in memory
+	return 0;
+}
+```
+

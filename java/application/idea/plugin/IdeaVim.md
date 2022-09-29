@@ -9,3 +9,7 @@
 Can disable / enable / update plugins.
 
 ![image-20220628214310988](img/image-20220628214310988.png)
+
+## Use some Ctrl in IDE Mode
+
+![image-20220826223236789](img/image-20220826223236789.png)

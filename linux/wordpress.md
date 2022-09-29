@@ -1,4 +1,5 @@
 ## Ubuntu Wordpress
+
 https://blog.csdn.net/songziqi98/article/details/82932127
 * sudo apt-get install apache2
 * sudo apt-get install php7.0
@@ -53,9 +54,9 @@ Better explain here https://askubuntu.com/questions/55280/phpmyadmin-is-not-work
 * http://39.96.76.106/phpmyadmin/
 建立数据库连接时出错
     * 解决WordPress建立数据库连接时出错
-    https://www.wpdaxue.com/error-establishing-a-database-connection.html
-![](https://raw.githubusercontent.com/youhuangla/images/main/20220127001151.png)
-![](https://raw.githubusercontent.com/youhuangla/images/main/20220127001344.png)
-![](https://raw.githubusercontent.com/youhuangla/images/main/20220127001450.png)![](https://raw.githubusercontent.com/youhuangla/images/main/20220127001527.png)
+      https://www.wpdaxue.com/error-establishing-a-database-connection.html
+    ![](https://raw.githubusercontent.com/youhuangla/images/main/20220127001151.png)
+    ![](https://raw.githubusercontent.com/youhuangla/images/main/20220127001344.png)
+    ![](https://raw.githubusercontent.com/youhuangla/images/main/20220127001450.png)![](https://raw.githubusercontent.com/youhuangla/images/main/20220127001527.png)
 * User:park
 * Password:************
