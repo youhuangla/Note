@@ -93,3 +93,7 @@ Empty Line
 [跳转方法1](#way1)
 
 <a id="way1">锚点方法2</a>
+
+## 恢复文件
+
+[Typora编辑器恢复未保存的markdown文件_花生啤酒八宝粥的博客-CSDN博客](https://blog.csdn.net/weixin_43823054/article/details/106479470)
