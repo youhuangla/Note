@@ -12,35 +12,177 @@
 
 [「一周年」专栏整理 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/57637220)
 
+[→→→→→→Anki终极汇总——请先看我！←←←←←← \- 知乎](https://zhuanlan.zhihu.com/p/21328602)
+
 ## 周边工具
 
 ### 实物
 
 [What！草稿还能这样“玩”？——「Anki」与草稿纸 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/38982064)
 
+### 浏览器插件
+
+#### anki划词助手
+
+[anki划词助手使用说明](chrome-extension://ajencmdaamfnkgilhpgkepfhfgjfplnn/bg/guide.html)
+
+该作者的两个（在线词典助手）插件冲突，但是划词助手较实用
+
+#### 在线词典助手
+
+[我不是针对谁，我是说在座各位... - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/25866272)
+
+[在线词典助手ODH\(划词助手在线版\) — 老黄老巢](https://www.laohuang.net/20180213/online-dictionary-helper/)
+
+[扩展程序 \- 在线词典助手](chrome://extensions/?options=lppjdajkacanlmpbbcdkccjkdbpllajb)
+
+[Anki制卡-在线词典助手，春节大更新 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/56393716)
+
+[Online Dictionary Helper \- Chrome Web Store](https://chrome.google.com/webstore/detail/online-dictionary-helper/lppjdajkacanlmpbbcdkccjkdbpllajb/related?hl=en)
+
+[ODH/README\.zh\_CN\.md at master · ninja33/ODH](https://github.com/ninja33/ODH/blob/master/README.zh_CN.md)
+
+[英文电子书划词+导入到anki+整理句素SOP - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/65851976)
+
+浏览本地pdf
+
+[工具篇——在PDF中取词（PDF.JS+划词助手） - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/23870485)
+
+使用开源的pdf.js打开里面的网址后，再右上角打开pdf
+
+##### 无法浏览本地文件解决办法
+
+[工具篇——在PDF中取词（PDF.JS+划词助手） - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/23870485)
+
+即扩展设置中允许访问文件网址
+
+>   是用Chrome打开本地txt版电子书文件出现这个问题。
+>   以下这段文字复制到本地txt文件，再用Chrome打开，划词就可以看见问题现象：
+>   Chris and I are traveling to Montana with some friends riding up ahead, and maybe headed farther than that..Waiting for them to get going one morning in their kitchen I noticed the sink faucet was dripping and remembered that it was dripping the last time I was there before and that in fact it had been dripping as long as I could remember. I commented on it and John said he had tried to fix it with a new faucet washer but it hadn't worked. That was all he said. The presumption left was that that was the end of the matter. If you try to fix a faucet and your fixing doesn't work then it's just your lot to live with a dripping faucet.
+>
+>   划词‘end’,例句中提取的原句是“Chris and I are traveling to Montana with some fri**end**s riding up ahead, and maybe headed farther than that.” （注意单词变成friENDs,而不是end）
+>
+>   谢谢
+>
+>   ------
+>
+>   解决了：
+>   先将txt转html文件，在用chrome打开，划词例句就正常了。
+>   谢谢老黄
+>
+>   [在线词典助手ODH\(划词助手在线版\) — 老黄老巢](https://www.laohuang.net/20180213/online-dictionary-helper/#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E)
+
+##### Pandoc转换为html
+
+[Pandoc User’s Guide](file:///D:/Program%20Files/Pandoc/Pandoc%20User's%20Guide.html#general-options-1)
+
+[Pandoc 安装与使用（转） \- 简书](https://www.jianshu.com/p/6ba04f669d0b)
+
+pandoc可将epub转html，但是图片会丢失，参考[借助pandoc将Word文档成网页\_51CTO博客\_word文档层级](https://blog.51cto.com/3chou/2722626)。
+
+已将pandoc安装目录设为path
+
+```powershell
+D:\Calibre house\J.K. Rowling\Harry Potter_ The Complete Collectio (5)>pandoc 1.epub -o Harry.html
+```
+
+PS：txt在chrome上打开卡的不行，不如pdf，但是pdf搜索速度较慢
+
+若是中文书籍，会遇到乱码，另外，转为pdf需要联网
+
+```powershell
+E:\Study\考研\英语>pandoc 1.epub -o 100.html -V mainfont="SimSun"
+```
+
 ### win
 
-BookxNote
+#### BookxNote
 
 >    每一处标注的内容都会变成一张单独的卡片（类似MarginNote了）
 >
->   支持划词翻译，目前支持谷歌翻译＆金山词霸
+>    支持划词翻译，目前支持谷歌翻译＆金山词霸
 >
->   除了按树状大纲展示笔记、按笔记创建时间线性查看笔记，还可以一键将笔记生成脑图！
+>    除了按树状大纲展示笔记、按笔记创建时间线性查看笔记，还可f
 >
->   你可以把笔记导出为Anki格式、XMIND脑图文件、markdown格式等
+>    以一键将笔记生成脑图！
 >
->   支持markdown笔记
+>    你可以把笔记导出为Anki格式、XMIND脑图文件、markdown格式等
 >
->   没错，你上图你可以看到你还可以把笔记导出为Anki格式、XMIND脑图文件、markdown格式等
+>    支持markdown笔记
 >
->   （图略）
+>    没错，你上图你可以看到你还可以把笔记导出为Anki格式、XMIND脑图文件、markdown格式等
 >
->   [免费PDF阅读器都是坑？这些开源神器我可是恨不得所有人都知道！ (qq.com)](https://mp.weixin.qq.com/s?__biz=MzA5NjEwNjE0OQ==&mid=2247501080&idx=1&sn=8d20773d8026edd5e5b25fa64abda351&chksm=90b7a6d2a7c02fc473c18d745b98589c7273dae3bfbb4645c5b520c33fd141f77268ce8af96f#rd)
+>    （图略）
+>
+>    [免费PDF阅读器都是坑？这些开源神器我可是恨不得所有人都知道！ (qq.com)](https://mp.weixin.qq.com/s?__biz=MzA5NjEwNjE0OQ==&mid=2247501080&idx=1&sn=8d20773d8026edd5e5b25fa64abda351&chksm=90b7a6d2a7c02fc473c18d745b98589c7273dae3bfbb4645c5b520c33fd141f77268ce8af96f#rd)
+
+#### subs2srs
+
+里面找的，有时间试试TODO
+
+>   它是一款配合Anki，输出材料的软件。只要放进视频+字幕，即可输出图片、视频、音频、字幕这么一堆按照字幕切割好的材料，然后自行导入到Anki即可。
+>
+>   [几个"北大"学生，是如何成为诈骗团体的。 \- 知乎](https://zhuanlan.zhihu.com/p/33425628)
+
+#### ABOBOO
+
+TODO
+
+[工具篇——使用ABOBOO学美剧（强推） \- 知乎](https://zhuanlan.zhihu.com/p/21930503?refer=-anki)
+
+#### 其他
+
+[anki卡片编辑器，考试资料分享，anki卡牌分享](http://anki.ysepan.com/)收费，弃置
+
+其中的anki编辑器和anki涂鸦，感觉和插件比起来还是插件较方便
+
+#### 欧陆词典
+
+[Anki高阶应用指南（二）：Anki \+ 词典 打造终极记单词利器 — Corkine's BlOG](https://blog.mazhangjing.com/2017/03/06/Anki-Advanced-Guide-2/)用的欧路词典
+
+[【Anki\+欧路词典】这是我见过最高效的背单词工具组合 \- YouTube](https://www.youtube.com/watch?v=LG_S6uTAKPo&ab_channel=%E5%B0%8F%E8%93%9DLoMoyi)
+
+### mac
+
+#### Marginnote
+
+[MarginNote&Anki天生CP，完美的学习闭环 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/26651332)
+
+[使用 MarginNote && Anki 学习 高等数学 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/34512119)
+
+[MarginNote3与anki的深度融合 - 知乎 (zhihu.com)](https://www.zhihu.com/zvideo/1208542433837211648)
 
 ## 制卡
 
 <img src="img/image-20220928145727723.png" alt="image-20220928145727723" style="zoom:50%;" />
+
+### 使用IOE制卡
+
+Image Occlusion Enhanced简称 IOE
+
+若在卡片浏览器中加入，以标签排序，并且生成遮挡卡后记得刷新浏览器当前组别，否则新卡暂时不显示。
+
+### 更改卡片
+
+#### 更改标签
+
+可在浏览器中批量更改，注意，如果加了两个标签，其中有包含关系，a包含b，删除a会同时删除b。
+
+#### 更改排序
+
+ANKI卡组如何按照特定字段排序？ - 叶峻峣的回答 - 知乎 https://www.zhihu.com/question/506084169/answer/2273399390
+
+#### 更改模板
+
+anki如何更改已经编辑好的牌组的模版? - 叶峻峣的回答 - 知乎 https://www.zhihu.com/question/479300458/answer/2061757472
+
+更改模板后，原模板的所有卡片都会被更改
+
+### 搜索卡片
+
+>   首先，你需要确认一下卡片的类型，然后在 编辑-[管理笔记](https://www.zhihu.com/search?q=管理笔记&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra={"sourceType"%3A"answer"%2C"sourceId"%3A"428215336"})类型-选中该类型-字段-补充-在浏览器中按照此字段排序 你就可以去[卡片浏览器](https://www.zhihu.com/search?q=卡片浏览器&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra={"sourceType"%3A"answer"%2C"sourceId"%3A"428215336"})中找到按照“补充”排序卡片啦！然后就可以去搜索了！
+>
+>   Anki如何按字段名搜索/筛选出卡片？ - 叶峻峣的回答 - 知乎 https://www.zhihu.com/question/68014510/answer/428215336
 
 ### IRead 题
 
@@ -145,11 +287,7 @@ is:buried 可以找到被搁置的卡片
 
 ![image-20220928171236612](img/image-20220928171236612.png)
 
-## 插件
-
-[Anki 超强插件推荐 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/49331137)
-
-### 科学上网
+## 科学上网
 
 
 
@@ -167,9 +305,17 @@ exit
 
 打开了之后可能还会提示要升级 anki 
 
+## 插件
+
+官网：[Add\-ons for Anki 2\.1 \- AnkiWeb](https://ankiweb.net/shared/addons/2.1)
+
+[Anki 超强插件推荐 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/49331137)
+
 ### 叶佬推荐
 
 [Anki 超强插件推荐 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/49331137)
+
+[Anki 超强插件介绍 \- 知乎](https://zhuanlan.zhihu.com/p/129399031)
 
 #### link Cards
 
@@ -183,15 +329,68 @@ Anki 如何复习有网状联系的知识？ - 叶峻峣的回答 - 知乎 https
 
 [Enhance main window - AnkiWeb](https://ankiweb.net/shared/info/877182321)
 
-未装
-
-#### Image Occlusion
+#### Image Occlusion Enhanced
 
 [Image Occlusion Enhanced - AnkiWeb](https://ankiweb.net/shared/info/1374772155)
 
-这个软件可以让用户在 Anki 中制作遮挡卡片
+上面简称的IOE，这个软件可以让用户在 Anki 中制作遮挡卡片
+
+[Anki 插件之Image Occlusion Enhanced 和Searching PDF Reading & Note Taking的配合使用\_哔哩哔哩\_bilibili](https://www.bilibili.com/video/BV1hf4y127pB/?vd_source=4ed832873c3b70388cd7746abf15ce0a)
+
+两种生成方法
+
+1.   用生成卡片不相重叠的信息，哪里都有标签隐藏在前面，还有一个显示在后面
+2.   hide one guess one
+
+两者区别，后者不用多个颜色，1用多种颜色区分
+
+生成的卡片排序字段使用默认的！也就是根据图片排序！如果还要一个个改`Header` 太过麻烦。生成默认的排序字段
+
+注：此插件在 PC 上有效
+
+>   [Image occlusion not working in Anki iPad OS \- AnkiMobile \(iPhone/iPad\) \- Anki Forums](https://forums.ankiweb.net/t/image-occlusion-not-working-in-anki-ipad-os/9923/2)
+
+#### Edit Field During Review
+
+这是一款让你可以边复习边改卡片的插件。用过 SuperMemo 的朋友一定很熟悉，因为 SuperMemo 就是直接点击 item 就能编辑。适合有边复习边修改措辞习惯的用户使用。
+
+[Edit Field During Review - AnkiWeb](https://ankiweb.net/shared/info/1020366288)
+
+#### AnkiConnect
+
+[Add\-ons for Anki 2\.1 \- AnkiWeb](https://ankiweb.net/shared/addons/)
+
+[FooSoft/anki\-connect: Anki plugin to expose a remote API for creating flash cards\.](https://github.com/FooSoft/anki-connect)
+
+[英文电子书划词+导入到anki+整理句素SOP - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/65851976)
+
+[在线词典助手ODH\(划词助手在线版\) — 老黄老巢](https://www.laohuang.net/20180213/online-dictionary-helper/)
+
+#### Review Heatmap
+
+[Review Heatmap \- AnkiWeb](https://ankiweb.net/shared/info/1771074083)
 
 ### 其他
+
+#### Searching, PDF Reading & Note-Taking in Add Dialog
+
+[Searching, PDF Reading & Note\-Taking in Add Dialog \- AnkiWeb](https://ankiweb.net/shared/info/1781298089)
+
+[Anki 插件之Image Occlusion Enhanced 和Searching PDF Reading & Note Taking的配合使用\_哔哩哔哩\_bilibili](https://www.bilibili.com/video/BV1hf4y127pB/?vd_source=4ed832873c3b70388cd7746abf15ce0a)
+
+#### Markdown and KaTeX Support
+
+[Markdown and KaTeX Support \- AnkiWeb](https://ankiweb.net/shared/info/1087328706)
+
+可以直接支持 markdown
+
+[Anki与Markdown的联动 \- 知乎](https://zhuanlan.zhihu.com/p/389510694)
+
+[如何使Anki支持Markdown？ \- 知乎](https://www.zhihu.com/question/469601592/answer/1975257570)
+
+感觉有点走远了，该方案搁置TODO
+
+以pdf为主
 
 #### hjp-bilink
 
@@ -199,6 +398,83 @@ Anki 如何复习有网状联系的知识？ - 叶峻峣的回答 - 知乎 https
 
 国人出品，链接可视化
 
+感觉有点丑，先禁用了
+
 使用：
 
 [hjp-bilink: 🧷 make the disorganized card more organizable|结构化卡片插件 - AnkiWeb](https://ankiweb.net/shared/info/1420819673)
+
+#### Fast Word Query
+
+查单词
+
+[给Fast Word Query插件制作自己的网络词库 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/191635270)
+
+## 模板
+
+[「硬核」卡片模板修改与制作入门 \- 知乎](https://zhuanlan.zhihu.com/p/59438099)
+
+[Anki终极模板\+制卡助手插件 \| Half Stack](https://zhangsn.me/anki-ultimate-template/)
+
+### 教程
+
+[小白一看就懂的Anki模板修改方法](https://mp.weixin.qq.com/s?__biz=MzU2NDI1Mzg2NQ==&mid=2247484062&idx=1&sn=bb128e26996e74d5f3ad5405d8040880&chksm=fc4c8758cb3b0e4e05002a68bf1362b8258f8cf1366838c00f6d171950afc63de0ecf39f8ec8&scene=21#wechat_redirect)
+
+### 内置
+
+### IREAD
+
+叶哥教程推荐的
+
+### Anki高考
+
+叶哥的
+
+TODO
+
+### Anki-Blank-Space
+
+[Anki\-Blank\-Space/anki\_blank\_space20190406\.colpkg at master · ZuoAoyu/Anki\-Blank\-Space](https://github.com/ZuoAoyu/Anki-Blank-Space/blob/master/anki_blank_space20190406.colpkg)
+
+[破解长篇背诵的 Anki 模板！Anki+网格记忆法！ - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/50393957)该文章中的模板可能太老了，有点问题
+
+但是这里有一个坑，colpkg？好像是这个，会直接覆盖，所以还是diy吧TODO
+
+>    [「Leo的Anki系列」1000种Anki模板 \- 知乎](https://zhuanlan.zhihu.com/p/38054064)
+>
+>   >   [小白一看就懂的Anki模板修改方法](https://mp.weixin.qq.com/s?__biz=MzU2NDI1Mzg2NQ==&mid=2247484062&idx=1&sn=bb128e26996e74d5f3ad5405d8040880&chksm=fc4c8758cb3b0e4e05002a68bf1362b8258f8cf1366838c00f6d171950afc63de0ecf39f8ec8&scene=21#wechat_redirect)
+
+### ODH模板
+
+及本人修改版
+
+[在线词典助手ODH\(划词助手在线版\) — 老黄老巢](https://www.laohuang.net/20180213/online-dictionary-helper/)作者在文章末尾分享
+
+[ODH模板下载链接](https://www.laohuang.net/files/ODH.zip)
+
+### 划词助手模板
+
+[Anki 模板及索引 — 老黄老巢](https://www.laohuang.net/20161006/anki-template/)
+
+谷歌模板要去掉
+
+```html
+<!-- 如有外部引用的网址，可以将下列 href="#" 改成href={{网址字段}}-->
+```
+
+填空模板正常
+
+#### Antimoon
+
+[Antimoon 划词助手兼容模板 3\.0 — 老黄老巢](https://www.laohuang.net/20180108/antimoon-template-3/)
+
+## 他人牌组
+
+[【分享】Anki 哈工深计科牌组 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/362498928)
+
+[【经验】他人牌组食用指北|Anki - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/168386543)
+
+## 目前尝试使用书籍
+
+hp 和100个句子记考研
+

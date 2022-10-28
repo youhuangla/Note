@@ -11,7 +11,9 @@ $$
 π
 $$
 
+[latex中的希腊字母\_茁壮小草的博客\-CSDN博客\_latex 希腊](https://blog.csdn.net/xxzhangx/article/details/52778539)
 
+<img src="img/image-20221010175525128.png" alt="image-20221010175525128" style="zoom:50%;" />
 
 ## 上下标
 
