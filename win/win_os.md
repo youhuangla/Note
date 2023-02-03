@@ -1,5 +1,11 @@
 # Windows
 
+## 快捷键
+
+[点鼠标右键的键盘快捷键是什么？\_百度知道](https://zhidao.baidu.com/question/14657851.html)
+
+Shift + F10
+
 ## 高级系统设置
 
 [How to: Add Tool Locations to the PATH Environment Variable \| Microsoft Docs](https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-2010/ee537574(v=office.14))
@@ -99,3 +105,18 @@ win10桌面空出来一部分
 ### Disc++
 
 如何对Windows系统盘下的Installer文件夹以及WinSxS文件夹进行清理？ - yichya QC的回答 - 知乎 https://www.zhihu.com/question/34964216/answer/60559237
+
+## 缩略图
+
+![image-20221112235532765](img/image-20221112235532765.png)
+
+[windows设置查看文件方式为详细信息\_朝着希望前进的博客\-CSDN博客](https://blog.csdn.net/zl544434558/article/details/21233137)
+
+![image-20221112235812314](img/image-20221112235812314.png)
+
+因为列表显示查找文件非常方便，但是，也习惯了列表视图，但是xp，默认是【平铺】模式，每次都要手动改动每一个文件夹为【详细信息】模式，太麻烦。最近找到一个办法：
+第一步：进入C盘（或D、E、F中任一盘符） -->点击 工具栏中【查看】按钮 --> 【详细信息】
+第二步：点击菜单栏中的【工具】 --> 【文件夹选项】 --> 选择【查看】选项卡 --> 找到【高级设置】列表内的【记住每个文件夹的视图设置】，将其前面的勾去掉 --> 再点击列表上面【文件夹视图】块中的【应用到所有文件夹】 --> 点击【是】 --> 点击【确定】
+————————————————
+版权声明：本文为CSDN博主「vebasan」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/vebasan/article/details/5857842

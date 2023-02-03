@@ -154,6 +154,12 @@ TODO
 
 ## 制卡
 
+### 如何制卡
+
+[如何写出好卡片：利用间隔重复创造理解 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/434074509)
+
+[3.5 制卡心得 · 高中生也能看懂的 Anki 教程 · 看云 (kancloud.cn)](https://www.kancloud.cn/ankigaokao/ankigaokao/784670)
+
 <img src="img/image-20220928145727723.png" alt="image-20220928145727723" style="zoom:50%;" />
 
 ### 使用IOE制卡
@@ -228,6 +234,26 @@ anki如何更改已经编辑好的牌组的模版? - 叶峻峣的回答 - 知乎
  is:suspended 可以找到被暂停的卡片搜索 
 
 is:buried 可以找到被搁置的卡片
+
+## 复习卡片
+
+## 复习卡片
+
+## [Review Cards](https://docs.ankiweb.net/studying.html?highlight=Enter#review-cards)
+
+When a card has been previously learnt and is ready to be reviewed again, there are four buttons to rate your answer:
+
+**Again** marks your answer as incorrect and asks Anki to show the card more frequently in the future. The card is said to have 'lapsed'. Please see the [lapses](https://docs.ankiweb.net/deck-options.html#lapses) section for more information about how lapsed reviews are handled.
+
+**Hard** by default, shows the card at a [slightly longer delay](https://docs.ankiweb.net/deck-options.html#hard-interval) than last time, and tells Anki to show the card more frequently in the future.
+
+**Good** tells Anki that the last delay was about right, and the card easiness doesn’t need to be adjusted down or up. At the [default starting easiness](https://docs.ankiweb.net/deck-options.html#starting-ease), the card will be shown again approximately 2 1/2 times longer than the previous time, so if you had waited 10 days to see the card previously, the next delay would be about 25 days.
+
+**Easy** tells Anki you found the delay too short. The card will be scheduled [further into the future than 'Good'](https://docs.ankiweb.net/deck-options.html#easy-bonus), and Anki will schedule the card less frequently in the future. Because 'Easy' rapidly increases the delay, it’s best used for only the easiest of cards. Usually you should find yourself answering 'Good' instead.
+
+As with learning cards, you can use 1, 2, 3 and 4 on the keyboard to select an answer. Pressing the spacebar or Enter will select **Good**.
+
+[Studying \- Anki Manual](https://docs.ankiweb.net/studying.html?highlight=Enter)
 
 ## 输入
 
@@ -477,4 +503,6 @@ TODO
 ## 目前尝试使用书籍
 
 hp 和100个句子记考研
+
+
 
