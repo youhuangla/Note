@@ -18,9 +18,13 @@
 
 
 
+
+
+
+
 ## chatopt
 
-### where should I look up java document? 
+### where should I look up java document?
 
 You can find the Java documentation at the following website: https://docs.oracle.com/en/java/ This website contains the official Java documentation, which includes detailed information about the various classes and methods in the Java Standard Library, as well as tutorials and examples on how to use them. It is a valuable resource for learning about and working with Java.  
 
@@ -51,3 +55,68 @@ Alternatively, you can navigate to the `PrintStream` class documentation manuall
 4.  Click on the `PrintStream` class to view its documentation. The `printf` method should be listed under the "Methods" section.
 
 [PrintStream \(Java Platform SE 8 \)](https://docs.oracle.com/javase/8/docs/api/index.html)
+
+## 数组
+
+### 数组初始化
+
+在 Java 8 中，可以通过以下方式来声明并初始化固定长度的数组：
+
+```
+javaCopy code// 声明并初始化一个长度为10的整型数组
+int[] arr = new int[10];
+```
+
+上述代码将声明并初始化一个名为 `arr` 的整型数组，其长度为 `10`。在这个数组中，所有元素的默认值都是 `0`。
+
+如果要在声明时同时初始化数组元素，可以使用以下方式：
+
+```
+javaCopy code// 声明并初始化一个长度为5的整型数组
+int[] arr = {1, 2, 3, 4, 5};
+```
+
+上述代码将声明并初始化一个名为 `arr` 的整型数组，其长度为 `5`，并且数组中的元素分别为 `1`、`2`、`3`、`4` 和 `5`。
+
+参考文档：[Java Tutorials - Arrays](https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html)。
+
+### Java 8 forEach遍历数组
+
+1.  使用for-each循环遍历Java数组
+
+使用Java 8中的forEach()方法时，可以结合使用for-each循环来遍历数组。下面是示例代码：
+
+```
+int[] numbers = {1, 2, 3, 4, 5};
+
+for (int number : numbers) {
+    System.out.println(number);
+}
+```
+
+以上代码摘自Oracle官方Java教程中的for-each循环部分，链接如下：
+
+[The for Statement \(The Java™ Tutorials > Learning the Java Language > Language Basics\)](https://docs.oracle.com/javase/tutorial/java/nutsandbolts/for.html)
+
+## 字符串
+
+### charAt
+
+java中的chatAt函数作用以及命名由来
+
+
+
+
+
+在Java中，charAt()函数用于获取字符串中指定位置的字符。该函数接受一个整数参数，表示要获取的字符在字符串中的索引位置，返回该位置上的字符。例如，下面的代码获取了字符串中第3个字符：
+
+```
+String str = "hello";
+char c = str.charAt(2); // c的值为 'l'
+```
+
+函数名称 charAt() 中的 "char" 意为 "字符"，"At" 则表示 "在...位置"。因此，charAt() 函数的命名可以理解为 "获取在字符串中指定位置的字符"。该函数的命名与其他Java字符串函数（如substring()和length()）一样，都采用了类似的方式，简洁明了地描述了它的功能。
+
+以上代码摘自 Oracle 官方 Java 文档中的 String 类文档，链接如下：
+
+https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html

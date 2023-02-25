@@ -38,6 +38,10 @@ ai功能：camera raw
 
 [在 Photoshop 中填充和描边选区、图层和路径](https://helpx.adobe.com/cn/photoshop/using/filling-stroking-selections-layers-paths.html)
 
+### 移动选框（选区）
+
+[PS怎么只移动选框而不移动选框里的图片? \- 自学ps教程网](https://www.taoxuemei.com/chuli/ps/711.html)
+
 ### 替换颜色
 
 ![image-20230119191730246](img/image-20230119191730246.png)

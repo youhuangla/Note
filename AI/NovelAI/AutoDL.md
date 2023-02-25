@@ -66,7 +66,7 @@ git pull
 
 
 
-### 启动
+## 启动
 
 ```
 cd ~/stable-diffusion-webui/
@@ -76,6 +76,26 @@ python launch.py --disable-safe-unpickle --port=6006 --deepdanbooru --share --gr
 ```
 
 #"--share --gradio-debug --xformers --deepdanbooru --enable-insecure-extension-access"
+
+小李启动器
+
+```
+export http_proxy=http://192.168.1.174:12798 && export https_proxy=http://192.168.1.174:12798
+cd /root/autodl-tmp/stable-diffusion-webui && /root/miniconda3/envs/xl_env/bin/python launch.py --disable-safe-unpickle  --port=6006 --xformers --enable-insecure-extension-access --api --cors-allow-origins=https://www.painthua.com --no-half-vae --share --listen
+
+```
+
+允许扩图
+
+## 版本
+
+当前版本分支：master
+
+当前版本SHA：2c1bb46c7ad5b4536f6587d327a03f0ff7811c5d
+
+分支选择:请先刷新
+
+
 
 ## 上传下载模型
 
