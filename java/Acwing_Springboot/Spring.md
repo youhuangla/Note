@@ -1500,6 +1500,195 @@ Bot战力：
   Access to XMLHttpRequest at 'http://127.0.0.1:3000/pk/getbotinfo/' from origin 'http://localhost:8080' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
 ```
 
+**给我Spring官方文档中有关跨域问题的文档链接**
+
+>   以下是 Spring 官方文档中有关跨域问题的文档链接：
+>
+>   -   CORS support in Spring Framework: https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#cors
+>
+>   这篇文档中介绍了 Spring Framework 中关于 CORS 的实现，包括基于注解的方式和基于配置的方式。
+>
+>   -   Enabling Cross Origin Requests for a RESTful Web Service: https://spring.io/guides/gs/rest-service-cors/
+>
+>   这篇文档是 Spring 官方提供的一个基础的 RESTful Web Service 示例，其中包含了如何开启 CORS 的示例。
+>
+>   希望对你有帮助！
+
+###### 添加配置类：CorsConfig
+
+```java
+添加配置类：CorsConfig
+
+package com.kob.backend.config;
+
+import org.springframework.context.annotation.Configuration;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+@Configuration
+public class CorsConfig implements Filter {
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+        HttpServletResponse response = (HttpServletResponse) res;
+        HttpServletRequest request = (HttpServletRequest) req;
+
+        String origin = request.getHeader("Origin");
+        if(origin!=null) {
+            response.setHeader("Access-Control-Allow-Origin", origin);
+        }
+
+        String headers = request.getHeader("Access-Control-Request-Headers");
+        if(headers!=null) {
+            response.setHeader("Access-Control-Allow-Headers", headers);
+            response.setHeader("Access-Control-Expose-Headers", headers);
+        }
+
+        response.setHeader("Access-Control-Allow-Methods", "*");
+        response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+
+        chain.doFilter(request, response);
+    }
+
+    @Override
+    public void init(FilterConfig filterConfig) {
+
+    }
+
+    @Override
+    public void destroy() {
+    }
+}
+```
+
+
+###### Bug
+
+发现名字不是 kob 而是example，重构 Refractor 重命名，然后直接运行报错
+
+```
+错误: 找不到或无法加载主类 com.example.backend.BackendApplication
+```
+
+**当IDEA编译springboot错误: 找不到或无法加载主类 com.example.backend.BackendApplication时，如何debug找到错误？**
+
+>   
+>
+>   
+>
+>   出现"找不到或无法加载主类"的错误通常是因为编译时出现了问题。在这种情况下，您可以尝试以下步骤来debug：
+>
+>   1.  检查您的代码是否有语法错误或其他编译错误。在您的IDE中检查控制台输出，查看是否有任何错误消息。
+>   2.  检查您的类路径是否正确设置。确保所有必需的类文件和库文件都在类路径中，并且没有任何重复项。您可以在IDEA中检查您的类路径设置。
+>   3.  检查您的代码是否正确地打包成jar文件。如果您的代码是通过jar文件运行的，则确保您的代码被正确地打包到jar文件中。您可以检查您的构建脚本或构建配置以确认jar文件是否被正确地构建。
+>   4.  检查您的启动命令是否正确。确保您的启动命令正确地指定了您的主类，并且没有任何错误的参数或选项。您可以检查您的启动脚本或IDEA配置以确认启动命令是否正确。
+>   5.  尝试手动运行您的应用程序。如果您的应用程序是通过命令行运行的，则尝试手动运行它，以查看是否有任何错误消息。您可以检查您的应用程序的日志文件或控制台输出以获取更多信息。
+>
+>   如果您仍然无法解决问题，请考虑寻求更高级的debugging工具或专业支持。
+
+![image-20230304165605533](img/image-20230304165605533.png)
+
+![image-20230304165626361](img/image-20230304165626361.png)
+
+这里也要改
+
+###### 回到跨域问题
+
+![image-20230304170124450](img/image-20230304170124450.png)
+
+现在前端已经能获取值了，现在如何显示出来？
+
+```vue
+<template>
+  <!--html-->
+  <div>
+    <div>Bot昵称：{{ bot_name }}</div>
+    <div>Bot战力：{{ bot_rating }}</div>
+
+  </div>
+</template>
+
+<script>
+// js
+
+import { ref } from 'vue';// ? if commented , delete produce below error? 定义变量引入
+
+/*
+Compiled with problems:X
+
+ERROR
+
+[eslint] 
+C:\Users\Administrator\Desktop\spring\kob\web\src\App.vue
+  31:22  error  'ref' is not defined  no-undef
+  32:24  error  'ref' is not defined  no-undef
+
+✖ 2 problems (2 errors, 0 warnings)
+*/
+
+import $ from 'jquery';// add this or error
+/*
+Compiled with problems:X
+
+ERROR
+
+[eslint] 
+C:\Users\Administrator\Desktop\spring\kob\web\src\App.vue
+  21:7  error  '$' is not defined  no-undef
+
+✖ 1 problem (1 error, 0 warnings)
+
+*/
+export default {
+  name: "App", // 对象名字
+  setup: () => { //函数入口
+      let bot_name = ref("");
+      let bot_rating = ref("");
+
+      $.ajax({
+        url: "http://127.0.0.1:3000/pk/getbotinfo/",
+        type: "get",// 请求类型 2: get post ，restful多2种
+        success: resp => {
+          //console.log(resp); //print in console
+          bot_name.value = resp.name;
+          bot_rating.value = resp.rating;
+        }
+      });
+
+      return {
+        bot_name,
+        bot_rating
+      }
+  }
+}
+</script>
+
+<style>
+/* css */
+</style>
+
+```
+
+```
+Bot昵称：tiger
+Bot战力：1500
+```
+
+Vue 中的代码全在用户浏览器中执行。
+
+![image-20230304185719922](img/image-20230304185719922.png)
+
+"[/js/app.js](http://localhost:8080/js/app.js)"
+
+###### 添加背景图片
+
+src\assets\background.png
+
+![image-20230304194051401](img/image-20230304194051401.png)
+
 
 
 
