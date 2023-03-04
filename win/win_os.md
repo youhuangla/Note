@@ -100,6 +100,61 @@ win10桌面空出来一部分
 
 ## 空间清理
 
+### C盘瘦身
+
+[电脑C盘空间空间清理方法 – 标点符](https://www.biaodianfu.com/free-up-hard-disk-space-on-windows.html#:~:text=C%3A%5C,-ProgramData%5CPackage%20Cache&text=package%20cache%E6%98%AF%E5%8C%85%E7%BC%93%E5%AD%98,%E4%BA%BA%E7%B3%BB%E7%BB%9F%E4%B8%8D%E5%90%8C%E8%80%8C%E4%B8%8D%E5%90%8C%E3%80%82&text=%E9%A6%96%E5%85%88%E5%BB%BA%E8%AE%AE%E6%98%AF%E4%B8%8D%E8%A6%81%E5%88%A0%E9%99%A4,%E4%B8%8D%E6%AD%A3%E5%B8%B8%EF%BC%8C%E5%A6%82Visual%20Studio%E3%80%82)
+
+```powershell
+C:\Users\Administrator>mklink /j "C:\ProgramData\Package Cache" "D:\ProgramData\Package Cache"
+为 C:\ProgramData\Package Cache <<===>> D:\ProgramData\Package Cache 创建的联接
+
+C:\Users\Administrator>
+```
+
+成功
+
+```powershell
+C:\Users\Administrator>cd C:\ProgramData\Package Cache
+
+C:\ProgramData\Package Cache>ls
+'ls' 不是内部或外部命令，也不是可运行的程序
+或批处理文件。
+
+C:\ProgramData\Package Cache>bash
+
+Administrator@DESKTOP-0O633M1 MINGW32 /c/ProgramData/Package Cache
+$ ls
+08EF2F6CFDB33946061884B1CE13FA867EFBD576             {96BFBDD2-78C9-42B5-9893-FABA2BB527C4}v3.10.7917.0
+786C79A2499AACD071FDB6336BD7EDF4ED53E13B             {9bd48a22-fe5a-457c-8f10-da6c2be89eee}
+EA8DB9D01555D0EA2A3D3CD41D56A28199A064F5             {A5316E23-BFC7-4200-B5F0-A2CFB2AA984F}v40.28.30105
+F7119E3AB3D5CB3ADCD9A57F0EC227F783695819             {A7036CFB-B403-4598-85FF-D397ABB88173}v24.0.28113
+{04F9E236-053D-4CF0-9390-AF70AD87AA49}v40.28.30105   {AEAA18F7-9C96-4A43-BC07-8B88A4913EEB}v14.32.31332
+{050d4fc8-5d48-4b8f-8972-47c82c46020f}
+```
+
+bash 命令见 Note 中 java 的 idea 文档。
+
+##### C:\ProgramData\Package Cache 文件夹
+
+package cache是windows系统中的一个目录，其中存放了软件安装和升级的某些必须文件。package cache是包缓存文件，大小几百M，到1G至不等，因各人系统不同而不同。
+
+###### 处理方法
+
+首先建议是不要删除。微软官方表示删除该文件夹可能引起某些软件工作不正常，如Visual Studio。为了给系统盘瘦身，可以采用加入文件链接的方法，即将系统盘的Program Data/Package Cache目录指向其他位置。
+
+在win 7及以上版本用户中，可以使用mklink命令。mklink的用法是：MKLINK [[/D] | [/H] | [/J]] Link Target
+
+-   /D 创建目录符号链接。默认为文件符号链接。
+-   /H 创建硬链接而非符号链接。
+-   /J 创建目录联接。
+-   Link 指定新的符号链接名称。
+-   Target 指定新链接引用的路径(相对或绝对)。
+
+参考步骤：
+
+-   将package cache文件夹剪切到D盘根目录；
+-   win+R，输入cmd 回车，输入命令：mklink /j “C:\ProgramData\Package Cache” “D:\Package Cache”  回车，就可以看到操作成功的提示。
+
 ### SpaceSniffer
 
 ### Disc++
