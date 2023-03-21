@@ -1129,6 +1129,14 @@ vue ui
 
 解决方案：用管理员身份打开终端，输入set-ExecutionPolicy RemoteSigned，然后输入y
 
+##### 安装依赖
+
+vue-router, vuex
+
+这里我一开始没装，所以到后面使用vue-router前都缺少依赖
+
+![image-20230305213155590](img/image-20230305213155590.png)
+
 #### 创建 vue 项目
 
 如果在 c 的 systems 文件夹中打开 powershell 会卡住，还行是因为文件太多？其实不是。我用最新版vue，将 systems 加入环境变量后问题消失了。
@@ -1688,6 +1696,1019 @@ Vue 中的代码全在用户浏览器中执行。
 src\assets\background.png
 
 ![image-20230304194051401](img/image-20230304194051401.png)
+
+
+
+## 5.创建菜单与游戏页面
+
+
+
+前端使用 Bootstrap 。
+
+将导航栏封装成一个可以复用的组件。
+
+src\components\NavBar.vue
+
+**Vue 对组件的命名要求实什么？给出文档链接**
+
+>   Vue对组件的命名有以下要求：
+>
+>   -   组件名应该始终是多个单词的，根组件 App 除外。
+>   -   组件名应该始终使用 PascalCase（首字母大写的驼峰命名法）命名规则。
+>   -   组件名应该是自定义元素的形式，以避免和当前以及未来的 HTML 元素相冲突。
+>
+>   你可以在官方文档中查看更多关于Vue组件命名的详细信息：[https://cn.vuejs.org/v2/style-guide/index.html#%E7%BB%84%E4%BB%B6%E5%90%8D%E5%BF%85%E9%A1%BB%E5%A4%9A%E5%8D%95%E8%AF%8D%E5%B9%B6%E4%BD%BF%E7%94%A8%E5%A4%A7%E5%86%99%E5%BC%8F%E5%91%BD%E5%90%8D](https://cn.vuejs.org/v2/style-guide/index.html#组件名必须多单词并使用大写式命名)
+
+```vue
+```
+
+#### 导入 NavBar
+
+[Bootstrap · The most popular HTML, CSS, and JS library in the world\.](https://getbootstrap.com/) => Docs => 搜索 Navbar 
+
+[Navbar · Bootstrap v5\.3](https://getbootstrap.com/docs/5.3/components/navbar/#how-it-works)
+
+搜索 w/ text
+
+```html
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar w/ text</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Features</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Pricing</a>
+        </li>
+      </ul>
+      <span class="navbar-text">
+        Navbar text with an inline element
+      </span>
+    </div>
+  </div>
+</nav>
+```
+
+App.vue
+
+```vue
+<template>
+  <!--html-->
+  <NavBar />
+</template>
+
+<script>
+// js
+import NavBar from './components/NavBar.vue'
+
+export default {
+  components: {
+    NavBar
+  }
+}
+</script>
+
+<style>
+/* css */
+body {
+  background-image: url(@/assets/background.png);
+  background-size: cover;
+}
+</style>
+
+```
+
+
+
+App.vue
+
+```vue
+<template>
+  <!--html-->
+  <NavBar />
+</template>
+
+<script>
+// js
+import NavBar from './components/NavBar.vue'
+
+export default {
+  components: {
+    NavBar
+  }
+}
+</script>
+
+<style>
+/* css */
+body {
+  background-image: url(@/assets/background.png);
+  background-size: cover;
+}
+</style>
+
+```
+
+
+
+Bootstrap not defined
+
+![image-20230304201056629](img/image-20230304201056629.png)
+
+#### 导入 Bootstrap
+
+```js
+import NavBar from './components/NavBar.vue'
+
+import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap/dist/js/bootstrap"
+```
+
+
+
+```
+Compiled with problems:X
+
+ERROR in ./node_modules/bootstrap/dist/js/bootstrap.js 8:90-115
+
+Module not found: Error: Can't resolve '@popperjs/core' in 'C:\Users\Administrator\Desktop\spring\kob\web\node_modules\bootstrap\dist\js'
+
+```
+
+
+
+在 vue cli 的依赖 => 安装依赖 中搜索 `@popperjs/core` 并安装
+
+![image-20230304202021064](img/image-20230304202021064.png)
+
+
+
+![image-20230304202104650](img/image-20230304202104650.png)
+
+
+
+```html
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+```
+
+
+
+![image-20230304202749743](img/image-20230304202749743.png)
+
+
+
+```html
+<template>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">King of Bots</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">对战</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">对局列表</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">排行榜</a>
+        </li>
+      </ul>
+      <span class="navbar-text">
+        Navbar text with an inline element
+      </span>
+    </div>
+  </div>
+</nav>
+</template>
+```
+
+![image-20230304203125779](img/image-20230304203125779.png)
+
+```html
+          <a class="nav-link active" aria-current="page" href="#">对战</a>
+<!-- active 是高亮-->
+```
+
+#### 实现下拉菜单 dropdown
+
+注意在 navbar 中搜索，而不是全局搜索，全局搜索的样式不匹配导航栏
+
+
+
+![image-20230305101915275](img/image-20230305101915275.png)
+
+#### 写页面
+
+views 文件夹
+
+中创建四个界面
+
+#### Router-view
+
+##### 网址打开对应页面
+
+src\router\index.js
+
+define   `<router-view></router-view>` in App.vue
+
+如果 vue-router 没安装就会报错
+
+```js
+app.js:434 
+        
+       Uncaught Error: Cannot find module 'vue-router'
+```
+
+现在打开一个网址对应了一个页面
+
+[Imply views.Fix router-vue problem, install router-vue and vuex. (d04a6dbc) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/d04a6dbca8396ac5758e44f0aa09fb5d8bc82a0e)
+
+##### 点击跳转网址
+
+[Click navbar and Jump to url (ec1f5112) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/ec1f51125150ec4bd64108355cb6a8363bfa22b7
+
+观察到每点击一次，就刷新一次，那如何实现点击不刷新
+
+```css
+            <!--a class="nav-link" aria-current="page" href="/pk/">对战</a-->
+            <router-link class="nav-link" :to="{name: 'pk_index'}">对战</router-link>  
+```
+
+[No reflesh (9277b9e4) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/9277b9e45edf6777e6b453fe22e4473097de4810)
+
+##### 实现card
+
+Bootstrap 里面搜，加入边框
+
+src\components\ContentField.vue
+
+![image-20230306144347750](img/image-20230306144347750.png)
+
+[Add card (990f2b3b) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/990f2b3b2c1fe5c95346b603cd371643e9346e4d)
+
+##### 实现导航栏点击页面高亮
+
+![image-20230306145236322](img/image-20230306145236322.png)
+
+[Highlight when jump (e0254c8b) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/e0254c8b72d9468ae4d22ae4955894a995e9d5f3)
+
+
+
+
+
+
+
+#### 实现地图
+
+![image-20230307104936589](img/image-20230307104936589.png)
+
+
+
+基类：基本功能，每秒钟画 60 次
+
+代码脚本放入 assets 中
+
+
+
+
+
+##### requestAnimationFrame
+
+
+
+传入一个函数，该函数在浏览器下一帧渲染之前返回
+
+##### 设置地图大小
+
+![image-20230309143603524](img/image-20230309143603524.png)
+
+[Set PK index background area's size (3258f3ed) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/3258f3ed884dbb45e7d1f0286fd3e68ac8f04155)
+
+##### Canvas
+
+[Canvas - Web API 接口参考 | MDN (mozilla.org)](https://developer.mozilla.org/zh-CN/docs/Web/API/Canvas_API)
+
+###### 画蓝色长方形中最大的绿色正方形
+
+[Canvas print a green square inside a rectangle (35a938c9) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/35a938c9bb4d892e7dd9ac16bb31aab3e1becae0)
+
+正方形是动态变化的
+
+###### 调试
+
+New BIng
+
+[在 VS Code 中调试 — Vue.js (vuejs.org)](https://v2.cn.vuejs.org/v2/cookbook/debugging-in-vscode.html)
+
+[vscode配置使vue项目支持断点调试 - 掘金 (juejin.cn)](https://juejin.cn/post/6844904144457695245)
+
+```
+如果你使用的是 Vue CLI 3，请设置并更新 vue.config.js 内的 devtool property：
+
+module.exports = {
+  configureWebpack: {
+    devtool: 'source-map'
+  }
+}
+
+如果我的  vue.config.js 内容如下 
+const { defineConfig } = require('@vue/cli-service')
+module.exports = defineConfig({
+  transpileDependencies: true
+}) 
+如何添加上述代码？
+
+```
+
+```
+const { defineConfig } = require('@vue/cli-service')
+module.exports = defineConfig({
+  transpileDependencies: true,
+  configureWebpack: {
+    devtool: 'source-map'
+  }
+})
+```
+
+结果最后发现是 client 打错了。。
+
+**vscode中为vue打断点出现unbound breakpoint**
+
+```
+根据搜索结果，unbound breakpoint 是指一个断点无法绑定到相应的源代码位置。² 这可能是因为源代码文件的路径或名称与断点的路径或名称不匹配，或者因为源代码文件没有被加载或执行。¹³
+```
+
+**this.L = Math.min(this.parent.cilentWidth / this.cols, this.parent.clientHeight / this.rows);// 求 canvas 中最小正方形的长宽 想在 console.log(""); 中输出this.L怎么做？**
+
+>   如果您想在 console.log 中输出 this.L 的值，您可以使用以下语句：
+>
+>   console.log(this.L);
+>
+>   这将在控制台中显示 this.L 的数值。
+
+**his.L = Math.min(this.parent.cilentWidth / this.cols, this.parent.clientHeight / this.rows);// 求 canvas 中最小正方形的长宽 //console.log(this.L); console.log("start"); console.log(this.parent.clientWidth); console.log(this.parent.clientHeight); console.log(this.cols); console.log(this.rows); console.log(this.L); console.log("end"); 打印出的结果start 372 460 13 13 NAN end 为什么打印出NAN?**
+
+>   [NaN 是一个英文单词，它是 Not a Number 的缩写，表示一个不是数字的值，或者是无法表示的值，特别是在浮点运算中](https://en.wikipedia.org/wiki/NaN)[1](https://en.wikipedia.org/wiki/NaN)[2](https://en.wikipedia.org/wiki/NaN)[3](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN)。您打印出 NaN 的原因可能是您的代码中有一个 typo， cilentWidth 应该是 clientWidth。如果您用一个 undefined 的值去做除法运算，那么结果就会是 NaN。您可以检查一下您的代码，看看是否有拼写错误。
+
+###### 画草地
+
+[Print Green odd and even grids (032ab9e5) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/032ab9e5342a1f0b4f8ab6fde6148b268cb41034)
+
+![image-20230310181533005](img/image-20230310181533005.png)
+
+
+
+###### 画墙
+
+![image-20230311145515200](img/image-20230311145515200.png)
+
+[Create a block of wall in (0,0) (98d638f9) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/98d638f94b9c7c29d1dbb4024b6ace61baa436c8)
+
+
+
+![image-20230311150316710](img/image-20230311150316710.png)
+
+[Add walls around 4 sides (de573808) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/de573808d195fdcba42a371dddc8fe23722f6af0)
+
+
+
+
+
+
+
+![image-20230311150742883](img/image-20230311150742883.png)
+
+[Add walls around all 4 sides but not perfect (03dc7a59) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/03dc7a597d691a7bb0df9105587a0c30fc0738e1)
+
+![image-20230311150900700](img/image-20230311150900700.png)
+
+[Add walls around all 4 sides perfectly (559c22d6) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/559c22d65de5a0f11e1205598dc56c87833dbb76)
+
+###### 随机添加障碍物（墙）
+
+![image-20230311152706940](img/image-20230311152706940.png)
+
+
+
+[Add Obstacles randomly (304ab02f) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/304ab02fa0209fac780ffea90c921d7eb817e52e)
+
+
+
+
+
+
+
+![image-20230311153046363](img/image-20230311153046363.png)
+
+
+
+[The squares in the upper left and lower right corners of the map are empty (c7002a7b) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/c7002a7b93ca88a5bee31a716ad041c41ab0ad0a)
+
+
+
+###### 连通函数（BFS）
+
+![image-20230311155934199](img/image-20230311155934199.png)
+
+[Conectivity function of begin position of two snakes (231949e9) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/231949e964ebbce72f79b0f67a4ebe6dde23a961)
+
+#### 换图标
+
+![image-20230311155953489](img/image-20230311155953489.png)
+
+to ![image-20230311160101330](img/image-20230311160101330.png)
+
+public\favicon.ico
+
+[Finish 3.1 and Change icon (1f5824cc) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/1f5824cc759b6f5508e41df27a04b1801e8913d5)
+
+
+
+#### 蛇头在同一时间不会在同一个格子相遇
+
+
+
+
+
+蛇头在同一时间不会在同一个格子相遇
+
+![image-20230311175359861](img/image-20230311175359861.png)
+
+将地图长宽列数增加1.
+
+将正方形变为长方形，地图障碍物对称也要从轴对称改成中心对称
+
+![image-20230311180305860](img/image-20230311180305860.png)
+
+未来的地图逻辑应该转移到后端，现在浏览器刷新地图也刷新为了方便调试
+
+#### 画蛇
+
+##### 起点
+
+![image-20230313123233094](img/image-20230313123233094.png)
+
+[Print Snake in starting point (a2a58f2c) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/a2a58f2ca5779f8c0504cad59e7289d9e45b21a1)
+
+##### 一个方向移动
+
+![image-20230313124651159](img/image-20230313124651159.png)
+
+[Move in a direction (823c7c7b) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/823c7c7b6056d74aa73a93227fcdac4e7f83383d)
+
+
+
+##### 用键盘操控蛇移动
+
+![image-20230318204232920](img/image-20230318204232920.png)
+
+[Keyboard control snake (2ef8ef6b) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/2ef8ef6bba1245fd1f032c2e6a0d8eaf2ff932de)
+
+
+
+
+
+##### 让蛇变小
+
+![image-20230319020551033](img/image-20230319020551033.png)
+
+[Make snake smaller (bc99adb4) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/bc99adb4c2f748722d997290c4b377f1efb21844)
+
+##### 判断蛇是否撞墙
+
+![image-20230319022058264](img/image-20230319022058264.png)
+
+![image-20230319022221929](img/image-20230319022221929.png)
+
+[Judge if a snake hits a wall (00d63eb7) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/00d63eb78ac364e74a121b9d0c59cad368743346)
+
+##### 画蛇头
+
+![image-20230319103656949](img/image-20230319103656949.png)
+
+[Print snake's head (8d56f0fb) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/8d56f0fb8b5680fa6f22e8ee333a9f0277f430e0)
+
+## 6.配置Mysql与注册登录模块
+
+### 配置
+
+mysql-installer-community-8.0.30.0.msi
+
+```powershell
+PS D:\Program Files\MySQL\MySQL Server 8.0\bin> .\mysql --version
+D:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe  Ver 8.0.30 for Win64 on x86_64 (MySQL Community Server - GPL)
+```
+
+密码：@
+
+加入环境变量
+
+### 启动与停止
+
+```powershell
+PS C:\Users\Administrator\Desktop> net stop mysql80
+MySQL80 服务正在停止.
+MySQL80 服务已成功停止。
+
+PS C:\Users\Administrator\Desktop> net start mysql80
+MySQL80 服务正在启动 .
+MySQL80 服务已经启动成功。
+```
+
+如果出现报错，将 [C:\Windows\System32](https://stackoverflow.com/questions/35591669/net-is-not-recognized-as-an-internal-or-external-command-operable-program-or) 加入环境变量后重启终端
+
+### 常见SQL命令
+
+![image-20230319155628309](img/image-20230319155628309.png)
+
+命令行使用 Mysql
+
+```powershell
+mysql -uroot -p
+```
+
+
+
+```sql
+PS C:\Users\Administrator\Desktop> mysql -uroot -p
+Enter password: **********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.30 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases
+    -> ;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+4 rows in set (0.01 sec)
+
+mysql> create database kob;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| kob                |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.00 sec)
+
+mysql> use kob;
+Database changed
+mysql> show tables;
+Empty set (0.00 sec)
+
+mysql> drop database kob;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> show databases
+    -> ;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+4 rows in set (0.00 sec)
+
+mysql> create database kob;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use kob;
+Database changed
+mysql> create table user(id int, username varchar(100), password varchar(100));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> show tables;
++---------------+
+| Tables_in_kob |
++---------------+
+| user          |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> drop table user;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> show tables;
+Empty set (0.00 sec)
+
+mysql> create table user(id int, username varchar(100), password varchar(100));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> use kob;
+Database changed
+mysql> show tables;
++---------------+
+| Tables_in_kob |
++---------------+
+| user          |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> insert into user values(1, 'yxc', 'pyxc');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from user
+    -> ;
++------+----------+----------+
+| id   | username | password |
++------+----------+----------+
+|    1 | yxc      | pyxc     |
++------+----------+----------+
+1 row in set (0.00 sec)
+
+mysql> insert into user values(2, 'b', 'pb');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into user values(3, 'c', 'pc');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from user;
++------+----------+----------+
+| id   | username | password |
++------+----------+----------+
+|    1 | yxc      | pyxc     |
+|    2 | b        | pb       |
+|    3 | c        | pc       |
++------+----------+----------+
+3 rows in set (0.00 sec)
+
+mysql> select * from user where id=1;
++------+----------+----------+
+| id   | username | password |
++------+----------+----------+
+|    1 | yxc      | pyxc     |
++------+----------+----------+
+1 row in set (0.00 sec)
+
+mysql> select * from user where id=2;
++------+----------+----------+
+| id   | username | password |
++------+----------+----------+
+|    2 | b        | pb       |
++------+----------+----------+
+1 row in set (0.00 sec)
+
+mysql> select * from user where username=yxc;
+ERROR 1054 (42S22): Unknown column 'yxc' in 'where clause'
+mysql> select * from user where username='yxc';
++------+----------+----------+
+| id   | username | password |
++------+----------+----------+
+|    1 | yxc      | pyxc     |
++------+----------+----------+
+1 row in set (0.00 sec)
+
+mysql> delete from user where id=2;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from user;
++------+----------+----------+
+| id   | username | password |
++------+----------+----------+
+|    1 | yxc      | pyxc     |
+|    3 | c        | pc       |
++------+----------+----------+
+2 rows in set (0.00 sec)
+
+mysql>
+```
+
+### IDEA连接Mysql
+
+![image-20230319155944836](img/image-20230319155944836.png)
+
+![image-20230319160032337](img/image-20230319160032337.png)
+
+
+
+![image-20230319160149010](img/image-20230319160149010.png)
+
+![image-20230319160206073](img/image-20230319160206073.png)
+
+![image-20230319160312426](img/image-20230319160312426.png)
+
+![image-20230319160418093](img/image-20230319160418093.png)
+
+![image-20230319160704313](img/image-20230319160704313.png)
+
+### Maven仓库
+
+Maven仓库[Maven Repository: Search/Browse/Explore](https://mvnrepository.com/)
+
+>   在pom.xml文件中添加依赖：
+>   Spring Boot Starter JDBC
+>   Project Lombok
+>   MySQL Connector/J
+>   mybatis-plus-boot-starter
+>   mybatis-plus-generator
+>   spring-boot-starter-security
+>   jjwt-api
+>   jjwt-impl
+>   jjwt-jackson
+
+#### 配置 Maven 库
+
+![image-20230319160952983](img/image-20230319160952983.png)
+
+
+
+[Maven Repository: org\.springframework\.boot » spring\-boot\-starter\-jdbc » 2\.7\.1](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-jdbc/2.7.1)
+
+从![image-20230319161100737](img/image-20230319161100737.png)复制
+
+```xml
+<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-jdbc -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-jdbc</artifactId>
+    <version>2.7.1</version>
+</dependency>
+
+```
+
+到 pom.xml 的 dependencies 中
+
+![image-20230319161254122](img/image-20230319161254122.png)
+
+
+
+在pom.xml文件中添加依赖：
+Spring Boot Starter JDBC
+Project Lombok
+MySQL Connector/J
+mybatis-plus-boot-starter
+mybatis-plus-generator
+
+后面的两个先别装
+
+字体为红色，打开 Maven 栏点刷新
+
+![image-20230319203616989](img/image-20230319203616989.png)
+
+[【SpringBoot】Plugin ‘org.springframework.boot:spring-boot-maven-plugin:‘ not found_猿人林克的博客-CSDN博客](https://blog.csdn.net/ooppookid/article/details/120182049)
+
+#### 添加数据库配置
+
+>   在application.properties中添加数据库配置：
+>
+>   ```
+>   spring.datasource.username=root
+>   spring.datasource.password=123456
+>   spring.datasource.url=jdbc:mysql://localhost:3306/kob?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8
+>   spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+>   ```
+
+src/main/resources/application.properties
+
+
+
+
+
+![image-20230319205330686](img/image-20230319205330686.png)
+
+![image-20230319205233455](img/image-20230319205233455.png)
+
+![image-20230319205353853](img/image-20230319205353853.png)
+
+
+
+
+
+### SpringBoot中的常用模块
+
+>   SpringBoot中的常用模块
+>   pojo层：将数据库中的表对应成Java中的Class
+>   mapper层（也叫Dao层）：将pojo层的class中的操作，映射成sql语句
+>   service层：写具体的业务逻辑，组合使用mapper中的操作
+>   controller层：负责请求转发，接受页面过来的参数，传给Service处理，接到返回值，再传给页面
+
+
+
+![image-20230319210109291](img/image-20230319210109291.png)
+
+
+
+#### 实现pojo层
+
+![image-20230319210936253](img/image-20230319210936253.png)
+
+也就是在上面中添加注解后
+
+下面的 User.class 中会生成一堆代码
+
+
+
+#### 实现 Mapper 层
+
+[MyBatis-Plus (baomidou.com)](https://baomidou.com/)
+
+![image-20230320092143886](img/image-20230320092143886.png)
+
+[Query all user (71cbfedc) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/71cbfedc2f1be4e399fc43fbf5b2df700c1493d1)
+
+查询所有用户
+
+![image-20230320092637432](img/image-20230320092637432.png)
+
+![image-20230320092700457](img/image-20230320092700457.png)
+
+[Query by id (7a2bd8bd) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/7a2bd8bd9fe16634d010435f759255ad25aa1a57)
+
+![image-20230320103734210](img/image-20230320103734210.png)
+
+[Query with condition (f6071795) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/f6071795028298cf0c879b077b1f38524bcac83d)
+
+![image-20230320104250399](img/image-20230320104250399.png)
+
+[Query more condition and return a list (ddf60c44) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/ddf60c44d8c00d71c8e5d4c90773809b0301df80)
+
+![image-20230320152511144](img/image-20230320152511144.png)
+
+[Add user in browser's bar (3036e5bb) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/3036e5bbae2396c1fc2df640e3f99744983f5c13)
+
+##### 未设置主键前加入重复数据的删除
+
+![image-20230320162201780](img/image-20230320162201780.png)
+
+加入重复数据后，不能直接删除
+
+![image-20230321104001514](img/image-20230321104001514.png)
+
+```sql
+DELETE FROM user WHERE id = 5 AND username = 'e' limit 1;
+```
+
+![image-20230321104256740](img/image-20230321104256740.png)
+
+
+
+##### 设置主键
+
+![image-20230321104447406](img/image-20230321104447406.png)
+
+![image-20230321104547162](img/image-20230321104547162.png)
+
+![image-20230321104603222](img/image-20230321104603222.png)
+
+现在添加重复 id 就会报错
+
+![image-20230321104729109](img/image-20230321104729109.png)
+
+![image-20230321104823786](img/image-20230321104823786.png)
+
+##### 实现 deleteUser
+
+[127.0.0.1:3000/user/all/](http://127.0.0.1:3000/user/all/)
+
+```json
+[{"id":1,"username":"yxc","password":"pyxc"},{"id":2,"username":"b","password":"pb"},{"id":3,"username":"c","password":"pc"},{"id":4,"username":"d","password":"pd"},{"id":5,"username":"e","password":"pe"},{"id":6,"username":"f","password":"pf"}]
+```
+
+![image-20230321105537266](img/image-20230321105537266.png)
+
+[127.0.0.1:3000/user/all/](http://127.0.0.1:3000/user/all/)
+
+```json
+[{"id":1,"username":"yxc","password":"pyxc"},{"id":2,"username":"b","password":"pb"},{"id":3,"username":"c","password":"pc"},{"id":4,"username":"d","password":"pd"},{"id":5,"username":"e","password":"pe"}]
+```
+
+MyBatis-Plus 集成了许多数据库，可以将 SQL 语句统一转换为 Java 语句
+
+
+
+Maven仓库[Maven Repository: Search/Browse/Explore](https://mvnrepository.com/)安装
+
+#### spring-boot-starter-security
+
+PS: 每次引入一个新 Maven 项目，都要在 Maven 选项卡中重新加载 `Reload All Maven Projects`
+
+重新启动项目，然后进入任意页面显示要登入
+
+![image-20230321135200910](img/image-20230321135200910.png)
+
+每次会动态生成一个密码
+
+![image-20230321135401455](img/image-20230321135401455.png)
+
+
+
+![image-20230321135429011](img/image-20230321135429011.png)
+
+
+
+[Confirm Log Out?](http://127.0.0.1:3000/logout)
+
+![image-20230321135601489](img/image-20230321135601489.png)
+
+原理：
+
+![image-20230321140108718](img/image-20230321140108718.png)
+
+JWT：不在数据库里存东西就可以保持验证、
+
+
+
+
+
+Alt + Enter 补全
+
+Alt + Insert 查找接口所有实现方法
+
+![image-20230321140705491](img/image-20230321140705491.png)
+
+![image-20230321140737128](img/image-20230321140737128.png)
+
+
+
+
+
+
+
+![image-20230321164202356](img/image-20230321164202356.png)
+
+`{noop}`表示未加密的明文
+
+```
+1,yxc,{noop}pyxc
+2,b,pb
+3,c,pc
+4,d,pd
+5,e,pe
+
+```
+
+
+
+
+
+出现“用户账号已过期”：
+
+![image-20230321175240872](img/image-20230321175240872.png)
+
+backend/src/main/java/com/kob/backend/service/impl/utils/UserDetailsImpl.java
+
+```java
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+```
+
+应为
+
+```java
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+```
+
+修改之后正常登录
+
+#### 实现加密密码，判断密码长度
+
+
+
+![image-20230321210341583](img/image-20230321210341583.png)
+
+[Password too short, finish l4.1 (41dc7524) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/41dc75245b236589ce8ad2c6d25b314d397c274b)
+
+
+
+
 
 
 

@@ -1,0 +1,1 @@
+[上万良心软件都在GitHub，你却还卡在无法访问？ (qq.com)](https://mp.weixin.qq.com/s?__biz=MzA5NjEwNjE0OQ==&mid=2247503500&idx=1&sn=aeb2d62d81beb93695b323df9a67b9d7&chksm=90b7ad46a7c024501690739558e267daeb7b7490626035878241931b199e2927a8f3ec1fb194#rd&rd2werd=1#wechat_redirect)
