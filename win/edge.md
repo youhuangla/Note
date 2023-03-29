@@ -17,3 +17,25 @@ edge科学上网事项
 公众号：奔跑中的奶酪
 
 https://mp.weixin.qq.com/s/1YDGE0n1OULlCtz5vlO5_w
+
+```
+Sorry, looks like your network settings are preventing access to this feature.
+```
+
+解决方法: 
+
+[New Bing 这是给我拉黑了？ \- V2EX](https://www.v2ex.com/t/924296)
+
+[New Bing 网络设置错误 \- 简书](https://www.jianshu.com/p/57918baf0ac8)
+
+![image-20230325150518388](img/image-20230325150518388.png)
+
+![image-20230325150546583](img/image-20230325150546583.png)
+
+## Pixiv免翻
+
+Steam++
+
+已改名为Watt Toolkit
+
+[仅需两步，完美解决vm16（vmware workstation16）占用443（https）端口的问题 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/376328486)

@@ -1256,6 +1256,14 @@ C:\Users\Administrator\AppData\Roaming\npm
 
 由于 vue 项目比较大，运行慢
 
+也可以在 vscode 中
+
+```bash
+npm run serve
+```
+
+
+
 ##### git 同步
 
 ```bash
@@ -2698,7 +2706,7 @@ backend/src/main/java/com/kob/backend/service/impl/utils/UserDetailsImpl.java
 
 修改之后正常登录
 
-#### 实现加密密码，判断密码长度
+##### 实现加密密码，判断密码长度
 
 
 
@@ -2710,7 +2718,404 @@ backend/src/main/java/com/kob/backend/service/impl/utils/UserDetailsImpl.java
 
 
 
+##### 更改验证方式
 
+![image-20230322152923909](img/image-20230322152923909.png)
+
+
+
+###### Jwt验证方式
+
+利于跨域验证
+
+![image-20230322153402489](img/image-20230322153402489.png)
+
+![image-20230322153337787](img/image-20230322153337787.png)
+
+项目中只验证 14 天的 access_token 。
+
+>   在pom.xml文件中添加依赖：
+>
+>   jjwt-api
+>   jjwt-impl
+>   jjwt-jackson
+
+```java
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.stereotype.Component;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.util.Base64;
+import java.util.Date;
+import java.util.UUID;
+
+@Component
+public class JwtUtil {
+    public static final long JWT_TTL = 60 * 60 * 1000L * 24 * 14;  // 有效期14天
+    public static final String JWT_KEY = "SDFGjhdsfalshdfHFdsjkdsfds121232131afasdfac";
+
+    public static String getUUID() {
+        return UUID.randomUUID().toString().replaceAll("-", "");
+    }
+
+    public static String createJWT(String subject) {
+        JwtBuilder builder = getJwtBuilder(subject, null, getUUID());
+        return builder.compact();
+    }
+
+    private static JwtBuilder getJwtBuilder(String subject, Long ttlMillis, String uuid) {
+        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+        SecretKey secretKey = generalKey();
+        long nowMillis = System.currentTimeMillis();
+        Date now = new Date(nowMillis);
+        if (ttlMillis == null) {
+            ttlMillis = JwtUtil.JWT_TTL;
+        }
+
+        long expMillis = nowMillis + ttlMillis;
+        Date expDate = new Date(expMillis);
+        return Jwts.builder()
+                .setId(uuid)
+                .setSubject(subject)
+                .setIssuer("sg")
+                .setIssuedAt(now)
+                .signWith(signatureAlgorithm, secretKey)
+                .setExpiration(expDate);
+    }
+
+    public static SecretKey generalKey() {
+        byte[] encodeKey = Base64.getDecoder().decode(JwtUtil.JWT_KEY);
+        return new SecretKeySpec(encodeKey, 0, encodeKey.length, "HmacSHA256");
+    }
+
+    public static Claims parseJWT(String jwt) throws Exception {
+        SecretKey secretKey = generalKey();
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(jwt)
+                .getBody();
+    }
+}
+
+作者：yxc
+链接：https://www.acwing.com/blog/content/23255/
+来源：AcWing
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+```
+
+
+
+关于 [IDEA中Maven项目导入依赖包，出现红线波浪线的问题（补充）_idea的maven依赖红线_迷茫君的博客-CSDN博客](https://blog.csdn.net/qq_41610418/article/details/119758410)
+
+
+
+
+
+![image-20230323154056937](img/image-20230323154056937.png)
+
+
+
+
+
+#### 编写api
+
+
+
+>   根据搜索结果[1](https://docs.spring.io/spring-framework/docs/3.0.0.M4/reference/html/ch15s03.html) [2](https://stackoverflow.com/questions/65944372/why-do-we-need-to-call-service-layer-using-interface-instead-of-direct-service-c)，Spring框架中写接口的步骤大致如下：
+>
+>   -   在Service层定义一个接口，声明需要提供的业务方法。
+>   -   在Service层实现该接口，编写具体的业务逻辑。
+>   -   在Controller层注入该接口的实例，使用@Autowired或@Resource注解。
+>   -   在Controller层调用该接口的方法，处理用户请求和响应。
+>
+>   您还有其他问题吗？
+
+
+
+##### 实现用户的授权认证
+
+
+
+[127.0.0.1:3000/user/account/token/](http://127.0.0.1:3000/user/account/token/)
+
+```
+Whitelabel Error Page
+This application has no explicit mapping for /error, so you are seeing this as a fallback.
+
+Thu Mar 23 18:46:36 CST 2023
+There was an unexpected error (type=Method Not Allowed, status=405).
+```
+
+在 LoginController.java 中，使用的是 Post 类型的请求
+
+```java
+
+    @PostMapping("/user/account/token/")
+    public Map<String, String> getToken(@RequestParam Map<String, String> map) {
+        String username = map.get("username");
+        String password = map.get("password");
+        return loginService.getToken(username, password);
+    }
+```
+
+浏览器中是 GET ，所以会报 405 方法错误
+
+![image-20230323185714620](img/image-20230323185714620.png)
+
+
+
+
+
+[JSON Web Tokens - jwt.io](https://jwt.io/)
+
+```
+"eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJkNDFjOTJlMGIxNzY0NGQ5OGE2YWM0N2U4ZDIwNWE1ZCIsInN1YiI6IjEiLCJpc3MiOiJzZyIsImlhdCI6MTY3OTU2OTAyNCwiZXhwIjoxNjgwNzc4NjI0fQ.1Vgrmr_eapPhS5NseoX9DXirN3-Q4mL51O__Hy-3vds"
+```
+
+out:
+
+```
+{
+  "jti": "d41c92e0b17644d98a6ac47e8d205a5d",
+  "sub": "1",
+  "iss": "sg",
+  "iat": 1679569024,
+  "exp": 1680778624
+}
+```
+
+
+
+
+
+![image-20230323200143876](img/image-20230323200143876.png)
+
+注：这里的 Error 是由于屏蔽广告扩展，换了一个无扩展浏览器就好了
+
+
+
+将 ajax 中用户名和密码更改，然后改 Token ，可以看到，返回的是第二个用户的信息
+
+![image-20230323200904848](img/image-20230323200904848.png)
+
+
+
+##### 实现用户注册
+
+```javascript
+    $.ajax({
+      url: "http://127.0.0.1:3000/user/account/register/",
+      type: "post",
+      data: {
+        username: "yxc",
+        password: "123",
+        confirmedPassword: "123",
+      },
+      success(resp) {
+        console.log(resp);
+      },
+      error(resp) {
+        console.log(resp);
+      }
+    })
+```
+
+
+
+![image-20230324150842554](img/image-20230324150842554.png)
+
+插入成功
+
+![image-20230324151925918](img/image-20230324151925918.png)
+
+
+
+[Finish backend register (62dbbd65) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/62dbbd65397f2abeaf0f32b3115287170bfb045a)
+
+### 前端用户账户实现
+
+注册和登录
+
+#### 实现注册和登录界面标题
+
+![image-20230324153634831](img/image-20230324153634831.png)
+
+![image-20230324153648473](img/image-20230324153648473.png)
+
+[Imply the frontend topic of Register and Login (9647c7ce) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/9647c7ce0a709facf8e4c6fd99cb46e379ccee5c)
+
+#### 注册界面
+
+表格
+
+[Grid system · Bootstrap v5\.3](https://getbootstrap.com/docs/5.3/layout/grid/#example)
+
+表格中文字居中
+
+[Grid system · Bootstrap v5\.3](https://getbootstrap.com/docs/5.3/layout/grid/#variable-width-content)
+
+表单样式
+
+[Form controls · Bootstrap v5\.3](https://getbootstrap.com/docs/5.3/forms/form-control/)
+
+按钮
+
+[Buttons · Bootstrap v5\.3](https://getbootstrap.com/docs/5.3/components/buttons/#examples)
+
+[web](http://localhost:8080/user/account/login)
+
+![image-20230324184121667](img/image-20230324184121667.png)
+
+[Imply forms frame of Login page's front end (f9b77886) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/f9b778865de2c80c04994cbadf530040368a028f)
+
+
+
+
+
+![image-20230325131141305](img/image-20230325131141305.png)
+
+
+
+
+
+![image-20230325131522940](img/image-20230325131522940.png)
+
+这里三个 Object 是因为调试代码还没有注释。
+
+
+
+#### 登录成功后自动跳转到主界面
+
+![image-20230327103548814](img/image-20230327103548814.png)
+
+[Login and jump to home page (25e62897) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/25e6289789eac4a5525af7e61a21b34c500e2606)
+
+#### 返回登录成功信息
+
+![image-20230327120123511](img/image-20230327120123511.png)
+
+[Login and show user info in browser's console (47ed1630) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/47ed1630da9056c30d66bb23c506def1a7100ef8)
+
+
+
+#### 从菜单栏按钮跳转到登录和注册页面
+
+![image-20230328120706501](img/image-20230328120706501.png)
+
+![image-20230328120802594](img/image-20230328120802594.png)
+
+[Jump to login and registration pages from menu bar buttons (2f3a8df1) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/2f3a8df19a9c6a64eaa1848d4aa463574f6dc3c2)
+
+#### 从菜单栏退出按钮退出
+
+![image-20230328140047488](img/image-20230328140047488.png)
+
+
+
+![image-20230328140102973](img/image-20230328140102973.png)
+
+4.2 结束
+
+
+
+
+
+#### 前端页面授权
+
+##### 如果没有登录，点击栏中的任意按钮将跳转到默认页面
+
+![image-20230329095303134](img/image-20230329095303134.png)
+
+[Click any button in bar will jump to default page if not login (3b60dba7) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/3b60dba79b4785b06fd2ee63a07b56defd460b6d)
+
+#### 实现注册页面
+
+##### 使用重复的用户名注册时在控制台打印 error_message
+
+![image-20230329143301285](img/image-20230329143301285.png)
+
+[Register with repeated username and print error_message in console (ba3b8ab8) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/ba3b8ab86f36718d06208182d602e68eb5c724a4)
+
+##### 注册失败在浏览器中打印错误信息
+
+![image-20230329144420497](img/image-20230329144420497.png)
+
+![image-20230329144542388](img/image-20230329144542388.png)
+
+![image-20230329144556303](img/image-20230329144556303.png)
+
+![image-20230329144635191](img/image-20230329144635191.png)
+
+![image-20230329145047909](img/image-20230329145047909.png)
+
+##### 成功实现注册功能
+
+![image-20230329151726554](img/image-20230329151726554.png)
+
+123
+
+![image-20230329151752932](img/image-20230329151752932.png)
+
+[Finish register (9f3e9b36) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/9f3e9b366fbaf642106085fa1e72ca1b2a8bb253)
+
+##### 注释掉调试中在控制台的输出
+
+全局搜索
+
+![image-20230329152558308](img/image-20230329152558308.png)
+
+##### 注释掉调试时的输出
+
+[Comment the debug output, like pringf and console.log (7d5dfe06) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/7d5dfe069067104af1d2bf844b98bc6e18b40e6b)
+
+
+
+#### 登录状态持久化
+
+每次刷新时，登录状态就会消失，原因：
+
+src\store\user.js 中的 token 是放到内存里的
+
+>   by Cursor:
+>
+>   看起来每次刷新后登录状态消失的原因是因为 src\store\user.js 中的 token 是存储在内存中的。这可能是因为 token 存储在 Vuex store 中，而 Vuex 是一个用于 Vue.js 应用程序的状态管理模式和库。
+>
+>   当页面刷新时，Vuex store 的状态会重置为其初始值，这意味着 token 会丢失。为了在页面刷新后保持 token，您可以考虑将其存储在更持久的存储机制中，例如本地存储或 cookie。
+>
+>   以下是如何修改 src\store\user.js 中的 login action 以将 token 存储在本地存储中的示例：
+>
+>   ```javascript
+>   login(context, data) {
+>     $.ajax({
+>       url: "https://app2703.acapp.acwing.com.cn/api/user/account/token/",
+>       type: "post",
+>       data: {
+>         username: data.username,
+>         password: data.password,
+>       },
+>       success(resp) {
+>         if (resp.error_message === "success") {
+>           localStorage.setItem("jwt_token", resp.token); // 将 token 存储在本地存储中
+>           context.commit("updateToken", resp.token);
+>           data.success(resp);
+>         } else {
+>           data.error(resp);
+>         }
+>       },
+>       error(resp) {
+>         data.error(resp);
+>       }
+>     });
+>   },
+>   
+>   ```
+>
+>   
 
 
 

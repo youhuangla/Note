@@ -254,3 +254,15 @@ FileNotFoundError: [Errno 2] No such file or directory: '/content/automatic/lib/
 ### `*.zip` zip in python
 
 [linux \- Trying to unzip a file, 'Filename not matched' when the directory exists \- Super User](https://superuser.com/questions/563215/trying-to-unzip-a-file-filename-not-matched-when-the-directory-exists)
+
+## 保留旧版本的方法
+
+你可以使用以下命令来clone某一commit:
+
+```
+git clone <repo_url>
+cd <repo_name>
+git checkout <commit_sha>
+```
+
+[其中，``是你要clone的仓库的url，``是你clone下来的本地仓库的名字，``是你要checkout的commit的sha值。](https://blog.csdn.net/kantin_y/article/details/116235762)[1](https://blog.csdn.net/kantin_y/article/details/116235762)[2](https://stackoverflow.com/questions/1655361/how-to-clone-an-old-git-commit-and-some-more-questions-about-git)

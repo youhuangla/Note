@@ -185,4 +185,3 @@ du -sh /root/.local/share/Trash # jupyterlab的回收站
 rm -rf /root/.local/share/Trash   
 
 ```
-
