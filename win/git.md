@@ -339,3 +339,22 @@ $ git branch -vv
 
 待会玩玩那个git游戏试试看
 
+## 更改上一个git commit -m 提交的信息
+
+**怎么更改上一个git commit -m 提交的信息**
+
+>   您好，这是必应。😊
+>
+>   [要更改上一个 git commit -m 提交的信息，您可以使用 --amend 标志来修改最近的一次提交的信息](https://melvingeorge.me/blog/change-last-commit-message-git)[1](https://melvingeorge.me/blog/change-last-commit-message-git)[2](https://www.git-tower.com/learn/git/faq/edit-fix-commit-message/)[3](https://linuxize.com/post/change-git-commit-message/)[4](https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/changing-a-commit-message)。例如：
+>
+>   ```bash
+>   git commit -m "新的提交信息" --amend
+>   ```
+>
+>   [这个命令会用新的提交覆盖最近的一次提交。如果您想要更改已经推送到服务器的提交的信息，您需要使用 --force 标志来强制推送您的更改](https://www.w3docs.com/snippets/git/how-to-change-commit-message.html)[5](https://www.w3docs.com/snippets/git/how-to-change-commit-message.html)，否则您的推送会被拒绝。例如：
+>
+>   ```bash
+>   git push origin main --force
+>   ```
+
+[Fix can't logout Bug in 'Refresh, the login page flash and go to home' (e05e7698) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/e05e76980c74327a04648c71c61c9f7696a4928d)

@@ -1,5 +1,7 @@
 # Spring
 
+以下引用没写的默认GPT3.5
+
 ## 1.项目设计
 
 ![image-20230304160833103](img/image-20230304160833103.png)
@@ -410,7 +412,7 @@ html 在服务器端生成： 前后端不分离
 
 ![image-20230301140019396](img/image-20230301140019396.png)
 
-连不上可以换成阿里云的源，这里我先不换试试（注：最后还是换了）
+连不上可以换成阿里云的源，第一行 Server URL 中，这里我先不换试试（注：最后还是换了）
 
 https://start.spring.io/加载慢的话，可以换成：https://start.aliyun.com
 
@@ -505,6 +507,7 @@ Console中出现
 
 2023-03-01 14:52:45.538  INFO 18092 --- [           main] com.example.backend.BackendApplication   : Started BackendApplication in 3.099 seconds (JVM running for 5.783)
 
+2023-04-04 22:23:36.853  INFO 35480 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
 ```
 
 说明在 [127.0.0.1:8080](http://127.0.0.1:8080/) 中打开了 127.0.0.1 等价于 localhost 。 
@@ -2015,9 +2018,9 @@ src\components\ContentField.vue
 
 正方形是动态变化的
 
-###### 调试
+###### 调试 DEBUG
 
-New BIng
+New Bing
 
 [在 VS Code 中调试 — Vue.js (vuejs.org)](https://v2.cn.vuejs.org/v2/cookbook/debugging-in-vscode.html)
 
@@ -3119,7 +3122,628 @@ src\store\user.js 中的 token 是放到内存里的
 
 
 
+![image-20230329213915591](img/image-20230329213915591.png)
 
+![image-20230329214016054](img/image-20230329214016054.png)
+
+##### 刷新，闪过登录界面然后回到主界面
+
+注：已经保持了登录状态
+
+该 commit 的 `src\store\user.js` 的第87行有BUG，应为:
+
+```javascript
+            localStorage.removeItem("jwt_token");// BUG here, Remove token from local storage, so that user can't access the website without login.
+
+```
+
+若错写成
+
+```javascript
+            localStorage.setItem("jwt_token");
+
+```
+
+则无法登出，所以下面直到我解决为止bug仍然存在
+
+[Refresh, the login page flash and go to home (876b8049) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/876b8049cb9940ec6dfc5d329943280293e5c350)
+
+
+
+##### 解决闪过登录界面问题
+
+[Solve page flash problem (af457450) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/af457450c8cc77eea54d45960a44e087f9d2d867)
+
+[Solve the nav bar's flash, which show login and register button (568b2490) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/568b249089e0e793f5fd168286eae24d94b1dc9b)
+
+##### BUG：无法登出
+
+见 `##### 刷新，闪过登录界面然后回到主界面`
+
+[Fix can't logout Bug in 'Refresh, the login page flash and go to home' (e05e7698) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/e05e76980c74327a04648c71c61c9f7696a4928d)
+
+##### mutation和action的区别
+
+>   by Copilot
+>
+>   mutation和action的区别: Mutation 必须是同步函数，Action 可以是异步函数。 Action 提交的是 mutation，而不是直接变更状态，Action 可以包含任意异步操作。 Action 函数接受一个与 store 实例具有相同方法和属性的 context 对象，因此你可以调用 context.commit 提交一个 mutation，或者通过 context.state 和 context.getters 来获取 state 和 getters。
+
+也可参考y总给的前端课中 vue 相关课程、笔记。
+
+#### 结束
+
+[Finish 4 (77b959e5) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/77b959e586b20b0108c24741dad3318ac2575ac5)
+
+## 7.创建个人中心页面
+
+### 在数据库中创建表bot
+
+导出原来的表做个备份
+
+**如何在IDEA中导出一个数据库的数据**
+
+>   在IntelliJ IDEA中，你可以以不同的格式导出数据库的数据。例如，你可以在数据表内容上点击右键，弹出窗口中先选择Data Extractor SQL Inserts，二级菜单会列出导出数据的类型，这里选择SQL Inserts[1](https://bing.com/search?q=如何在IDEA中导出一个数据库的数据)[。你也可以选择导出为CSV文件，右键要导出的table，选择export data to file，然后选择导出为cvs，表头设置为第一行，选择导出文件位置，点击导出即可](https://jingyan.baidu.com/article/b7001fe17e9eaf4f7382dd78.html)[2](https://jingyan.baidu.com/article/b7001fe17e9eaf4f7382dd78.html)。
+
+
+
+[Imply com/kob/backend/pojo/Bot.java (e7d11ea5) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/e7d11ea58e0637c0b7f9eb66d9f0152214318e42)
+
+>   在数据库中创建表bot
+>   表中包含的列：
+>
+>   id: int：非空、自动增加、唯一、主键
+>   user_id: int：非空
+>   注意：在pojo中需要定义成userId，在queryWrapper中的名称仍然为user_id
+>   title: varchar(100)
+>   description: varchar(300)
+>   content：varchar(10000)
+>   rating: int：默认值为1500
+>   createtime: datetime
+>   pojo中定义日期格式的注解：@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+>   modifytime: datetime
+>   pojo中定义日期格式的注解：@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+>
+>   作者：yxc
+>   链接：https://www.acwing.com/file_system/file/content/whole/index/content/6208973/
+>   来源：AcWing
+>   著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+
+
+![image-20230405141339789](img/image-20230405141339789.png)
+
+### 提交表单
+
+此处
+
+#### Bug
+
+##### 1 跨域问题
+
+![image-20230405142732770](img/image-20230405154426741.png)
+
+若使用 Postman
+
+![image-20230406161107759](img/image-20230406161107759.png)
+
+**其他地方的跨域请求都有效，只有一个页面的跨域请求无效**
+
+>   如果其他地方的跨域请求都有效，那么很可能是因为这个页面的跨域请求存在一些特殊的情况，导致无法生效。可能的原因有以下几个：
+>
+>   1.  该页面的请求方式不是简单请求，而是复杂请求（例如请求头中带有自定义的header字段），需要进行预检请求（OPTIONS）；而预检请求被阻止了。
+>   2.  该页面的跨域请求存在一些特殊的安全限制（例如 Content Security Policy），阻止了跨域请求的执行。
+>   3.  该页面的跨域请求存在一些特殊的 Cookie 策略（例如 SameSite 属性），导致请求无法携带 Cookie，从而被拦截。
+>
+>   针对以上可能的原因，你可以检查一下该页面的请求方式是否为简单请求，以及是否存在特殊的安全限制或 Cookie 策略，然后针对性地进行调整。如果还是无法解决问题，可以尝试使用浏览器开发者工具查看请求和响应的详细信息，或者在服务器端的日志中查看异常信息，以便进一步定位问题。
+
+```javascript
+            headers: {
+                Authorizaiton: "Bearer " + store.state.user.token,
+            },
+```
+
+应为 
+
+```javascript
+            headers: {
+                Authorization: "Bearer " + store.state.user.token,
+            },
+```
+
+
+
+##### 2 标题不能为空
+
+![image-20230406140218748](img/image-20230406140218748.png)
+
+
+
+```javascript
+    setup() {
+        const store = useStore();
+        console.log("Bearer " + store.state.user.token);
+        $.ajax({
+            url: "http://127.0.0.1:3000/user/bot/add/",
+            type: "POST",
+            data: {
+                title: "Bot的标题",
+                description: "Bot的描述",
+                content: "Bot的代码",
+            },
+            headers: {
+                Authorization: "Bearer " + store.state.user.token,
+            },
+            success(resp) {
+                console.log("data.title " + resp.title);
+                //console.log("data: " + resp);
+                console.log(resp);
+            },
+            error(resp) {
+                console.log(resp);
+            }
+        })
+    }
+```
+
+![image-20230406140905764](img/image-20230406140905764.png)
+
+改为 `console.log("data: " + resp);` 时
+
+![image-20230406141051030](img/image-20230406141051030.png)
+
+尝试在后端调试
+
+```java
+        if (title == null || title.length() == 0) {
+            System.out.println("title is :" + title);
+            map.put("error_message", "标题不能为空");
+            return map;
+        }
+```
+
+控制台打印
+
+```bash
+title is :null
+```
+
+
+
+```java
+        // Based on Bot.java com/kob/backend/pojo/Bot.java
+        String title = data.get("title");
+        String description = data.get("description");
+        String content = data.get("content");
+        System.out.println("title:" + title);
+        System.out.println("description:" + description);
+        System.out.println("content:" + content);
+
+```
+
+控制台打印
+
+```bash
+title:null
+description:null
+content:null
+```
+
+可见根本没有传到值。。
+
+
+
+
+
+```java
+package com.kob.backend.mapper.service.impl.user.bot;
+
+import com.kob.backend.mapper.BotMapper;
+import com.kob.backend.pojo.Bot;
+import com.kob.backend.pojo.User;
+import com.kob.backend.mapper.service.impl.utils.UserDetailsImpl;
+import com.kob.backend.mapper.service.user.bot.AddService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+@Service
+public class AddServiceImpl implements AddService {
+    @Autowired
+    private BotMapper botMapper;
+
+    @Override
+    public Map<String, String> add(Map<String, String> data) {
+        UsernamePasswordAuthenticationToken authenticationToken =
+                (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
+        User user = loginUser.getUser();
+
+        // Based on Bot.java com/kob/backend/pojo/Bot.java
+        String title = data.get("title");
+        String description = data.get("description");
+        String content = data.get("content");
+
+        Map<String, String> map = new HashMap<>();
+
+        if (title == null || title.length() == 0) {
+            map.put("error_message", "标题不能为空");
+            return map;
+        }
+
+        if (title.length() > 100) {
+            map.put("error_message", "标题长度不能大于100");
+            return map;
+        }
+
+        if (description == null || description.length() == 0) {
+            description = "这个用户很懒，什么都没留下~";
+        }
+
+        if (description.length() > 300) {
+            map.put("error_message", "Bot描述长度不能超过300");
+            return map;
+        }
+
+        if (content == null || content.length() == 0) {
+            map.put("error_message", "代码不能为空");
+            return map;
+        }
+
+        if (content.length() > 10000) {
+            map.put("error_message", "代码长度不能超过10000");
+            return map;
+        }
+
+        Date now = new Date();
+        Bot bot = new Bot(null, user.getId(), title, description, content, 1500, now, now);
+
+        botMapper.insert(bot);
+        map.put("error_message", "success");
+
+        return map;
+    }
+}
+```
+
+与
+
+```java
+package com.kob.backend.controller.user.bot;
+
+import com.kob.backend.mapper.service.user.bot.AddService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
+
+
+@RestController
+public class AddController {
+    @Autowired
+    private AddService addService;
+
+    @PostMapping("/user/bot/add/")
+    public Map<String, String> add(Map<String, String> data) {
+        return addService.add(data);
+    }
+}
+
+
+```
+
+**两者关系与作用**
+
+>   在第二段代码中，`add()`方法的参数是`Map<String, String> data`，而在请求中并没有明确指定数据的传输方式，例如使用`@RequestBody`注解。因此，该代码可能存在bug，导致第一段代码中的`data.get()`函数无法获取值。
+>
+>   建议在`AddController`的`add()`方法上添加`@RequestBody`注解来明确指定数据的传输方式，例如：
+>
+>   ```
+>   javaCopy code@PostMapping("/user/bot/add/")
+>   public Map<String, String> add(@RequestBody Map<String, String> data) {
+>       return addService.add(data);
+>   }
+>   ```
+>
+>   这样可以确保请求中的数据被正确地转换为`Map<String, String>`类型，并且可以在第一段代码中正确地获取数据。
+
+
+
+
+
+
+
+
+
+```java
+public Map<String, String> add(@RequestParam Map<String, String> data) {// Bug: @RequestParam not added
+    return addService.add(data);
+}
+```
+
+##### 3 插入表失败
+
+![image-20230406145324570](img/image-20230406145324570.png)
+
+数据库中的 `modifytime` 打成了 `modifyname`
+
+![image-20230406145643721](img/image-20230406145643721.png)
+
+![image-20230406145656980](img/image-20230406145656980.png)
+
+[Imply submitting form in 'My Bot', insert a line in table 'bot', Fix 3 Bug (41115c42) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/41115c42df2b60f193119e4007c3ef6a48586c89)
+
+#### 使用 Postman 发出代码中的 ajax 请求
+
+**ajax和postman测试api的区别**
+
+
+
+>   G3.5:
+>
+>   AJAX（Asynchronous JavaScript and XML）是一种在浏览器中通过 JavaScript 发起 HTTP 请求并异步获取响应的技术。使用 AJAX 可以在不刷新页面的情况下向服务器发送请求并更新页面内容，适用于 Web 应用程序的前端开发。
+>
+>   Postman 是一种功能强大的 API 测试工具，可以用来测试 API 的各种功能，如 GET、POST、PUT、DELETE 等 HTTP 请求类型。使用 Postman 可以轻松创建和发送请求，并查看服务器响应和状态码。 Postman 提供了易于使用的用户界面和丰富的功能，可以轻松地构建测试用例和集成测试。
+>
+>   虽然 AJAX 和 Postman 都用于测试 Web 应用程序的 API，但它们之间有以下区别：
+>
+>   1.  AJAX 是一种在 Web 应用程序中使用的技术，而 Postman 是一个单独的测试工具。
+>   2.  AJAX 只能在浏览器中使用，而 Postman 可以在多种平台上运行。
+>   3.  AJAX 可以与页面内容集成，而 Postman 通常用于独立的 API 测试。
+>   4.  AJAX 使用 JavaScript 发送请求和处理响应，而 Postman 可以使用多种语言和框架测试 API。
+>   5.  AJAX 可以与前端代码集成，而 Postman 主要用于后端开发和测试。
+>
+>   综上所述，虽然 AJAX 和 Postman 都用于测试 API，但它们的使用场景和功能略有不同，开发者可以根据具体的需要来选择使用哪种测试工具。
+
+**...这串ajax请求要用postman发出来怎么发？**
+
+>   GPT3.5:
+>
+>   这串ajax请求需要使用postman中的请求功能进行模拟。可以按照以下步骤进行：
+>
+>   1.  在postman中选择创建一个新的请求，并将请求方法设置为POST。
+>   2.  输入请求URL：http://127.0.0.1:3000/user/bot/add/
+>   3.  在请求头中添加Authorization，Type为Bearer，并将token填入Token字段中。
+>   4.  在Body中选择x-www-form-urlencoded格式，然后添加三个键值对参数：title，description和content，以及它们的值。
+>   5.  点击“Send”按钮，发送请求并查看响应。
+>
+>   请注意，这个请求需要依赖于一个有效的token才能成功发送，所以请确保您已经在应用程序中登录并获取到了有效的token。
+
+登录后，我们可以先在该 bot 页面的
+
+```javascript
+export default {
+    components: {
+        ContentField
+    },
+    setup() {
+        const store = useStore();
+        console.log("Bearer " + store.state.user.token);
+    }
+}
+```
+
+是控制台打印 token ，
+
+![image-20230406153349392](img/image-20230406153349392.png)
+
+新建一个 Http 请求，选择 POST 类型，然后按照 GPT 所给的格式输入
+
+![image-20230406153506541](img/image-20230406153506541.png)
+
+然后复制 token 到 Postman 的 Authorization 
+
+**Bearer类型的token是每次用户登录就会刷新吗？**
+
+>   G3.5:
+>
+>   Bearer 类型的令牌通常不会在用户每次登录时刷新，而是在特定条件下自动刷新，例如：
+>
+>   1.  令牌过期时，如果配置了自动刷新令牌，则会使用令牌中的 refresh token 自动刷新令牌，以延长令牌的有效期；
+>   2.  用户在使用过程中，如果执行了某些操作需要重新验证身份，例如修改密码、安全设置等，也可能会自动刷新令牌。
+>
+>   一般来说，Bearer 类型的令牌会设置一个过期时间，过期后就需要重新获取令牌。一般情况下，用户在每次登录时会获取一个新的令牌，但是并不意味着每次登录都会重新生成一个新的 refresh token。而是在 refresh token 过期后，用户再次登录时，系统会生成一个新的 refresh token，用于刷新令牌。
+
+这里不用每次复制，因为本项目的 token 要很久才会过期。
+
+**postman中新建http请求，Authorization中的Type 选择Bearer**
+
+>   G3.5:
+>
+>   在 Postman 中新建 HTTP 请求，点击 "Authorization" 标签页，在 "Type" 下拉菜单中选择 "Bearer"。这样可以设置请求的 Authorization 头，用于携带访问令牌。在 "Token" 输入框中输入令牌的值，然后点击 "Preview Request" 按钮预览请求，确保 Authorization 头已正确设置。最后，点击 "Send" 按钮发送请求。
+
+![image-20230406152708621](img/image-20230406152708621.png)
+
+数据库也增加了一行。
+
+
+
+#### 提交表单的架构分析
+
+**现在你是一名软件工程师，从下面三个文件中分析出该文件在一个Spring框架项目中的作用以及他们之间的联系，在代码最前面是java代码所在项目中的位置**
+
+com/kob/backend/src/main/java/com/kob/backend/mapper/service/impl/user/bot/AddServiceImpl.java
+
+```java
+package com.kob.backend.mapper.service.impl.user.bot;
+
+import com.kob.backend.mapper.BotMapper;
+import com.kob.backend.pojo.Bot;
+import com.kob.backend.pojo.User;
+import com.kob.backend.mapper.service.impl.utils.UserDetailsImpl;
+import com.kob.backend.mapper.service.user.bot.AddService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+@Service
+public class AddServiceImpl implements AddService {
+    @Autowired
+    private BotMapper botMapper;
+
+    @Override
+    public Map<String, String> add(Map<String, String> data) {
+        UsernamePasswordAuthenticationToken authenticationToken =
+                (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl loginUser = (UserDetailsImpl) authenticationToken.getPrincipal();
+        User user = loginUser.getUser();
+
+        // Based on Bot.java com/kob/backend/pojo/Bot.java
+        String title = data.get("title");
+        String description = data.get("description");
+        String content = data.get("content");
+/*
+        System.out.println("title:" + data.get("title"));
+        System.out.println("description:" + data.get("description"));
+        System.out.println("content:" + data.get("content"));
+*/
+        Map<String, String> map = new HashMap<>();
+
+        if (title == null || title.length() == 0) {
+            //System.out.println("title is :" + title);
+            map.put("error_message", "标题不能为空");
+            return map;
+        }
+
+        if (title.length() > 100) {
+            map.put("error_message", "标题长度不能大于100");
+            return map;
+        }
+
+        if (description == null || description.length() == 0) {
+            description = "这个用户很懒，什么都没留下~";
+        }
+
+        if (description.length() > 300) {
+            map.put("error_message", "Bot描述长度不能超过300");
+            return map;
+        }
+
+        if (content == null || content.length() == 0) {
+            map.put("error_message", "代码不能为空");
+            return map;
+        }
+
+        if (content.length() > 10000) {
+            map.put("error_message", "代码长度不能超过10000");
+            return map;
+        }
+
+        Date now = new Date();
+        Bot bot = new Bot(null, user.getId(), title, description, content, 1500, now, now);
+
+        botMapper.insert(bot);
+        map.put("error_message", "success");
+
+        return map;
+    }
+}
+
+```
+
+com/kob/backend/src/main/java/com/kob/backend/mapper/service/user/bot/AddService.java
+
+```java
+package com.kob.backend.mapper.service.user.bot;
+
+import java.util.Map;
+
+public interface AddService {
+    Map<String, String> add(Map<String, String> data);
+}
+
+```
+
+com/kob/backend/controller/user/bot/AddController.java
+
+```java
+package com.kob.backend.controller.user.bot;
+
+import com.kob.backend.mapper.service.user.bot.AddService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
+
+
+@RestController
+public class AddController {
+    @Autowired
+    private AddService addService;
+
+    @PostMapping("/user/bot/add/")
+    public Map<String, String> add(/*@RequestParam*/ Map<String, String> data) {// Bug: @RequestParam // Bug: @RequestParam not added
+        return addService.add(data);
+    }
+}
+
+
+```
+
+>   这是一个基于Spring框架的Java项目。从代码文件的路径和内容来看，该项目主要涉及到用户添加Bot的功能。在这个项目中，主要有三个文件分别负责不同的角色：
+>
+>   1.  AddServiceImpl.java：这是一个服务实现类，负责具体的添加Bot的业务逻辑。它实现了AddService接口，并使用@Autowired注解自动注入了BotMapper对象。在`add()`方法中，首先从SecurityContextHolder中获取到当前登录用户，然后校验用户输入的数据，创建一个Bot对象，最后调用botMapper的`insert()`方法将Bot信息插入到数据库。
+>   2.  AddService.java：这是一个接口，定义了添加Bot的业务逻辑。它只包含一个`add()`方法，接收一个Map类型的参数，用于传递用户输入的Bot信息。
+>   3.  AddController.java：这是一个控制器类，负责处理用户发起的HTTP请求。它使用@RestController注解，表示这是一个RESTful风格的控制器。在其中定义了一个`add()`方法，使用@PostMapping注解映射到`/user/bot/add/`这个URL。该方法中，通过@Autowired注解自动注入了AddService对象，并在方法内调用了addService的`add()`方法处理用户的请求。
+>
+>   这三个文件之间的关系是：
+>
+>   -   AddController接收到用户的请求后，会调用AddService的`add()`方法处理业务逻辑。
+>   -   AddService接口定义了业务逻辑，而具体的实现在AddServiceImpl类中完成。
+>   -   AddServiceImpl类依赖于BotMapper来完成Bot对象的数据库操作。
+>
+>   总的来说，这个项目遵循了典型的MVC（Model-View-Controller）设计模式，其中AddController作为控制器负责处理用户请求，AddService定义了业务逻辑，而具体的实现在AddServiceImpl类中，最后通过BotMapper完成对数据库的操作。
+
+
+
+**这三个java文件分别扮演着MVC中的哪三个角色？能进一步解释吗？**
+
+>   在这个项目中，这三个Java文件并不能直接对应MVC（Model-View-Controller）中的三个角色，因为这是一个基于Spring框架的后端项目，没有涉及到前端视图（View）。然而，我们可以从以下几个方面对比MVC中的角色：
+>
+>   1.  Model（模型）：在这个项目中，模型的角色主要体现在`Bot`和`User`这两个类上，它们表示了应用程序中的数据结构。虽然这两个类没有直接出现在给定的三个文件中，但在`AddServiceImpl`中，我们可以看到它们被用于处理业务逻辑。
+>   2.  View（视图）：在这个项目中，视图的角色并没有体现。通常情况下，视图是前端的一部分，负责展示数据和与用户进行交互。在这个后端项目中，我们可以把`Map<String, String>`看作是一种简化的视图，用于向前端返回处理结果。实际上，这个项目更符合前后端分离的设计思路，前端视图应该由一个独立的前端项目来实现。
+>   3.  Controller（控制器）：`AddController`类对应于MVC中的控制器角色。它负责接收来自客户端的HTTP请求，并将请求传递给业务逻辑层（即服务层）进行处理。在这个项目中，`AddController`通过调用`AddService`的`add()`方法来完成具体的业务逻辑处理。
+>
+>   在这个项目中，我们可以把`AddService`和`AddServiceImpl`看作是一个扩展的MVC模式中的业务逻辑层（Service Layer），它们在控制器和模型之间起到桥梁的作用。`AddService`定义了业务逻辑接口，而具体的实现在`AddServiceImpl`中。这样的设计有助于解耦和模块化，便于维护和扩展。
+
+**这三段java代码中用到了什么设计模式？**
+
+>   在这三段Java代码中，主要涉及到以下两种设计模式：
+>
+>   1.  依赖注入（Dependency Injection）：这是一种典型的Spring框架所使用的设计模式。在代码中，我们可以看到`@Autowired`注解被用于注入依赖的对象，如`AddController`中的`AddService`对象和`AddServiceImpl`中的`BotMapper`对象。依赖注入的主要目的是实现松耦合，使代码更容易维护和测试。
+>   2.  服务接口（Service Interface）：在这个项目中，我们可以看到`AddService`是一个接口，而`AddServiceImpl`是该接口的具体实现。这种将接口和实现分离的方式实际上是一种服务接口设计模式。这种模式的优点是提高了代码的可扩展性和可维护性，因为在需要替换或修改实现时，我们只需要修改对应的实现类，而不需要修改使用该服务的其他代码。同时，这种模式也使得代码更容易进行单元测试，因为我们可以针对接口编写测试用例，并使用不同的实现类进行测试。
+>
+>   总的来说，这个项目中主要应用了依赖注入和服务接口两种设计模式，以实现松耦合、可扩展性和可维护性。这些模式在许多基于Spring框架的项目中都非常常见。
+
+
+
+在相关代码中，插入bot表的操作实现了自增，当你删除表中的行时，其余 ID 也不会变并保持自增。同时，每当你登录不同的用户时，user_id 也会根据该用户在另一个user表中 ID 的不同而变化。
+
+### 删除表单中的一行
+
+![image-20230407155039275](img/image-20230407155039275.png)
+
+![image-20230407154711422](img/image-20230407154711422.png)
+
+[Imply API to Delete a Bot in MySQL and test API (86ae95c0) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/86ae95c0d8b4f467fa813c1a7b7a14582dff9974)
+
+如果使用非该 Bot 所属用户删除
+
+![image-20230407155256823](img/image-20230407155256823.png)
+
+不存在 bot_id 不放图了，差不多
 
 
 

@@ -95,7 +95,9 @@ cd /root/autodl-tmp/stable-diffusion-webui && /root/miniconda3/envs/xl_env/bin/p
 
 分支选择:请先刷新
 
+当前版本分支：master
 
+当前版本SHA：0cc0ee1bcb4c24a8c9715f66cede06601bfc00c8
 
 ## 上传下载模型
 
