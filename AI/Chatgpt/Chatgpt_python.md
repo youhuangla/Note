@@ -509,3 +509,53 @@ Rate limit hit. Sleeping for 2 seconds.
 在ai官网中，使用对话翻译，见
 
 爬到112章.docx
+
+#### API的资费问题
+
+**已知api花费$0.002 / 1K tokens，帮我估计使用openai的chatgpt3的api接口翻译526175个日语字到中文花费**
+
+>   假设您的526175个日语字是以纯文本格式存储的，您可以使用以下Python代码计算出令牌数并估算出使用OpenAI API进行翻译的费用：
+>
+>   ```python
+>   import openai_secret_manager
+>   import openai
+>   import math
+>   
+>   # 获取OpenAI API的凭据
+>   assert "openai" in openai_secret_manager.get_services()
+>   secrets = openai_secret_manager.get_secret("openai")
+>   
+>   # 将文本分割成多个小块，每块不超过2048个字符
+>   text = "YOUR JAPANESE TEXT HERE"
+>   chunks = [text[i:i+2048] for i in range(0, len(text), 2048)]
+>   
+>   # 使用OpenAI API进行翻译
+>   openai.api_key = secrets["api_key"]
+>   model_engine = "text-davinci-002"
+>   translations = []
+>   for chunk in chunks:
+>       response = openai.Completion.create(
+>           engine=model_engine,
+>           prompt=f"翻译日语到中文：\n{chunk}\n",
+>           max_tokens=2048,
+>           n=1,
+>           stop=None,
+>           temperature=0.5,
+>       )
+>       translation = response.choices[0].text.strip()
+>       translations.append(translation)
+>   
+>   # 合并翻译结果并计算令牌数
+>   translation = "".join(translations)
+>   num_tokens = len(translation.split())
+>   
+>   # 计算费用
+>   price_per_token = 0.002 / 1000
+>   cost = math.ceil(num_tokens) * price_per_token
+>   
+>   print(f"翻译了 {num_tokens} 个令牌，预计费用为 ${cost:.2f}")
+>   ```
+>
+>   在这个代码中，您需要将“YOUR JAPANESE TEXT HERE”替换为您要翻译的日语文本。代码将文本分割成多个小块，并使用OpenAI API进行翻译。最后，代码将翻译结果合并起来，并计算令牌数和估计的费用。需要注意的是，这里使用了最大令牌数为2048，这是因为ChatGPT-3的输入限制为2048个字符。如果您的文本更长，则需要将文本分成更多的块，或者使用不同的机器翻译服务。
+>
+>   根据上述计算公式，您需要翻译的526175个日语字大约会生成526175/3 ≈ 175391个令牌（这里假设平均每个日语字翻译成3个英文单词）。因此，根据每1000个令牌花费$0.002的价格，预计翻译的费用大约为$0.35（即175391/1000 * $0.002）。请注意，这个估计的费用仅供参考，实际的费用可能会因为OpenAI的定价策略变化等因素而有所不同。
