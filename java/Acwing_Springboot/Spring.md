@@ -3184,7 +3184,7 @@ src\store\user.js 中的 token 是放到内存里的
 
 >   在IntelliJ IDEA中，你可以以不同的格式导出数据库的数据。例如，你可以在数据表内容上点击右键，弹出窗口中先选择Data Extractor SQL Inserts，二级菜单会列出导出数据的类型，这里选择SQL Inserts[1](https://bing.com/search?q=如何在IDEA中导出一个数据库的数据)[。你也可以选择导出为CSV文件，右键要导出的table，选择export data to file，然后选择导出为cvs，表头设置为第一行，选择导出文件位置，点击导出即可](https://jingyan.baidu.com/article/b7001fe17e9eaf4f7382dd78.html)[2](https://jingyan.baidu.com/article/b7001fe17e9eaf4f7382dd78.html)。
 
-
+### 创建后端API
 
 [Imply com/kob/backend/pojo/Bot.java (e7d11ea5) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/e7d11ea58e0637c0b7f9eb66d9f0152214318e42)
 
@@ -3212,13 +3212,13 @@ src\store\user.js 中的 token 是放到内存里的
 
 ![image-20230405141339789](img/image-20230405141339789.png)
 
-### 提交表单
+#### 提交表单
 
 此处
 
-#### Bug
+##### Bug
 
-##### 1 跨域问题
+###### 1 跨域问题
 
 ![image-20230405142732770](img/image-20230405154426741.png)
 
@@ -3731,7 +3731,7 @@ public class AddController {
 
 在相关代码中，插入bot表的操作实现了自增，当你删除表中的行时，其余 ID 也不会变并保持自增。同时，每当你登录不同的用户时，user_id 也会根据该用户在另一个user表中 ID 的不同而变化。
 
-### 删除表单中的一行
+#### 删除表单中的一行
 
 ![image-20230407155039275](img/image-20230407155039275.png)
 
@@ -3744,6 +3744,174 @@ public class AddController {
 ![image-20230407155256823](img/image-20230407155256823.png)
 
 不存在 bot_id 不放图了，差不多
+
+#### 更新表单中一行
+
+![image-20230411103202082](img/image-20230411103202082.png)
+
+![image-20230411103225397](img/image-20230411103225397.png)
+
+#### 查询用户所拥有的所有表单
+
+![image-20230411114945555](img/image-20230411114945555.png)
+
+[Update and GetList bots (18f5b89d) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/18f5b89d02fc00667543e6bfbdf49934057a6a99)
+
+### 5.1结束
+
+讲了一些 git 操作后结束
+
+[Finish 5.1 (07a54f84) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/07a54f84466b7272a2c2e8feafeacceb0a235e5a)
+
+
+
+### 我的Bot页面
+
+#### 添加头像
+
+[Grid system · Bootstrap v5\.3](https://getbootstrap.com/docs/5.3/layout/grid/#example)
+
+>   Person: 
+>   - Bootstrap 布局默认分多少列？
+>
+>   ChatGPT: 
+>   - Bootstrap 布局默认分为12列。这意味着一个行（row）可以最多包含12个列（column），每个列的宽度可以是1到12中的任意整数，且它们的宽度加起来应该等于12。
+>
+>   例如，如果你想要一个分为三列的布局，你可以将每个列的宽度设置为4（即12除以3），如下所示：
+>
+>   ```html
+>   
+>   <div class="row">
+>     <div class="col-md-4">Column 1</div>
+>     <div class="col-md-4">Column 2</div>
+>     <div class="col-md-4">Column 3</div>
+>   </div>
+>   ```
+>
+>   
+>
+>   这样每个列的宽度都是相等的，且它们占据了整个行的宽度。其中 `col-md-4` 表示在中等大小的设备上每个列的宽度占据了四分之一（即12除以4）。
+
+[Add Avatar to 'My Bot' page (607fe4c1) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/607fe4c1b03c6b8d271ea89fe8e835ee8391978e)
+
+#### 添加卡片
+
+![image-20230419184137438](img/image-20230419184137438.png)
+
+
+
+[Add a card in 'My Bot' (76801ecc) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/76801ecc568b1512132c2b56721dbe79729a3347)
+
+#### 添加按钮
+
+[Buttons · Bootstrap v5\.3](https://getbootstrap.com/docs/5.3/components/buttons/#base-class)
+
+#### 添加表格
+
+[Tables · Bootstrap v5\.3](https://getbootstrap.com/docs/5.3/content/tables/#overview)
+
+![image-20230420114359089](img/image-20230420114359089.png)
+
+#### 添加模态框
+
+[Modal · Bootstrap v5\.3](https://getbootstrap.com/docs/5.3/components/modal/#live-demo)
+
+>   Person: 
+>   - Bootstrap中的modal什么意思
+>
+>   ChatGPT: 
+>   - 在 Bootstrap 中，modal 是指一种浮动层，用于在当前页面上展示一个模态对话框（modal dialog）。模态对话框通常用于显示一些重要的提示信息、警告信息或者需要用户输入数据的窗口。
+>
+>   Modal 在 Bootstrap 中通常包括一个标题、一个主体内容和一个底部按钮区域。它们是响应式的，可以在各种设备上自适应，并且支持通过 JavaScript 代码来控制其显示和隐藏。
+>
+>   Bootstrap 的 modal 组件提供了丰富的选项和自定义样式，可以轻松地创建出各种不同风格的模态对话框。可以通过在 HTML 中添加一些特定的 data 属性来触发 modal 的显示和隐藏，也可以通过 JavaScript API 来控制 modal 的行为。
+>
+>   Person: 
+>   - Bootstrap中的modal什么意思，中文一般叫什么
+>
+>   ChatGPT: 
+>   - Bootstrap 中的 Modal 是一种常用的交互式组件，用于在页面上展示一个浮动层来显示一些信息或者收集用户的输入。
+>
+>   Modal（模态框）在中文翻译上也常被称为对话框、弹出框、弹窗等，不同的公司和团队可能会有不同的叫法，但都是指相似的交互式组件。在网页设计中，模态框是一种常见的交互设计元素，能够提供更好的用户体验，减少页面切换的次数。
+
+该例子中是通过ID实现触发的
+
+```vue
+						<button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#add-bot-btn">
+                            创建Bot
+                        </button>
+                        <!-- Button trigger modal -->
+                        <!-- Modal -->
+                        <div class="modal fade" id="add-bot-btn" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">	
+```
+
+![image-20230420125303633](img/image-20230420125303633.png)
+
+[Add Modal in Bootstrap (7d103cc1) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/7d103cc16e452ce5cd59598ef8aea8671e2c4e1f)
+
+#### 调整模态框
+
+##### 调整模态框大小
+
+size
+
+[Modal · Bootstrap v5\.3](https://getbootstrap.com/docs/5.3/components/modal/#optional-sizes)
+
+![image-20230420125745491](img/image-20230420125745491.png)
+
+
+
+##### 绑定并提交表单
+
+`botadd.content`变量与`<textarea>`元素进行双向数据绑定，从而在提交表单时将`content`的值一起发送。
+
+![image-20230420153550706](img/image-20230420153550706.png)
+
+![image-20230420153946265](img/image-20230420153946265.png)
+
+但是提交完后模态框不会自动清空
+
+##### 提交后清空并关闭模态框
+
+引入modal中的函数
+
+![image-20230421105443097](img/image-20230421105443097.png)
+
+
+
+![image-20230421105419937](img/image-20230421105419937.png)
+
+[Clear and Close the modal (8bcc7220) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/8bcc72207547423c867acf549ffab9c214a9301e)
+
+在上面的创建时间一栏中， 我们可以发现创建时间是错误的，但是在数据库表中，时间却是正确的。这是因为时区问题。
+
+![image-20230421105558786](img/image-20230421105558786.png)
+
+
+
+#### 后端中修改时区
+
+
+
+![image-20230421113510263](img/image-20230421113510263.png)
+
+![image-20230421113441568](img/image-20230421113441568.png)
+
+可以看到，加上时区后，重启的时间正常显示。
+
+[Add time region (e497bc67) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/e497bc67b1de8580989597fa6bf55531499b05b5)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

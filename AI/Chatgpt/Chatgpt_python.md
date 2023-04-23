@@ -489,6 +489,8 @@ with open("output.txt", "w", encoding='utf-8') as file:
 
 ### 机翻过程
 
+#### API
+
 [Raychanan/ChatGPT\-for\-Translation: Use Python and ChatGPT for translation\. 利用Python和ChatGPT完成翻译。](https://github.com/Raychanan/ChatGPT-for-Translation)
 
 使用上述的 Colab 笔记，可能比较方便，但是我用着老出现 
@@ -504,11 +506,17 @@ Rate limit hit. Sleeping for 2 seconds.
 
 见文件夹中的 翻译by_api.txt
 
+#### 官网对话
+
 **在这个对话中，我让你来充当翻译家，你的目标是把任何语言翻译成中文，请翻译时不要带翻译腔，而是要翻译得自然、流畅和地道，使用优美和高雅的表达方式。下面我会逐渐输入日文小说，“{}”都是小说内容，请将小说翻译成中文，并去掉括号，明白了吗？**
+
+参考了[🧠ChatGPT 中文调教指南 \| ChatGPT 中文调教指南](https://chatguide.plexpt.com/#%E5%85%85%E5%BD%93%E8%8B%B1%E8%AF%AD%E7%BF%BB%E8%AF%91%E5%92%8C%E6%94%B9%E8%BF%9B%E8%80%85)
 
 在ai官网中，使用对话翻译，见
 
 爬到112章.docx
+
+AI老忘记自己是个翻译家。。。
 
 #### API的资费问题
 
