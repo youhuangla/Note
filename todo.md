@@ -2,11 +2,13 @@
 
 |  todo   | done?  |
 |  ----  | ----  |
-| code farmer  | x |
+| 剪发   | - [   ] |
 | 单元格  | x |
 
 - [ ] todo
 - [x] alt-c
+
+
 
 [//]: <> "press alt+c to right the todo"
 

@@ -28,7 +28,7 @@ Use cd to Enter a dir
 (base) PS E:\Study\数学\程序员数学\源代码文件\Math-for-Programmers-master> jupyter notebook
 ```
 
-## Bug	
+## Bug
 
 jupyter连接不到内核
 
@@ -42,3 +42,38 @@ jupyter连接不到内核
 >   链接：https://juejin.cn/post/7107131869216374820
 >   来源：稀土掘金
 >   著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+## Jupyter Lab相关
+
+### 启动
+
+>   Person: 
+>   - 安装anaconda后，我只能在anaconda prompt中运行jupyter lab，而且只能看c盘上的文件，如何用jupyter lab看其他盘的文件？
+>
+>   ChatGPT: 
+>   - 默认情况下，Anaconda Prompt打开的JupyterLab只能看到当前所在的文件夹以及其子文件夹中的文件。要在JupyterLab中访问其他盘符上的文件，可以通过设置JupyterLab的工作目录来实现。
+>
+>   请按照以下步骤进行操作： 
+>   1. 打开Anaconda Prompt。 
+>   2. 在Anaconda Prompt中，使用以下命令打开JupyterLab，并设置工作目录：
+>
+>   ```python
+>   jupyter lab --notebook-dir="D:\your_folder"
+>   ```
+>
+>   
+>
+>   将`D:\your_folder`替换为你希望作为JupyterLab工作目录的目标文件夹路径。 
+>   3. 这将在默认的Web浏览器中打开JupyterLab，并且你将能够在指定的目标文件夹中创建和编辑Jupyter笔记本以及运行代码。
+>
+>   通过设置`--notebook-dir`选项，你可以指定JupyterLab的工作目录为其他盘符上的文件夹。这样，你就可以在JupyterLab中访问指定目录以及其子文件夹中的文件了。
+
+```powershell
+jupyter lab --notebook-dir="E:\github"
+```
+
+### 快捷键
+
+![image-20230710120950895](img/image-20230710120950895.png)
+
+中搜索keybord

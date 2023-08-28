@@ -31,3 +31,9 @@ Something went wrong. If this issue persists please contact us through our help 
 [一个插件，让你的 ChatGPT 不再报错！ - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/623848022)
 
 [KeepChatGPT](https://greasyfork.org/zh-CN/scripts/462804-keepchatgpt)
+
+## Plus
+
+[当前可用开通ChatGPT Plus的支付方式 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/632603179)
+
+[Pockyt Shop](https://shop.pockyt.io/pc/home)

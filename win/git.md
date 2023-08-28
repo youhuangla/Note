@@ -358,3 +358,133 @@ $ git branch -vv
 >   ```
 
 [Fix can't logout Bug in 'Refresh, the login page flash and go to home' (e05e7698) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/e05e76980c74327a04648c71c61c9f7696a4928d)
+
+## js的Vue3项目Todolist小记
+
+git 同步过程中，由于出现
+
+>   Person: 
+>   - PS E:\github\Todolist_Demo_Vue3> git remote show origin
+>   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+>   @    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+>   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+>   IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+>   Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+>   It is also possible that a host key has just been changed.
+>   The fingerprint for the RSA key sent by the remote host is
+>   SHA256:uNiVztksCsDhcc0u9e8BujQXVUpKZIDTMcz。。。。。。。。.
+>   Please contact your system administrator.
+>   Add correct host key in /c/Users/Administrator/.ssh/known_hosts to get rid of this message.
+>   Offending RSA key in /c/Users/Administrator/.ssh/known_hosts:1
+>   RSA host key for github.com has changed and you have requested strict checking.
+>   Host key verification failed.
+>   fatal: Could not read from remote repository.
+>
+>   Please make sure you have the correct access rights
+>   and the repository exists.
+>
+>   ChatGPT: 
+>   - 根据您提供的错误信息，Git 报告了一个致命错误，指示远程主机的身份验证发生了变化，并且可能存在中间人攻击。这通常是由于远程主机的 SSH 密钥发生了变化而导致的。为了确保您的连接安全，Git 拒绝了与远程主机的连接。
+>
+>   解决这个问题的方法是更新本地计算机上与远程主机 `github.com` 相关的已知主机密钥。但在这之前，请确保您真的在意这个问题并了解发生的原因。此警告可能由以下原因之一引起： 
+>   1. **远程主机更换了SSH密钥** ：GitHub 等服务提供商有时会更新其密钥。通常情况下，这是正常的，并不表示存在安全问题。 
+>   2. **您连接到了恶意的中间人** ：在某些情况下，网络中的攻击者可能尝试进行中间人攻击。这是一种安全风险，应该避免连接到不受信任的网络。
+>
+>   为了解决此问题，您可以按照以下步骤操作： 
+>   1. **备份 known_hosts 文件** ：首先，建议您备份 `/c/Users/Administrator/.ssh/known_hosts` 文件，这样以后可以恢复。 
+>   2. **更新 known_hosts 文件** ：打开 `/c/Users/Administrator/.ssh/known_hosts` 文件，并删除第一行（Offending RSA key）。然后，尝试重新运行之前的 Git 命令。 
+>   3. **进行安全检查** ：在确保远程主机的身份验证确实合法后，可以再次连接。确保您连接到真正的 GitHub 主机，而不是中间人。
+>
+>   如果您不确定如何解决此问题，建议您联系系统管理员或向 GitHub 支持寻求帮助，以确保您的连接安全。
+>
+>   Person: 
+>   - 有没有可能是本机更换了密钥？
+>
+>   ChatGPT: 
+>   - 是的，确实有可能是本机更换了密钥导致了这个问题。当您在本机连接到远程主机（例如 GitHub）时，会在本机的 `~/.ssh/known_hosts` 文件中保存远程主机的公钥信息。这样，下次连接时，Git 会验证远程主机的公钥是否匹配已保存的公钥信息，以确保连接的安全性。
+>
+>   如果您在本机更换了密钥或更新了远程主机的密钥（例如重新安装操作系统或重置SSH密钥），Git 将会提示警告，因为公钥信息不再匹配。
+>
+>   如果您确认在本机更换了密钥，可以按照以下步骤来解决问题： 
+>   1. 备份 `known_hosts` 文件（可选）：如果您在更新之前还没有备份过 `known_hosts` 文件，请先备份该文件，以防止意外删除现有的公钥信息。 
+>   2. 更新 `known_hosts` 文件：打开 `~/.ssh/known_hosts` 文件，并删除与 GitHub 相关的行（可能有多行）。然后，保存文件。 
+>   3. 重新连接远程主机：运行之前的 Git 命令，例如 `git push -u origin main`，Git 会重新获取 GitHub 的公钥信息，并将其保存在 `known_hosts` 文件中。
+>
+>   请注意，更新 `known_hosts` 文件时，务必小心，确保删除正确的行，并且确保您在连接时是连接到真正的 GitHub 主机。确保您的密钥更新是合法和可信的，以防止中间人攻击。
+>
+>   如果您不确定如何处理此问题，或担心出现安全问题，请务必咨询系统管理员或向 GitHub 支持寻求帮助。他们将能够提供更准确的指导和解决方案。
+
+在本机的`C:\Users\Administrator\.ssh`中删除了对应含有“github”行，最后发现仍然不行。然后根据IP删除了对应行。
+
+>   ```powershell
+>   PS E:\github\Todolist_Demo_Vue3> git push -u origin main
+>   error: src refspec main does not match any.
+>   error: failed to push some refs to 'git@github.com:youhuangla/Todolist_Demo_Vue3.git'
+>   PS E:\github\Todolist_Demo_Vue3>
+>   ```
+>
+>   ChatGPT:  根据您提供的输出信息，执行 `git push -u origin main` 命令时再次出现了错误：
+>
+>   ```
+>   error: src refspec main does not match any.
+>   error: failed to push some refs to 'git@github.com:youhuangla/Todolist_Demo_Vue3.git'
+>   ```
+>
+>   这个错误通常意味着本地的 `main` 分支在您的本地仓库中存在，但没有与任何提交记录关联。Git 找不到与 `main` 分支相关的提交记录，因此无法推送。
+>
+>   出现这个错误的原因可能有以下几种情况：
+>
+>   1. **空的 `main` 分支**：`main` 分支可能存在于本地仓库中，但是没有进行任何提交，因此 Git 找不到提交记录。
+>
+>   2. **分支名错误**：在某些情况下，如果仓库的默认分支是 `main`，而不是 `master`，您可能需要将本地分支名更改为 `main`，然后再进行推送。
+>
+>   为了解决这个问题，您可以按照以下步骤操作：
+>
+>   1. 确认本地 `main` 分支存在：使用以下命令查看本地仓库中的分支列表，并确保 `main` 分支存在：
+>
+>      ```
+>      git branch
+>      ```
+>
+>      如果 `main` 分支不存在，请确认是否正确创建了该分支，并且在该分支上进行了一些提交操作。
+>
+>   2. 确认远程 `origin` 仓库：使用以下命令查看远程仓库列表，并确保远程仓库 `origin` 是正确的：
+>
+>      ```
+>      git remote -v
+>      ```
+>
+>      如果远程仓库不正确，您可以使用以下命令添加正确的远程仓库：
+>
+>      ```
+>      git remote add origin <远程仓库URL>
+>      ```
+>
+>   3. 确认分支关联：使用以下命令查看本地 `main` 分支是否与远程的 `origin/main` 分支正确关联：
+>
+>      ```
+>      git branch -vv
+>      ```
+>
+>      确保输出中的 `main` 分支有关联的远程分支。
+>
+>   4. 进行提交：如果本地的 `main` 分支为空，请先进行一些提交操作：
+>
+>      ```
+>      git add .
+>      git commit -m "Your initial commit message here"
+>      ```
+>
+>      将 `"Your initial commit message here"` 替换为您的提交信息。
+>
+>   5. 进行推送：完成提交后，再次尝试推送：
+>
+>      ```
+>      git push -u origin main
+>      ```
+>
+>   请注意，执行推送操作前，请确保您在本地的 `main` 分支上进行了一些提交操作。如果您在推送之前尚未进行任何更改，Git会提示无法推送空的 `main` 分支。
+>
+>   如果您在执行以上操作时仍然遇到问题，请提供更多详细的错误信息，以便我能够更好地帮助您解决问题。
+
+另在本地仓库中无文件直接push会出现以上报错，push前先确定仓库不为空。

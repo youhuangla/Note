@@ -4,6 +4,14 @@
 
 [binary\-husky/chatgpt\_academic: 科研工作专用ChatGPT拓展，特别优化学术Paper润色体验，支持自定义快捷按钮，支持自定义函数插件，支持markdown代码块表格显示，Tex公式双显示，新增Python/C\+\+项目剖析/自译解功能，PDF/LaTex论文翻译/总结功能，兼容ChatGLM等本地模型](https://github.com/binary-husky/chatgpt_academic)
 
+## 启动
+
+```powershell
+PS E:\github\chatgpt_academic> python main.py
+```
+
+## 安装
+
 ```powershell
 
 PS E:\github> git clone https://github.com/binary-husky/chatgpt_academic.git
@@ -187,3 +195,22 @@ Running on local URL:  http://0.0.0.0:15521
 To create a public link, set `share=True` in `launch()`.
 ```
 
+## 更新
+
+自动更新失败：重新下载并覆盖（记得config.py重命名成private_config.py
+
+[ImportError: cannot import name 'update\_ui' from 'toolbox' · Issue \#421 · binary\-husky/gpt\_academic](https://github.com/binary-husky/gpt_academic/issues/421)
+
+
+
+## Bug
+
+```
+AttributeError: module 'tiktoken' has no attribute 'encoding_for_model
+```
+
+[批量翻譯pdf文檔\(多線程\)功能出現問題: AttributeError: module 'tiktoken' has no attribute 'encoding\_for\_model' · Issue \#448 · binary\-husky/gpt\_academic](https://github.com/binary-husky/gpt_academic/issues/448)
+
+## api
+
+可用api2d的api

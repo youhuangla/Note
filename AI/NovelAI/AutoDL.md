@@ -68,15 +68,6 @@ git pull
 
 ## 启动
 
-```
-cd ~/stable-diffusion-webui/
-rm -rf outputs && ln -s /root/autodl-tmp outputs
-python launch.py --disable-safe-unpickle --port=6006 --deepdanbooru --share --gradio-debug --enable-insecure-extension-access
-
-```
-
-#"--share --gradio-debug --xformers --deepdanbooru --enable-insecure-extension-access"
-
 小李启动器
 
 ```
@@ -86,6 +77,15 @@ cd /root/autodl-tmp/stable-diffusion-webui && /root/miniconda3/envs/xl_env/bin/p
 ```
 
 允许扩图
+
+```v3
+export http_proxy=http://192.168.1.174:12798 && export https_proxy=http://192.168.1.174:12798
+
+cd /root/autodl-tmp/stable-diffusion-webui && /root/miniconda3/envs/xl_env/bin/python launch.py --disable-safe-unpickle  --port=6006 --deepdanbooru --xformers --share --gradio-auth 1:1 --enable-insecure-extension-access --api --cors-allow-origins=https://www.painthua.com --no-half-vae --no-gradio-queue 
+
+```
+
+
 
 ## 版本
 
@@ -187,3 +187,13 @@ du -sh /root/.local/share/Trash # jupyterlab的回收站
 rm -rf /root/.local/share/Trash   
 
 ```
+
+## API
+
+#### Bug
+
+[Bug: ERROR: Exception in ASGI application · Issue \#6883 · AUTOMATIC1111/stable\-diffusion\-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui/issues/6883)
+
+OpenOutpaint扩展引起？更新或停用
+
+.......还有，记得加齐参数

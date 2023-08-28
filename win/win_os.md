@@ -155,11 +155,27 @@ package cache是windows系统中的一个目录，其中存放了软件安装和
 -   将package cache文件夹剪切到D盘根目录；
 -   win+R，输入cmd 回车，输入命令：mklink /j “C:\ProgramData\Package Cache” “D:\Package Cache”  回车，就可以看到操作成功的提示。
 
-### SpaceSniffer
+### 管理软件
 
-### Disc++
+#### SpaceSniffer
+
+#### Disc++
 
 如何对Windows系统盘下的Installer文件夹以及WinSxS文件夹进行清理？ - yichya QC的回答 - 知乎 https://www.zhihu.com/question/34964216/answer/60559237
+
+### 软件搬家
+
+[什么软件可以进行软件搬家？ - 知乎 (zhihu.com)](https://www.zhihu.com/question/295814856/answer/584147873)
+
+#### Foldermove
+
+[无法枚举容器内对象 访问被拒绝？ - 知乎 (zhihu.com)](https://www.zhihu.com/question/31001796)
+
+#### 腾讯电脑管家
+
+[使用腾讯电脑管家的软件搬家功能，卸载重装，无搬家历史如何还原软件位置的方法。 - 哔哩哔哩 (bilibili.com)](https://www.bilibili.com/read/cv22452896/)
+
+推荐
 
 ## 缩略图
 

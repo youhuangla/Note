@@ -976,6 +976,41 @@ server.port=8080
 
 [Vue官网](https://vuejs.org/)
 
+##### vue的运行
+
+>   Person: 
+>   - ```powershell
+>     PS C:\Users\Administrator\Desktop\spring\kob> npm list -g vue
+>     npm WARN config global `--global`, `--local` are deprecated. Use `--location=global` instead.
+>     npm WARN config global `--global`, `--local` are deprecated. Use `--location=global` instead.
+>     C:\Users\Administrator\AppData\Roaming\npm
+>     `-- @vue/cli@5.0.8
+>     `-- vue@2.7.14 但是PS C:\Users\Administrator\Desktop\spring\kob> vue
+>     vue : 无法将“vue”项识别为 cmdlet、函数、脚本文件或可运行程序的名称。请检查名称的拼写，如果包括路径，请确保路径正确，
+>     然后再试一次。
+>     所在位置 行:1 字符: 1
+>     ```
+>
+>   ChatGPT: 
+>
+>   - 根据你提供的输出来看，`@vue/cli` 已经全局安装在你的计算机上。然而，执行 `vue` 命令时出现了错误，这可能是因为在 PowerShell 环境中无法直接执行 `vue` 命令。
+>
+>   在 PowerShell 中，无法像在终端或命令提示符中一样直接执行 `vue` 命令。原因是 PowerShell 默认情况下不会自动查找全局安装的 Node.js 包。不过你仍然可以通过以下方法在 PowerShell 中执行 Vue CLI 命令： 
+>   1. **使用 npx：**  在 PowerShell 中，你可以使用 `npx` 命令来临时执行全局安装的 Node.js 包。尝试在 PowerShell 中执行以下命令：
+>
+>   ```powershell
+>   
+>   npx vue
+>   ```
+>
+>   
+>
+>   `npx` 会查找全局安装的 Vue CLI 并执行它。 
+>
+>   ......
+
+
+
 ##### 终端
 
 Linux和Mac上可以用自带的终端。
@@ -3903,6 +3938,749 @@ size
 
 
 
+#### 实现删除bot
+
+删除前：
+
+![image-20230425120243706](img/image-20230425120243706.png)
+
+![image-20230425120340472](img/image-20230425120340472.png)
+
+删除后：
+
+![image-20230425120407511](img/image-20230425120407511.png)
+
+![image-20230425120437644](img/image-20230425120437644.png)
+
+[Delete Bot button (92a40fe7) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/92a40fe7bfbacb3b693ca2fa66eac4e0cd343508)
+
+#### 实现修改Bot
+
+不同的按钮打开不同的标签，标签的id不同。
+
+![image-20230425150252575](img/image-20230425150252575.png)
+
+![image-20230425150335326](img/image-20230425150335326.png)
+
+
+
+将标题、描述、代码绑定
+
+![image-20230425150631821](img/image-20230425150631821.png)
+
+![image-20230425150716836](img/image-20230425150716836.png)
+
+保存修改后模态框并没有关闭，使用的是bootstrap的API
+
+![image-20230425152521339](img/image-20230425152521339.png)
+
+更改标题、内容、代码后
+
+![image-20230425152544328](img/image-20230425152544328.png)
+
+数据库内容也更改了
+
+这里的问题是即使不点击保存，点击取消后修改内容依然会保存
+
+[Imply Change Bot title, content and code (0fdf1c92) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/0fdf1c92c1d130087707ab0e9fbd9913fed689d6)
+
+#### 实现代码编辑器
+
+>   ```js
+>   import { VAceEditor } from 'vue3-ace-editor';
+>   import ace from 'ace-builds';
+>   ace.config.set(
+>       "basePath", 
+>       "https://cdn.jsdelivr.net/npm/ace-builds@" + require('ace-builds').version + "/src-noconflict/")
+>   <VAceEditor
+>       v-model:value="botadd.content"
+>       @init="editorInit"
+>       lang="c_cpp"
+>       theme="textmate"
+>       style="height: 300px" />
+>   ```
+>
+>   作者：yxc
+>   链接：https://www.acwing.com/file_system/file/content/whole/index/content/6208973/
+>   来源：AcWing
+>   著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+##### 安装依赖
+
+上面已经用过网页装了
+
+>   Person: 
+>   - 如何在命令行中安装vue3-ace-editor依赖？
+>
+>   ChatGPT: 
+>   - 安装vue3-ace-editor依赖的命令行操作步骤如下： 
+>   1. 打开终端并进入你的项目文件夹。 
+>   2. 运行以下命令安装vue3-ace-editor依赖：
+>
+>   ```
+>   npm install vue3-ace-editor
+>   ```
+>
+>   这个命令会自动安装vue3-ace-editor依赖。 
+>   1. 如果你使用的是 TypeScript，还需要安装相关的类型定义。运行以下命令安装 `@types/ace` 类型定义：
+>
+>   ```bash
+>   npm install @types/ace
+>   ```
+>
+>
+>   1. 安装完成后，你可以在你的Vue组件中引入vue3-ace-editor并使用它：
+>
+>   ```vue
+>   
+>   <template>
+>     <div>
+>       <ace-editor v-model="code"></ace-editor>
+>     </div>
+>   </template>
+>   
+>   <script>
+>   import AceEditor from "vue3-ace-editor";
+>   
+>   export default {
+>     components: {
+>       AceEditor,
+>     },
+>     data() {
+>       return {
+>         code: "function hello() {\n  console.log('Hello World!');\n}",
+>       };
+>     },
+>   };
+>   </script>
+>   ```
+>
+>   
+>
+>   希望这可以帮助你安装vue3-ace-editor依赖。
+
+```powershell
+PS C:\Users\Administrator\Desktop\spring\kob\web> npm install vue3-ace-editor
+npm WARN config global `--global`, `--local` are deprecated. Use `--location=global` instead.
+
+added 3 packages, and audited 969 packages in 55s
+
+6 vulnerabilities (5 moderate, 1 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+```
+
+##### 引入依赖
+
+setup函数中引入
+
+```js
+        ace.config.set(
+            "basePath", 
+            "https://cdn.jsdelivr.net/npm/ace-builds@" + require('ace-builds').version + "/src-noconflict/")
+```
+
+因为是组件，default中加入
+
+```js
+    components: {
+        VAceEditor,
+    },
+```
+
+Alt + Shift + F 自动格式化
+
+##### 完成
+
+![image-20230425154615311](img/image-20230425154615311.png)
+
+[Change code input to vue3-ace-editor (e1cabda8) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/e1cabda87489be12bb5d0c7e9f0649e44dcfbfa3)
+
+
+
+
+
+## 8.实现微服务：匹配系统
+
+### 架构图
+
+![image-20230429141338010](img/image-20230429141338010.png)
+
+匹配系统不会立即返回结果，是异步的过程，我们可以用一个额外的服务实现。
+
+Matching System 是另一个进程
+
+![image-20230429141618910](img/image-20230429141618910.png)
+
+#### Http请求
+
+用Http请求很难达到要求：Bot 返回Bot列表，服务端是一问一答，来回时间短暂
+
+#### WebSocket请求
+
+发出请求，不知道什么时候返回一个（多个）、一次（多次）结果
+
+>   ChatGPT: 
+>   - WebSocket 是一种协议，它允许在客户端和服务器之间建立双向实时通信。与 HTTP 请求相比，WebSocket 更适用于频繁、实时交互的场景。使用 WebSocket 时，您可以在任何时候收到服务器发送的消息，而不需要等待特定的请求响应。这对于处理不确定何时返回结果的情况非常有用。
+>
+
+>   Person: 
+>   - websocket 协议是全双工吗？为什么？
+>
+>   ChatGPT: 
+>   - 是的，WebSocket 协议是全双工的。全双工通信是指数据在两个方向上可以同时进行传输。在全双工通信中，客户端和服务器可以在任何时候互相发送和接收消息，而不需要等待对方先发送或接收消息。
+>
+>   WebSocket 协议的全双工特性主要归功于它的底层实现。WebSocket 在建立连接时，首先通过HTTP握手（HTTP Upgrade）升级到WebSocket协议。握手成功后，客户端和服务器之间将建立一个持久的TCP连接，从而实现双向实时通信。
+>
+>   在这个TCP连接中，数据是以帧的形式传输的，每个帧可以在客户端和服务器之间独立发送。这意味着在任何时候，双方都可以发送数据帧，而不需要等待对方的响应。这使得WebSocket可以实现全双工通信，提高了数据传输的效率和实时性。
+>
+>   总之，WebSocket 协议是全双工的，因为它允许客户端和服务器在任何时候互相发送和接收消息，实现了双向实时通信。
+
+#### 游戏逻辑的后端实现
+
+贪吃蛇地图原先是在用户的浏览器前端中生成的，所以不同用户生成的地图不一样。现在我们要将游戏的所有过程放在服务器端。
+
+游戏体验与用户间的权衡：像一些射击游戏，本地计算十分频繁，导致很多外挂。但像炉石外挂就很少。
+
+
+
+![image-20230429142802344](img/image-20230429142802344.png)
+
+
+
+
+
+每一个链接其实就是一个WebSocketServer类，每来一个链接就 new 一个这个了类的实例，开一个新的线程。
+
+所有和这个链接相关的信息都存在这个类里面。如果是每一个链接独有的信息，如这个链接的用户是谁，存成这个类的私有变量（成员变量）。如果是维护链接的公共信息，可以存成一个静态变量。
+
+[为什么有HTTP协议，还要有websocket协议 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/590817258)
+
+### 集成WebSocket
+
+#### 添加依赖
+
+在pom.xml文件中添加依赖：
+
+```
+spring-boot-starter-websocket
+fastjson
+```
+
+[Maven Repository: org\.springframework\.boot » spring\-boot\-starter\-websocket » 2\.7\.2](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-websocket/2.7.2)
+
+[Maven Repository: com\.alibaba » fastjson » 2\.0\.11](https://mvnrepository.com/artifact/com.alibaba/fastjson/2.0.11)
+
+添加config.WebSocketConfig配置类：
+
+
+
+>```java
+>import org.springframework.context.annotation.Bean;
+>import org.springframework.context.annotation.Configuration;
+>import org.springframework.web.socket.server.standard.ServerEndpointExporter;
+>
+>@Configuration
+>public class WebSocketConfig {
+>
+>    @Bean
+>    public ServerEndpointExporter serverEndpointExporter() {
+>
+>        return new ServerEndpointExporter();
+>    }
+>}
+>
+>```
+>
+>
+
+添加consumer.WebSocketServer类
+
+>   ```java
+>   import org.springframework.stereotype.Component;
+>   
+>   import javax.websocket.*;
+>   import javax.websocket.server.PathParam;
+>   import javax.websocket.server.ServerEndpoint;
+>   
+>   @Component
+>   @ServerEndpoint("/websocket/{token}")  // 注意不要以'/'结尾
+>   public class WebSocketServer {
+>       @OnOpen
+>       public void onOpen(Session session, @PathParam("token") String token) {
+>           // 建立连接
+>       }
+>   
+>       @OnClose
+>       public void onClose() {
+>           // 关闭链接
+>       }
+>   
+>       @OnMessage
+>       public void onMessage(String message, Session session) {
+>           // 从Client接收消息
+>       }
+>   
+>       @OnError
+>       public void onError(Session session, Throwable error) {
+>           error.printStackTrace();
+>       }
+>   }
+>   
+>   ```
+>
+
+配置config.SecurityConfig
+
+>   ```java
+>   @Override
+>   public void configure(WebSecurity web) throws Exception {
+>       web.ignoring().antMatchers("/websocket/**");
+>   }
+>   ```
+>
+>   
+>
+>   
+
+#### 注入
+
+WebSocketServer并不是一个标准的Spring组件，不是一个Bean，所以不能使用@Autowired注入。
+
+>   这里的bean是指单例模式吗？
+>
+>   ChatGPT:
+>   - 在 Spring 中，`@Component` 注解用于将类标记为 Spring 组件，将由 Spring 容器进行管理。
+>   在这种情况下，`WebSocketServer` 类被标记为 Spring 组件，因此它可以使用 `@Autowired` 注入其他 Spring 组件或依赖项。
+>
+>   但是，`WebSocketServer` 类上的 `@ServerEndpoint` 注解并不是 Spring 框架的一部分，而是 JavaEE 中的标准注解，它定义了一个 WebSocket 服务器端点。
+>   因此，`WebSocketServer` 并不是一个标准的 Spring 组件，它不是一个 bean，不能直接通过 `@Autowired` 进行注入。
+>
+>   关于 bean 的问题，`@Component` 注解表示这个类是一个 Spring 组件，将由 Spring 容器进行管理，因此它会在 Spring 容器中创建一个单例对象。
+>   在这种情况下，`WebSocketServer` 类会在 Spring 容器中创建一个单例对象，即这个 bean 是一个单例 bean，所有的 WebSocket 客户端都会共享这个单例对象。
+>
+>   Person: 
+>   - 什么是单例模式？
+>
+>   ChatGPT: 
+>   - 单例模式（Singleton Pattern）是一种设计模式，它的核心思想是确保一个类只有一个实例，并提供一个全局访问点来获取该实例。这种模式通常用于那些需要全局访问和控制的资源，例如配置信息、日志管理、数据库连接池等。
+>
+>   单例模式的主要优点是在整个应用程序中共享一个实例，从而避免了多个实例可能带来的资源浪费和潜在的冲突。但是，单例模式也有一些缺点，比如它可能导致代码的紧耦合，不易测试和扩展。
+>
+>   要实现单例模式，通常需要以下几个步骤：
+>   1. 将类的构造方法声明为私有，这样外部无法直接创建该类的实例。
+>   2. 在类内部定义一个静态变量来保存唯一的实例。
+>   3. 提供一个公共的静态方法，用于获取实例。在这个方法中，首先检查实例是否已经创建，如果没有则创建一个新实例并赋值给静态变量，然后返回该实例。
+>
+>   以下是一个简单的单例模式示例：
+>
+>   ```java
+>   
+>   public class Singleton {
+>       private static Singleton instance;
+>   
+>       private Singleton() {
+>           // 私有构造方法，防止外部直接创建实例
+>       }
+>   
+>       public static synchronized Singleton getInstance() {
+>           if (instance == null) {
+>               instance = new Singleton();
+>           }
+>           return instance;
+>       }
+>   }
+>   ```
+>
+>   
+>
+>   需要注意的是，在多线程环境下，实现单例模式时需要特别小心，以避免多个线程同时创建实例。在上述示例中，我们使用了 `synchronized` 关键字来确保线程安全。然而，这种方法在性能上可能不是最优的，因为每次调用 `getInstance()` 方法时都会进行同步。有其他实现方法可以在多线程环境下提高性能，例如双重检查锁定（Double-Checked Locking）和静态内部类等。
+
+#### 测试前后端是否能连接
+
+[Test front-end and back-end connections (6c167052) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/6c167052b81e809667b62de6b04589d8baee9c56)
+
+![image-20230505124330463](img/image-20230505124330463.png)
+
+
+
+打开其他页面自动断开连接
+
+![image-20230505141605219](img/image-20230505141605219.png)
+
+
+
+回到pk页面又有链接
+
+![image-20230505141848319](img/image-20230505141848319.png)
+
+
+
+![image-20230505142033381](img/image-20230505142033381.png)
+
+测试不同用户登录
+
+![image-20230505142657211](img/image-20230505142657211.png)
+
+
+
+#### 增加Jwt验证
+
+前端用户如果将链接中的ID改成别人的ID，就可以用别人的ID进行对战
+
+![image-20230505150130527](img/image-20230505150130527.png)
+
+
+
+
+
+>   Person: 
+>   - ......
+>       userId是int还是Integer比较好？
+>
+>   ChatGPT: 
+>   - 在这个场景下，使用 `Integer` 类型可能更合适。原因如下： 
+>   1. 使用 `Integer` 对象允许返回 `null` 值，这在某些情况下可能有助于表示无效或不存在的用户 ID。而使用基本类型 `int` 时，无法表示 `null`，可能需要使用特殊值（如 -1）来表示无效或不存在的用户 ID。 
+>   2. 当处理来自外部源（如数据库、网络请求等）的数据时，使用包装类型（如 `Integer`）可以提供更好的灵活性和可扩展性。
+>
+>   然而，需要注意的是，使用包装类型可能会导致性能开销和额外的空间消耗。在大多数情况下，这种开销并不显著，但在性能关键的场景中，可能需要考虑使用基本类型。
+>
+>   总之，在这个例子中，使用 `Integer` 类型可以提供更好的可读性和灵活性。如果性能不是关键因素，建议使用 `Integer` 类型。
+
+
+
+
+
+bb
+
+![image-20230505151040468](img/image-20230505151040468.png)
+
+yxc
+
+![image-20230505151108179](img/image-20230505151108179.png)
+
+```IDEA
+connected!
+{2=com.kob.backend.consumer.WebSocketServer@205a230b}
+disconnected!
+connected!
+{1=com.kob.backend.consumer.WebSocketServer@29787714}
+```
+
+[Jwt verification in matching system (f9e85bd2) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/f9e85bd2957190ec2bc318f0bb3d87e5e37043ac)
+
+### 实现前端
+
+#### 控制是否显示匹配界面
+
+用status控制是否展示playground这个组件
+
+[Use status to control whether to display the playground component (e6ce8e08) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/e6ce8e08e10aef0192f8f9980a14a557be6be474)
+
+
+
+#### 画个方块做测试
+
+[Print blue square in PK index (3a4b4df8) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/3a4b4df8c128c2c73689580fd9f61a5da428eacd)
+
+![image-20230509182400364](img/image-20230509182400364.png)
+
+#### 布局
+
+一行12份，左边6份，右边6份
+
+![image-20230509182510769](img/image-20230509182510769.png)
+
+#### 显示当前用户头像与名字
+
+[Display the current user avatar and name in matching index (6555ce9d) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/6555ce9dcaac5d5ec8aadac6136c2dc30ab5d932)
+
+![image-20230509183036566](img/image-20230509183036566.png)
+
+#### 调整头像和用户名的css样式
+
+[Adjust current user avatar and name 's css (db22ca08) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/db22ca083e08e3169db53ef0dbc2a8db9a369a95)
+
+![image-20230509183534034](img/image-20230509183534034.png)
+
+
+
+#### 微调背景与字体颜色
+
+[Fine-tune background and font colors (2b865037) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/2b865037a063efb145ac3f585389ee4bc2138071)
+
+![image-20230509184122424](img/image-20230509184122424.png)
+
+#### 左边用户名与图像完成
+
+[Fine-tune left (f1ae622d) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/f1ae622dcac31830f3cfc3075980222511c73e93)
+
+![image-20230509184525921](img/image-20230509184525921.png)
+
+#### 右边用户头像与用户名
+
+前端中生成右边用户头像与用户名，并暂时上传一个虚假的头像与用户名
+
+[Show Right avatar and username (44132005) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/441320055f27be397bd69fb89832ac8bc8cda2d6)
+
+![image-20230509185648972](img/image-20230509185648972.png)
+
+#### 按钮
+
+##### 添加按钮
+
+[Add matching button (3753fd66) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/3753fd664925d062c7809f37ef640b134b10eb58)
+
+![image-20230511094750163](img/image-20230511094750163.png)
+
+
+
+### 实现前后端通信
+
+1:11
+
+![image-20230512001643657](img/image-20230512001643657.png)
+
+#### 傻瓜式匹配机制
+
+[Imply simple matching (38d8b29d) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/38d8b29d1de4daf7ddfd57f73293d98ea1eebf31)
+
+后端打印
+
+```bash
+Start completed.
+connected!
+{1=com.kob.backend.consumer.WebSocketServer@3ebcf445}
+connected!
+{1=com.kob.backend.consumer.WebSocketServer@3ebcf445, 2=com.kob.backend.consumer.WebSocketServer@1e747502}
+received message: {"event":"start-matching"}
+start matching
+received message: {"event":"start-matching"}
+start matching
+```
+
+
+
+![image-20230511125234821](img/image-20230511125234821.png)
+
+
+
+![image-20230511125241739](img/image-20230511125241739.png)
+
+点击取消，后端控制台打印`stop matching`
+
+#### 匹配成功后等待2秒跳转到游戏页面
+
+[Wait for 2 sec and jump to playing page after successfully matching (6e9a3999) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/6e9a3999ba63e89eff00c660a490a305a1291e39)
+
+
+
+点击菜单栏按钮跳转其他界面后，自动取消匹配，返回 pk 页面看到的依然是匹配界面
+
+[After clicking the menu bar button to jump to other interfaces, the matching... (b2cd0665) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/b2cd06659fb55813640648390ecfbf640f5b7ee3)
+
+#### 解决两个用户地图同步问题
+
+统一在后端生成地图
+
+[Create map in backend, send the same map to 2 different users on web (1e047cb7) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/1e047cb75d1f80d0b1181519c61242d04f885a67)
+
+![image-20230512151239364](img/image-20230512151239364.png)
+
+![image-20230512151249487](img/image-20230512151249487.png)
+
+#### 从后端向前端传递蛇的坐标
+
+[Achieve passing the snake's coordinates from the backend to the front end (e7146fc5) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/e7146fc527034cc20298f106a6c0dfc6f6ac6a75)
+
+#### 架构
+
+每局游戏有三个棋盘，两个在云端，一个在服务器
+
+两个前端发送给服务器后，
+
+![image-20230514214250706](img/image-20230514214250706.png)
+
+服务器返回给前端
+
+![image-20230514214302490](img/image-20230514214302490.png)
+
+加入机器人
+
+![image-20230514214411424](img/image-20230514214411424.png)
+
+##### Game作为多线程处理的理由
+
+WS：WebSocket
+
+![image-20230514214847333](img/image-20230514214847333.png)
+
+Game 需要另起一个新的线程，否则，多个用户同时匹配会卡死。
+
+##### 引入两个线程的通信与加锁
+
+![image-20230514215050205](img/image-20230514215050205.png)
+
+
+
+##### 两个线程操作一个变量发生的读写冲突
+
+![image-20230514223313225](img/image-20230514223313225.png)
+
+
+
+两个都是读没有问题，一读一写就会产生顺序问题
+
+
+
+边界超时判负
+
+
+
+两个线程同时操作一个变量，至少有一个变量是写的，这时需要加锁
+
+#### 前端输入“WASD”，后端接收信息
+
+前端输入“WASD”，后端接收信息，但是如何确认是谁（A还是B）的？
+
+[Receive message in backend :WASD , which controls direction (7c47b9bb) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/7c47b9bbdbc2fc85003aea3bcb2bc6f7e725a29d)
+
+```
+received message: {"event":"start-matching"}
+start matching
+received message: {"event":"start-matching"}
+start matching
+received message: {"event":"move","direction":0}
+received message: {"event":"move","direction":2}
+received message: {"event":"move","direction":2}
+received message: {"event":"move","direction":0}
+```
+
+
+
+
+
+[Send snake's position to 2 browser (3b315660) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/3b3156606096f128a30a4729ee56f19d3bda7fec)
+
+![image-20230516115344601](img/image-20230516115344601.png)
+
+#### 实现蛇头碰撞蛇身以及撞墙死亡逻辑
+
+[Implement logic for snake head colliding with snake body resulting in death (404d5dac) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/404d5dacfcecbf38fc65978dd094ff8741efbfdf)
+
+![image-20230517105211032](img/image-20230517105211032.png)
+
+![image-20230517105531810](img/image-20230517105531810.png)
+
+
+
+#### 结果面板
+
+实现result-board，结果面板
+
+[Implemented a result board which shows who wins (275a2b94) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/275a2b943b544dd1fb5b6fff49b3827a46626925)
+
+![image-20230517130356652](img/image-20230517130356652.png)
+
+#### “再来”按钮
+
+实现游戏结束后重新匹配的按钮功能
+
+解决了之前src/main/java/com/kob/backend/consumer/utils/Game.java 中finished打成finish的bug。
+
+另外：这里如果B停留了很久，貌似并不会判断A赢B输。A是先匹配的那个（？也就是后匹配的如果超时了，不会判负。
+
+这里我突然发现，地图逻辑不对，貌似后端生成的时候写错了。。同一个文件的
+
+`g[r][c] = g[this.rows - 1 - r][this.cols - 1 - c] = 1;` rows打错了，
+
+老粗心可以试试[代码对比/归并](https://tool.oschina.net/diff/)
+
+[Implemented the button of matching again after a game finished. Fixed 2 bugs (d4feb279) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/d4feb279f8bff3d6db36016c8dc333df3215a269)
+
+![image-20230517144805840](img/image-20230517144805840.png)
+
+注意，如果一条蛇多次移动方向键，最后一次会覆盖
+
+#### 点击“再来”后头像变为“？”
+
+[Change avatar to '?' after click the 'Match again' button (af6593a7) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/af6593a7974c6825ae48018cbf254abfaabfc34d)
+
+
+
+
+
+### 在数据库中增加表record
+
+>   在数据库中创建表record
+>   record表用来记录每局对战的信息
+>
+>   表中的列：
+>
+>   id: int
+>   a_id: int
+>   a_sx: int
+>   a_sy: int
+>   b_id: int
+>   b_sx: int
+>   b_sy: int
+>   a_steps: varchar(1000)
+>   b_steps: varchar(1000)
+>   map: varchar(1000)
+>   loser: varchar(10)
+>   createtime: datetime
+
+```sql
+create table record
+(
+    id         int           null,
+    a_id       int           null,
+    a_sx       int           null,
+    a_sy       int           null,
+    b_id       int           null,
+    b_sx       int           null,
+    b_sy       int           null,
+    a_steps    varchar(1000) null,
+    b_steps    varchar(1000) null,
+    map        varchar(1000) null,
+    loser      varchar(10)   null,
+    createtime datetime      null
+);
+```
+
+#### 后端实现插入表
+
+[Implemented Record data insertion into MySQL Database (df5b5930) · Commits · you huang / kob · GitLab (acwing.com)](https://git.acwing.com/youhuang/kob/-/commit/df5b59309f3ad2869b5b473a1b55cf13104baa8c)
+
+```
+1,1,11,1,2,1,12,11101012,33323222,11111111111111100000000000011000110100000110100000001001100100000000011000100001100110100000000101100110000100011000000000100110010000000101100000101100011000000000000111111111111111,A,2023-05-17 22:45:17
+```
+
+![image-20230517224846398](img/image-20230517224846398.png)
+
+至此，6.2结束
+
+### 实现微服务
+
+![image-20230518091843715](img/image-20230518091843715.png)
+
+
+
+
+
+在以下两个位置实现
+
+![image-20230518091903822](img/image-20230518091903822.png)
+
+为什么要使用微服务
+
+![image-20230518092024684](img/image-20230518092024684.png)
 
 
 
@@ -3910,10 +4688,89 @@ size
 
 
 
+## 9.项目上线
+
+[8. 租云服务器及配docker环境 - AcWing](https://www.acwing.com/file_system/file/content/whole/index/content/3074146/)
+
+[阿里云 - AcWing](https://www.acwing.com/blog/content/10867/)
+
+### 安装Docker
+
+[Install Docker Engine on Ubuntu | Docker Documentation](https://docs.docker.com/engine/install/ubuntu/)
+
+```bash
+youhuangla@Ubuntu / % sudo docker run hello-world                                                                                   [0]
+
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+    (amd64)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:
+ $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:
+ https://hub.docker.com/
+
+For more examples and ideas, visit:
+ https://docs.docker.com/get-started/
+```
 
 
 
+### Docker教程
 
+[docker教程 - AcWing](https://www.acwing.com/blog/content/10878/)
+
+#### 设置权限
+
+```bash
+youhuangla@Ubuntu / % sudo usermod -aG docker $USER                                                                               [127]
+youhuangla@Ubuntu / % docker images                                                                                                 [0]
+permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get "http://%2Fvar%2Frun%2Fdocker.sock/v1.24/images/json": dial unix /var/run/docker.sock: connect: permission denied
+```
+
+要退出一次
+
+```bash
+youhuangla@Ubuntu / % docker images                                                                                                 [0]
+```
+
+#### 重新登录tmux
+
+试了好几次。。
+
+>   **youhuangla@Ubuntu ~ % logout                                                                                        [0] youhuangla@Ubuntu ~ % 为什么logout无法退出？**
+>
+>   
+>
+>   `logout` 命令用于注销当前登录用户，但是如果您在 SSH 会话或者终端窗口中执行该命令，则会关闭该会话或者窗口。因此，如果您在 SSH 会话或终端窗口中执行 `logout` 命令，则会话或窗口会立即关闭而不会注销当前用户。
+>
+>   如果您需要注销当前用户，可以在桌面环境中使用注销功能（例如，单击右上角的注销按钮）。如果您在终端窗口中，并且想要注销当前用户，请使用以下命令：
+>
+>   ```
+>   phpCopy code
+>   sudo pkill -u <username>
+>   ```
+>
+>   将 `<username>` 替换为要注销的用户名。这将关闭当前用户的所有进程并注销该用户。
+
+```bash
+youhuangla@Ubuntu ~ % sudo pkill -u youhuangla                                                                      [0]
+[sudo] password for youhuangla:
+Connection to 39.96.76.106 closed by remote host.
+Connection to 39.96.76.106 closed.
+youhuangla@Ubuntu ~ % docker images                                                                                 [0]
+REPOSITORY    TAG       IMAGE ID       CREATED         SIZE
+hello-world   latest    feb5d9fea6a5   19 months ago   13.3kB
+```
 
 
 

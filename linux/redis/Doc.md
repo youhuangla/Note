@@ -1,0 +1,1 @@
+[Installing Redis \| Redis](https://redis.io/docs/getting-started/installation/)

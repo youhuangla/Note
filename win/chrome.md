@@ -34,3 +34,5 @@ Animate smoothly when scrolling page content. – Windows, Linux, ChromeOS, Andr
 >   是的，该版本号大于 72。根据版本号“102.0.5005.63”，第一个数字“102”代表的是大版本号，第二个数字“0”代表的是次版本号，第三个数字“5005”代表的是修订版本号，最后一个数字“63”代表的是编译版本号。这个版本号大于 72，因为它的大版本号比 72 大。
 >
 >   值得注意的是，您提供的版本号中的“Chrome++ 1.5.2 inside”并不是 Google Chrome 浏览器的正式版本号，而是一个定制版或者修改版的名称，可能会有不同的功能或者性能表现。如果您需要获得最新版本的 Google Chrome 浏览器，请访问官方网站进行下载和安装。
+
+[在 Chrome 中清除、允许使用和管理 Cookie \- 计算机 \- Google Chrome帮助](https://support.google.com/chrome/answer/95647?hl=zh-Hans&visit_id=638286161489435791-2859950993&p=rl_error&rd=1#zippy=%2C%E5%88%A0%E9%99%A4%E6%9D%A5%E8%87%AA%E6%9F%90%E4%B8%AA%E7%BD%91%E7%AB%99%E7%9A%84-cookie)
